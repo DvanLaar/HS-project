@@ -301,7 +301,8 @@ abstract class Boss : Hero
     {
         for (int i = 0; i < amount; i++)
         {
-            this.hand.Add(new UnknownCard(this.deck));
+            UnknownCard uc = new UnknownCard(this.deck, this);
+            this.hand.Add(uc);
         }
     }
 }

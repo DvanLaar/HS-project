@@ -260,12 +260,16 @@ class UnknownCard : Card
 {
     public List<Card> possibilities;
 
-    public UnknownCard(List<Card> possibilities)
+    public UnknownCard(List<Card> possibilities, Hero hero)
     {
         this.possibilities = possibilities;
+        for (int i = 0; i < possibilities.Count; i++)
+            possibilities[i].owner = hero;
     }
-    public UnknownCard(Func<Type, bool> condition)
+    public UnknownCard(Func<Type, bool> condition, Hero hero)
     {
         this.possibilities = Card.createCards(condition);
+        for (int i = 0; i < possibilities.Count; i++)
+            possibilities[i].owner = hero;
     }
 }
