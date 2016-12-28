@@ -94,13 +94,15 @@ static class Effects
     {
         if (list1 == null || list2 == null)
             return (list1 == null && list2 == null);
+        List<Tuple<T, bool>> list2a = tuplify(list2);
         foreach (T t1 in list1)
         {
             bool found = false;
-            foreach (T t2 in list2)
+            for (int i = 0; i < list2a.Count; i++)
             {
-                if (t1.Equals(t2))
+                if (!list2a[i].Item2 && t1.Equals(list2a[i].Item1))
                 {
+                    list2a[i] = new Tuple<T, bool>(list2a[i].Item1, true);
                     found = true;
                     break;
                 }
@@ -108,7 +110,19 @@ static class Effects
             if (!found)
                 return false;
         }
+        foreach (Tuple<T, bool> t in list2a)
+            if (!t.Item2)
+                return false;
         return true;
+    }
+    static private List<Tuple<T, bool>> tuplify<T>(List<T> list)
+    {
+        List<Tuple<T, bool>> result = new List<Tuple<T, bool>>();
+        foreach(T a in list)
+        {
+            result.Add(new Tuple<T, bool>(a, false));
+        }
+        return result;
     }
 }
 
