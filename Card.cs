@@ -258,7 +258,7 @@ abstract class Secret : Spell
 
 class UnknownCard : Card
 {
-    List<Card> possibilities;
+    public List<Card> possibilities;
 
     public UnknownCard(List<Card> possibilities)
     {

@@ -10,7 +10,7 @@ abstract class Hero : IDamagable
     public int attack { get { return attackValue; } set { attackValue = value; } }
     public bool isFrozen { get { return frozen; } set { frozen = value; } }
     public int availableMana, spellDamage;
-    public bool turn;
+    public bool turn, simulated;
     public string name;
 
     public delegate void SpellEventHandler(Spell spell);
@@ -175,6 +175,7 @@ abstract class Hero : IDamagable
     public void ExtraAvailableMana(int amount)
     {
         this.availableMana += amount;
+        this.availableMana = Math.Min(availableMana, 10);
     }
     public virtual void DrawCards(int amount)
     {
@@ -186,6 +187,7 @@ abstract class Hero : IDamagable
     }
     private bool drawCard()
     {
+        
         Card result = null;
         Console.WriteLine("What card did you draw?");
         Card card = Card.GetCard(Console.ReadLine());
@@ -245,7 +247,6 @@ abstract class Hero : IDamagable
         }
         return null;
     }
-
     private static void createHeroes()
     {
         IEnumerable<System.Type> o = typeof(Hero).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Hero)) && !type.IsAbstract);
@@ -298,10 +299,9 @@ abstract class Boss : Hero
 
     public override void DrawCards(int amount)
     {
-        for(int i = 0; i < amount; i++)
+        for (int i = 0; i < amount; i++)
         {
-            UnknownCard uc = new UnknownCard(this.deck);
-
+            this.hand.Add(new UnknownCard(this.deck));
         }
     }
 }
