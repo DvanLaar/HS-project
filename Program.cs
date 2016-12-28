@@ -124,22 +124,26 @@ class Program
     static private Hero pickDeck()
     {
         Console.WriteLine("Which of the following decks would you like to play with?");
-        for(int i = 1; i < decks.Count + 1; i++)
+        for(int i = 0; i < decks.Count; i++)
         {
-            Console.WriteLine(i + ": " + decks[i-1]);
+            Console.WriteLine(i + 1 + ": " + decks[i]);
         }
 
         string input = Console.ReadLine();
-
+        //???
+        //int j;
+        //if (int.TryParse(input, out j))
+        //    input = decks[j - 1].ToString();
+        //switch (input)
+        //{
+        //    case "Classic Mage":
+        //        return decks[0];
+        //    default:
+        //        return null;
+        //}
         int j;
-        if (int.TryParse(input, out j))
-            input = decks[j - 1].ToString();
-        switch(input)
-        {
-            case "Classic Mage":
-                return decks[0];
-            default:
-                return null;
-        }
+        if (!int.TryParse(input, out j))
+            return null;
+        return decks[j - 1];
     }
 }
