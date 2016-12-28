@@ -92,7 +92,7 @@ static class Effects
 
     static public bool checkList<T>(List<T> list1, List<T> list2)
     {
-        if (list1 == null || list2 == null)
+        if (list1 == null || list2 == null || list1.Count != list2.Count)
             return (list1 == null && list2 == null);
         List<Tuple<T, bool>> list2a = tuplify(list2);
         foreach (T t1 in list1)
