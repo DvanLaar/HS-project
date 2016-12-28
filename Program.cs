@@ -46,11 +46,12 @@ class Program
         string s = reader.ReadLine();
         while (s == "Deck")
         {
-            s = initializeDeck(reader);
+            initializeDeck(reader);
+            s = reader.ReadLine();
         }
     }
 
-    static private string initializeDeck(StreamReader reader)
+    static private void initializeDeck(StreamReader reader)
     {
         string heroName = reader.ReadLine();
         string deckName = reader.ReadLine();
@@ -72,7 +73,7 @@ class Program
         }
         hero.deck = deck;
         decks.Add(hero);
-        return reader.ReadLine();
+        return;
     }
 
     static private void pickGameMode()
