@@ -33,10 +33,10 @@ class Program
         //board1.player.drawKnownCards(1);
         //board2.player.drawKnownCards(1);
         Console.WriteLine(board1.Equals(board2));
-        HashSet<Board> testset = new HashSet<Board>();
-        testset.Add(board1);
-        testset.Add(board2);
-        Console.WriteLine(testset.Count);
+        MyList<Board> testList = new MyList<Board>();
+        testList.Add(board1);
+        testList.Add(board2);
+        Console.WriteLine(testList.Count);
         Console.ReadLine();
     }
 
@@ -134,20 +134,14 @@ class Program
         }
 
         string input = Console.ReadLine();
-        //???
-        //int j;
-        //if (int.TryParse(input, out j))
-        //    input = decks[j - 1].ToString();
-        //switch (input)
-        //{
-        //    case "Classic Mage":
-        //        return decks[0];
-        //    default:
-        //        return null;
-        //}
         int j;
         if (!int.TryParse(input, out j))
+        {
+            foreach (Hero deck in decks)
+                if (deck.name == input)
+                    return deck;
             return null;
+        }
         return decks[j - 1];
     }
 }
