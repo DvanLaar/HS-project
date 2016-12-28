@@ -41,6 +41,10 @@ abstract class Card
         Card toCheck = (Card)obj;
         return (this.mana == toCheck.mana);
     }
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 
     static public Card GetCard(string cardName)
     {
@@ -145,6 +149,11 @@ abstract class Minion : Card, IDamagable
         return (this.attack == compareTo.attack && this.health == compareTo.health && this.maxHealth == compareTo.maxHealth && this.mana == compareTo.mana
              && this.isFrozen == compareTo.isFrozen && this.cantAttack == compareTo.cantAttack);
     }
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
     public bool HasBattlecry()
     {
         return Battlecry != null;

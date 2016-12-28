@@ -33,6 +33,10 @@ class Program
         //board1.player.drawKnownCards(1);
         //board2.player.drawKnownCards(1);
         Console.WriteLine(board1.Equals(board2));
+        HashSet<Board> testset = new HashSet<Board>();
+        testset.Add(board1);
+        testset.Add(board2);
+        Console.WriteLine(testset.Count);
         Console.ReadLine();
     }
 

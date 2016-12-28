@@ -46,7 +46,8 @@ class Board
             player.hand.Add(coin);
         }
         else
-        {//TODO: teruggaan voor de plebs
+        {
+            //TODO: teruggaan voor de plebs
             Console.WriteLine("Fucking moron...");
         }
 
@@ -60,9 +61,9 @@ class Board
     }
     private void playerTurn()
     {
-        //StartTurnEvent
-        player.DrawCards(1);
+        player.InvokeStartEvent();
 
+        player.DrawCards(1);
         //SimulateTurn();
 
         switchTurn();
@@ -167,6 +168,10 @@ class Board
             return false;
         Board compareTo = (Board)obj;
         return (this.player.Equals(compareTo.player) && this.boss.Equals(compareTo.boss));
+    }
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 
     private void attack(IDamagable attacker, IDamagable defender)

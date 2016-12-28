@@ -10,7 +10,7 @@ abstract class Hero : IDamagable
     public int attack { get { return attackValue; } set { attackValue = value; } }
     public bool isFrozen { get { return frozen; } set { frozen = value; } }
     public int availableMana, spellDamage;
-    public bool turn, simulated;
+    public bool turn;//, simulated;
     public string name;
 
     public delegate void SpellEventHandler(Spell spell);
@@ -53,6 +53,7 @@ abstract class Hero : IDamagable
         this.onBoard = new List<Minion>();
         this.secrets = new List<Secret>();
         this.frozen = false;
+        this.StartTurn += OnStartOfTurn;
     }
     public Hero Clone()
     {
@@ -111,6 +112,19 @@ abstract class Hero : IDamagable
         return (this.health == toCheck.health && this.armor == toCheck.armor && this.mana == toCheck.mana && this.maxHealth == toCheck.maxHealth
              && this.attack == toCheck.attack && this.isFrozen == toCheck.isFrozen && this.availableMana == toCheck.availableMana
              && this.spellDamage == toCheck.spellDamage && this.turn == toCheck.turn && this.name == toCheck.name);
+    }
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+    private int generateHashCode<T>(List<T> list)
+    {
+        string s = "";
+        foreach (T t in list)
+        {
+            s += t.GetHashCode();
+        }
+        return int.Parse(s);
     }
     protected void updateOpp()
     {
@@ -231,6 +245,16 @@ abstract class Hero : IDamagable
     {
         if (SummonMinion != null)
             SummonMinion(minion);
+    }
+    public void InvokeStartEvent()
+    {
+        if (StartTurn != null)
+            StartTurn();
+    }
+    public void InvokeEndEvent()
+    {
+        if (EndTurn != null)
+            EndTurn();
     }
 
     public static Hero GetHero(string heroName)

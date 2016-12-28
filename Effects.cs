@@ -90,7 +90,7 @@ static class Effects
         minion.owner.onBoard.Remove(minion);
     }
 
-    static public bool checkList<T>(List<T> list1, List<T> list2)
+    static public bool checkList<T>(ICollection<T> list1, ICollection<T> list2)
     {
         if (list1 == null || list2 == null)
             return (list1 == null && list2 == null);
@@ -117,7 +117,7 @@ static class Effects
                 return false;
         return true;
     }
-    static private List<Tuple<T, bool>> tuplify<T>(List<T> list)
+    static private List<Tuple<T, bool>> tuplify<T>(ICollection<T> list)
     {
         List<Tuple<T, bool>> result = new List<Tuple<T, bool>>();
         foreach(T a in list)
