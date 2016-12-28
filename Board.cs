@@ -46,7 +46,7 @@ class Board
             player.hand.Add(coin);
         }
         else
-        {
+        {//TODO: teruggaan voor de plebs
             Console.WriteLine("Fucking moron...");
         }
 
@@ -92,7 +92,7 @@ class Board
             temp.Add(copy);
         }
 
-        bool taunt = boss.onBoard.Count != 0 && boss.onBoard.TrueForAll(minion => !minion.hasTaunt);
+        bool taunt = boss.onBoard.Count != 0 && !boss.onBoard.TrueForAll(minion => !minion.hasTaunt);
         foreach (Minion m in boss.onBoard)
         {
             if (taunt && !m.hasTaunt)
