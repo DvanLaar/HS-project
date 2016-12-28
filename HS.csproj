@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attribute.cs" />
+    <Compile Include="Simulation.cs" />
     <Compile Include="MyList.cs" />
     <Compile Include="PriestCards\GvGSpells.cs" />
     <Compile Include="RogueCard\NaxxMinions.cs" />

@@ -7,9 +7,9 @@ class Board
     public event AttackEventHandler Attack;
 
     public Hero player, boss;
-    public double value;
-    private bool gameEnded;
-    private List<Board> possibilities;
+    public double value, chance;
+    public bool gameEnded;
+    public List<Board> possibilities;
 
     public Board()
     {
@@ -129,6 +129,11 @@ class Board
             //result.UnionWith(possibilities)
         }
         return result;
+    }
+
+    public MyList<Board> getChildren()
+    {//TODO
+        return null;
     }
 
     private void bossTurn()

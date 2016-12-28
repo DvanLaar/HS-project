@@ -16,7 +16,23 @@ class MyList<T> : ICollection<T>
     {
         if (innerList.TrueForAll(i => !i.Equals(item)))
             innerList.Add(item);
+        else
+        {
+            T match = innerList.Find(i => i.Equals(item));
+            if(typeof(T) == typeof(Board))
+            {
+                ((Board)(object)match).chance += ((Board)(object)item).chance;
+            }
+        }
     }
+
+    public void AddRange(ICollection<T> addables)
+    {
+        //When the variable names are just right
+        foreach (T addable in addables)
+            Add(addable);
+    }
+
     public bool Remove(T item)
     {
         return innerList.Remove(item);
