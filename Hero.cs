@@ -300,7 +300,7 @@ abstract class Boss : Hero
     {
         for(int i = 0; i < amount; i++)
         {
-            UnknownCard uc = new UnknownCard(this.deck);
+            UnknownCard uc = new UnknownCard(this.deck, this);
 
         }
     }
