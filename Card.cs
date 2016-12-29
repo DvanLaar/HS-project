@@ -28,6 +28,15 @@ abstract class Card
         owner.hand.Remove(this);
     }
 
+    public virtual MyList<Board> SimulateOnPlay()
+    {
+        //Board copy = ;
+        //OnPlay();
+        //Board result = ;
+        //this.  = copy;
+        return new MyList<Board>() { null };
+    }
+
     public virtual Card Clone()
     {
         Card card = (Card)this.GetType().InvokeMember("", System.Reflection.BindingFlags.CreateInstance, null, null, null);

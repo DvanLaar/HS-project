@@ -7,7 +7,7 @@ class Board
     public event AttackEventHandler Attack;
 
     public Hero player, boss;
-    public double value, chance = 1;
+    public double value = -1, chance = 1;
     public bool gameEnded;
     public List<Board> possibilities;
 
@@ -20,6 +20,13 @@ class Board
         this.boss = boss;
         this.gameEnded = false;
         this.possibilities = new List<Board>();
+    }
+
+    public void computeValue()
+    {
+        value = 0;
+        foreach (Board b in possibilities)
+            value += b.value * b.chance;
     }
 
     public void simulate()
@@ -132,9 +139,19 @@ class Board
     }
 
     public MyList<Board> getChildren()
-    {//TODO
-        return null;
+    {
+        //TODO
+        MyList<Board> results = new MyList<Board>() { this };
+        foreach (Card c in player.hand)
+            if (c.mana < player.availableMana)
+                results.AddRange(c.SimulateOnPlay().getChildren());
+        foreach (Minion m in player.onBoard)
+            results.AddRange(m.SimulateAttack().getChildren());
+        
+        return results;
     }
+
+    
 
     private void bossTurn()
     {

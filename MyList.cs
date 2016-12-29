@@ -33,6 +33,18 @@ class MyList<T> : ICollection<T>
             Add(addable);
     }
 
+    public MyList<Board> getChildren()
+    {
+        if (typeof(T) != typeof(Board))
+            throw new Exception();
+        MyList<Board> results = new MyList<Board>();
+        foreach (object o in innerList)
+        {
+            Board b = (Board)o;
+            results.AddRange(b.getChildren());
+        }
+        return results;
+    }
     public bool Remove(T item)
     {
         return innerList.Remove(item);
