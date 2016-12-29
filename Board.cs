@@ -7,7 +7,7 @@ class Board
     public event AttackEventHandler Attack;
 
     public Hero player, boss;
-    public double value, chance;
+    public double value, chance = 1;
     public bool gameEnded;
     public List<Board> possibilities;
 
