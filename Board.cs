@@ -24,9 +24,9 @@ class Board
 
     public void computeValue()
     {
-        value = 0;
+        value = 1;
         foreach (Board b in possibilities)
-            value += b.value * b.chance;
+            value -= b.value * b.chance;
     }
 
     public void simulate()
@@ -140,12 +140,14 @@ class Board
 
     public MyList<Board> getChildren()
     {
-        //TODO
+        Hero activePlayer = player;
+        if (!activePlayer.turn)
+            activePlayer = boss;
         MyList<Board> results = new MyList<Board>() { this };
-        foreach (Card c in player.hand)
-            if (c.mana < player.availableMana)
+        foreach (Card c in activePlayer.hand)
+            if (c.mana < activePlayer.availableMana)
                 results.AddRange(c.SimulateOnPlay().getChildren());
-        foreach (Minion m in player.onBoard)
+        foreach (Minion m in activePlayer.onBoard)
             results.AddRange(m.SimulateAttack().getChildren());
         
         return results;
