@@ -147,8 +147,8 @@ class Board
         foreach (Card c in activePlayer.hand)
             if (c.mana < activePlayer.availableMana)
                 results.AddRange(c.SimulateOnPlay().getChildren());
-        foreach (Minion m in activePlayer.onBoard)
-            results.AddRange(m.SimulateAttack().getChildren());
+        //foreach (Minion m in activePlayer.onBoard)
+            //results.AddRange(m.SimulateAttack().getChildren());
         
         return results;
     }
