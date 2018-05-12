@@ -22,7 +22,7 @@ class ArcaneMissiles : Spell
             {
                 (brd.Item1.me.id == owner.id ? brd.Item1.me : brd.Item1.opp).Mana -= cost;
             }
-            return new MultipleBoardContainer(new List<(Board, int)>(result), "Play Missiles");
+            return new RandomSubBoardContainer(new List<(Board, int)>(result), b, "Play Arcane Missiles");
         });
     }
 
@@ -35,7 +35,6 @@ class ArcaneMissiles : Spell
         {
             Board clone = b.Clone();
             Hero Opp = clone.me.id == opponent.id ? clone.me : clone.opp;
-            (clone.me.id == owner.id ? clone.me : clone.opp).Mana -= cost;
             Opp.onBoard[opponent.onBoard.IndexOf(m)].Health--;
             result.Add((clone, 1));
         }

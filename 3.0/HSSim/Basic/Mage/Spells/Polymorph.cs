@@ -32,10 +32,10 @@ class Polymorph : Spell
                 me.onBoard[owner.onBoard.IndexOf(m)] = sheep;
                 result.Add(clone);
             }
-            return new MultipleChoiceBoardContainer(result, "play polymorph");
+            return new ChoiceSubBoardContainer(result, b, "Play Polymorph");
         });
-    }
 
+    }
     public override bool CanPlay(Board b)
     {
         if (!base.CanPlay(b))

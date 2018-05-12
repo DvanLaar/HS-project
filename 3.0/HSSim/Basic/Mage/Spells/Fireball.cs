@@ -42,7 +42,7 @@ class Fireball : Spell
                 result.Add(clone);
             }
 
-            return new MultipleChoiceBoardContainer(result, "play Fireball");
+            return new ChoiceSubBoardContainer(result, b, "play Fireball");
         });
     }
 }

@@ -6,7 +6,7 @@ abstract class Card
     public int baseCost { get; set; }
     protected int cost;
     public Hero owner;
-    public abstract BoardContainer Play(Board curBoard);
+    public abstract SubBoardContainer Play(Board curBoard);
     public virtual Card Clone()
     {
         Card c = (Card)GetType().InvokeMember("", System.Reflection.BindingFlags.CreateInstance, null, null, null);
@@ -33,12 +33,12 @@ abstract class Card
 
 abstract class Minion : Card, IDamagable
 {
-    int baseAttack, baseHealth, maxHealth, curHealth, curAttack;
-    protected int attacksLeft;
+    int baseAttack, baseHealth, maxHealth;
+    protected int curHealth;
     public bool Taunt = false, charge = false, windfury = false, megaWindfury = false;
     public int maxAttacks { get { if (megaWindfury) return 4; if (windfury) return 2; return 1; } }
 
-    public int Health
+    public virtual int Health
     {
         get => curHealth; set
         {
@@ -49,18 +49,18 @@ abstract class Minion : Card, IDamagable
             }
         }
     }
-    public int Attack { get => curAttack; set => curAttack = value; }
-    public int AttacksLeft { get => attacksLeft; set => attacksLeft = value; }
+    public int Attack { get; set; }
+    public int AttacksLeft { get; set; }
 
     public Minion(int mana, int attack, int health) : base(mana)
     {
         baseAttack = attack;
-        curAttack = attack;
+        Attack = attack;
         baseHealth = health;
         curHealth = health;
         maxHealth = health;
         cost = mana;
-        attacksLeft = 0;
+        AttacksLeft = 0;
     }
 
     public override Card Clone()
@@ -71,8 +71,8 @@ abstract class Minion : Card, IDamagable
         m.cost = cost;
         m.maxHealth = maxHealth;
         m.curHealth = curHealth;
-        m.curAttack = curAttack;
-        m.AttacksLeft = attacksLeft;
+        m.Attack = Attack;
+        m.AttacksLeft = AttacksLeft;
 
         return m;
     }
@@ -101,15 +101,15 @@ abstract class Minion : Card, IDamagable
 
     public void AlterAttack(int alteration)
     {
-        if (curAttack + alteration <= 0)
+        if (Attack + alteration <= 0)
         {
-            curAttack = 0;
+            Attack = 0;
             return;
         }
-        curAttack += alteration;
+        Attack += alteration;
     }
 
-    public override BoardContainer Play(Board curBoard)
+    public override SubBoardContainer Play(Board curBoard)
     {
         if (!CanPlay(curBoard))
             return null;
@@ -123,12 +123,12 @@ abstract class Minion : Card, IDamagable
         ownerClone.Mana -= cost;
         ownerClone.StartSummon(m);
 
-        return new SingleBoardContainer(b, "play " + this);
+        return new SingleSubBoardContainer(new MasterBoardContainer(b), curBoard, "Play " + this);
     }
 
-    public virtual BoardContainer PerformAttack(Board curBoard)
+    public virtual SubBoardContainer PerformAttack(Board curBoard)
     {
-        if (attacksLeft <= 0)
+        if (AttacksLeft <= 0)
             return null;
 
         List<Board> results = new List<Board>();
@@ -152,7 +152,7 @@ abstract class Minion : Card, IDamagable
             clone.Attack(Att, Opp);
             results.Add(clone);
 
-            return new MultipleChoiceBoardContainer(results, this + " attacks");
+            return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
         }
 
         foreach (Minion m in opponent.onBoard)
@@ -168,25 +168,25 @@ abstract class Minion : Card, IDamagable
             results.Add(b);
         }
 
-        return new MultipleChoiceBoardContainer(results, this + " attacks");
+        return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
     }
 }
 
 abstract class Spell : Card
 {
-    protected Func<Board, BoardContainer> Cast;
+    protected Func<Board, SubBoardContainer> Cast;
 
     public Spell(int mana) : base(mana)
     {
 
     }
 
-    public void SetSpell(Func<Board, BoardContainer> effect)
+    public void SetSpell(Func<Board, SubBoardContainer> effect)
     {
         Cast = effect;
     }
 
-    public override BoardContainer Play(Board curBoard)
+    public override SubBoardContainer Play(Board curBoard)
     {
         if (!CanPlay(curBoard))
             return null;

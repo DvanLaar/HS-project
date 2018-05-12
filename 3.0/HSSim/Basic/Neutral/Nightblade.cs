@@ -9,7 +9,7 @@ class Nightblade : BattlecryMinion
             Board clone = b.Clone();
             Hero OppClone = owner.id != clone.me.id ? clone.me : clone.opp;
             OppClone.Health -= 3;
-            return new SingleBoardContainer(clone, "play Nightblade");
+            return new SingleSubBoardContainer(clone, b, "Play Nightblade");
         });
     }
 }

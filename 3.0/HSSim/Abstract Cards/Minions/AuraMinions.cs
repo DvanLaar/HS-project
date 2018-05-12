@@ -22,6 +22,19 @@ abstract class AuraMinion : Minion
         am.auraActive = auraActive;
         return am;
     }
+
+    public override int Health
+    {
+        get => curHealth; set
+        {
+            curHealth = value;
+            if (curHealth <= 0)
+            {
+                owner.onBoard.Remove(this);
+                RemoveAura();
+            }
+        }
+    }
 }
 
 abstract class MinionAuraMinion : AuraMinion

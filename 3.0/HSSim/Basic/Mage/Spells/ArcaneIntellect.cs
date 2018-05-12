@@ -7,19 +7,9 @@ class ArcaneIntellect : Spell
     {
         SetSpell((b) =>
         {
-            List<(Board, int)> result = new List<(Board, int)>();
-            Board clone = b.Clone();
-            Hero me = owner.id == clone.me.id ? clone.me : clone.opp;
-            me.Mana -= cost;
-            foreach (Board brd in me.DrawCard(clone).boards)
-            {
-                Hero own = owner.id == brd.me.id ? brd.me : brd.opp;
-                BoardContainer bc = own.DrawCard(brd);
-                foreach (Board toAdd in bc.boards)
-                    result.Add((toAdd, 1));
-            }
-
-            return new MultipleBoardContainer(result, "play arcane intellect");
+            Board b2 = b.Clone();
+            (owner.id == b2.me.id ? b2.me : b2.opp).Mana -= cost;
+            return owner.DrawTwoCards(b2);
         });
     }
 }

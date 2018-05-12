@@ -46,7 +46,7 @@ class Mage : Hero
             me.HeroPowerUsed = true;
             results.Add(c);
 
-            return new MultipleChoiceBoardContainer(results, "Hero power used");
+            return new ChoiceSubBoardContainer(results, b, "Use Hero Power");
         };
     }
 }

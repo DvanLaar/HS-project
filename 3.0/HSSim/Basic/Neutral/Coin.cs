@@ -7,10 +7,10 @@ class Coin : Spell
         SetSpell((b) =>
         {
             Board clone = b.Clone();
-            Hero ownerClone = b.me.id == owner.id ? b.me : b.opp;
+            Hero ownerClone = b.me.id == owner.id ? clone.me : clone.opp;
             ownerClone.Mana -= cost;
             ownerClone.Mana += 1;
-            return new SingleBoardContainer(clone, "Play Coin");
+            return new SingleSubBoardContainer(clone, b, "Play The Coin");
         });
     }
 

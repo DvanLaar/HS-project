@@ -6,7 +6,7 @@ class NoviceEngineer : BattlecryMinion
     {
         SetBattlecry((b) =>
         {
-            return owner.DrawCard(b);
+            return owner.DrawOneCard(b);
         });
     }
 }

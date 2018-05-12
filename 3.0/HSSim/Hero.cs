@@ -5,20 +5,19 @@ using System.Collections.Specialized;
 abstract class Hero : IDamagable
 {
     public List<Card> hand;
-    public List<(Card, int)> deck;
+    public Dictionary<Card, int> deck;
     public List<Minion> onBoard;
-    private int health, attack, attacksLeft;
     protected int mana;
     public int maxMana;
     public bool id, HeroPowerUsed;
-    protected Func<Board, BoardContainer> HeroPower;
+    protected Func<Board, SubBoardContainer> HeroPower;
 
     public delegate void MinionHandler(Minion m);
     public event MinionHandler Summon;
 
-    public int Health { get => health; set => health = value; }
-    public int Attack { get => attack; set => attack = value; }
-    public int AttacksLeft { get => attacksLeft; set => attacksLeft = value; }
+    public int Health { get; set; }
+    public int Attack { get; set; }
+    public int AttacksLeft { get; set; }
     public int Mana { get => mana; set { if (value >= 10) mana = 10; mana = value; } }
     public double value { get
         {
@@ -27,8 +26,8 @@ abstract class Hero : IDamagable
     public int cardsInDeck { get
         {
             int res = 0;
-            foreach ((Card, int) ci in deck)
-                res += ci.Item2;
+            foreach (KeyValuePair<Card, int> ci in deck)
+                res += ci.Value;
             return res;
         } }
     public int minionValue{ get
@@ -50,10 +49,10 @@ abstract class Hero : IDamagable
     public Hero()
     {
         hand = new List<Card>();
-        deck = new List<(Card, int)>();
+        deck = new Dictionary<Card, int>();
         onBoard = new List<Minion>();
-        health = 30;
-        attack = 0;
+        Health = 30;
+        Attack = 0;
         mana = 0;
         maxMana = 0;
         HeroPowerUsed = false;
@@ -71,11 +70,9 @@ abstract class Hero : IDamagable
             copy.SetOwner(h);
             h.hand.Add(copy); //Clone
         }
-        foreach ((Card, int) kvp in deck)
+        foreach (KeyValuePair<Card, int> kvp in deck)
         {
-            Card copy = kvp.Item1.Clone();
-            copy.SetOwner(h);
-            h.deck.Add((copy, kvp.Item2)); //Clone
+            h.deck.Add(kvp.Key, kvp.Value);
         }
         foreach (Minion m in onBoard)
         {
@@ -103,7 +100,7 @@ abstract class Hero : IDamagable
         onBoard.Add(m);
     }
 
-    public BoardContainer PerformAttack(Board b)
+    public SubBoardContainer PerformAttack(Board b)
     {
         if (Attack <= 0)
             return null;
@@ -130,7 +127,7 @@ abstract class Hero : IDamagable
             c.Attack(Att, Def);
             results.Add(c);
 
-            return new MultipleChoiceBoardContainer(results, this + " attacks");
+            return new ChoiceSubBoardContainer(results, b, this + " attacks");
         }
         // At least one minion has taunt
         foreach (Minion m in opp.onBoard)
@@ -145,32 +142,55 @@ abstract class Hero : IDamagable
             results.Add(clone);
         }
 
-        return new MultipleChoiceBoardContainer(results, this + " attacks");
+        return new ChoiceSubBoardContainer(results, b, this + " attacks");
     }
 
-    public BoardContainer UseHeroPower(Board b)
+    public SubBoardContainer UseHeroPower(Board b)
     {
         return HeroPower.Invoke(b);
     }
 
-    public BoardContainer DrawCard(Board b)
+    public Board DrawCard(Board b, Card c)
+    {
+        Board clone = b.Clone();
+        Hero me = b.me.id == id ? clone.me : clone.opp;
+        me.deck[c]--;
+        if (me.deck[c] == 0)
+            me.deck.Remove(c);
+        Card cln = c.Clone();
+        me.hand.Add(cln);
+        cln.owner = me;
+        return clone;
+
+        //return new MultipleBoardContainer(result, this + " draws card");
+    }
+
+    public SubBoardContainer DrawOneCard(Board b)
     {
         List<(Board, int)> result = new List<(Board, int)>();
-        foreach((Card, int) kvp in deck)
+        foreach (KeyValuePair<Card, int> c in deck)
         {
-            Board clone = b.Clone();
-            Hero me = b.me.id == id ? clone.me : clone.opp;
-            (Card, int) kopie = me.deck[deck.IndexOf(kvp)];
-            int inDeck = kopie.Item2;
-            kopie = (kopie.Item1, kopie.Item2 - 1);
-            me.deck[deck.IndexOf(kvp)] = kopie;
-            if (kopie.Item2 == 0)
-                me.deck.Remove(kopie);
-            me.hand.Add(kopie.Item1);
-            result.Add((clone, kopie.Item2));
+            result.Add((DrawCard(b, c.Key), c.Value));
         }
+        return new RandomSubBoardContainer(result, b, "Draw One Card");
+    }
 
-        return new MultipleBoardContainer(result, this + " draws card");
+    public SubBoardContainer DrawTwoCards(Board b)
+    {
+        List<(Board, int)> result = new List<(Board, int)>();
+        List<Card> seen = new List<Card>();
+        foreach (KeyValuePair<Card, int> c in deck)
+        {
+            Board drawOne = DrawCard(b, c.Key);
+            foreach (KeyValuePair<Card, int> c2 in (drawOne.me.id == id ? drawOne.me : drawOne.opp).deck)
+            {
+                if (seen.Contains(c2.Key))
+                    continue;
+                result.Add((DrawCard(drawOne, c2.Key), c.Key == c2.Key ? 1 : c.Value * c2.Value));
+            }
+            seen.Add(c.Key);
+        }
+        return new RandomSubBoardContainer(result, b, "Draw Two Cards");
     }
 
 }

@@ -15,7 +15,7 @@ class ArcaneExplosion : Spell
             {
                 Opp.onBoard[i].Health--;
             }
-            return new SingleBoardContainer(clone, "Play Arcane Explosion");
+            return new SingleSubBoardContainer(clone, b, "Play Arcane Explosion");
         });
     }
 }
