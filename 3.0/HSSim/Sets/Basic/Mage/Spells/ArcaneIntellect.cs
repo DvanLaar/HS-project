@@ -8,7 +8,6 @@ class ArcaneIntellect : Spell
         SetSpell((b) =>
         {
             Board b2 = b.Clone();
-            (owner.id == b2.me.id ? b2.me : b2.opp).Mana -= cost;
             return owner.DrawTwoCards(b2);
         });
     }

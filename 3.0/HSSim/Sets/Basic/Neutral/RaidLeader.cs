@@ -1,6 +1,6 @@
 ﻿using System;
 
-class RaidLeader : MinionAuraMinion
+class RaidLeader : FriendlyMinionAuraMinion
 {
     public RaidLeader() : base(3, 2, 2)
     {
@@ -36,5 +36,12 @@ class RaidLeader : MinionAuraMinion
         if (m == this)
             return;
         m.AlterAttack(1);
+    }
+
+    protected override void AuraInvert(Minion m)
+    {
+        if (m == this)
+            return;
+        m.AlterAttack(-1);
     }
 }

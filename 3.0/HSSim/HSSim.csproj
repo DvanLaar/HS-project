@@ -37,27 +37,39 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract Cards\Minions\BattlecryMinions.cs" />
-    <Compile Include="Abstract Cards\Spells.cs" />
-    <Compile Include="Algorithm.cs" />
-    <Compile Include="Basic\Mage\Spells\ArcaneExplosion.cs" />
-    <Compile Include="Basic\Mage\Spells\ArcaneIntellect.cs" />
-    <Compile Include="Basic\Mage\Spells\ArcaneMissiles.cs" />
-    <Compile Include="Basic\Mage\Spells\Fireball.cs" />
-    <Compile Include="Basic\Mage\Spells\Polymorph.cs" />
-    <Compile Include="Basic\Neutral\BloodfenRaptor.cs" />
-    <Compile Include="Basic\Neutral\BoulderfistOgre.cs" />
-    <Compile Include="Basic\Neutral\Coin.cs" />
-    <Compile Include="Basic\Neutral\CoreHound.cs" />
-    <Compile Include="Basic\Neutral\MurlocRaider.cs" />
-    <Compile Include="Basic\Neutral\Nightblade.cs" />
-    <Compile Include="Basic\Neutral\NoviceEngineer.cs" />
-    <Compile Include="Basic\Neutral\OasisSnapjaw.cs" />
-    <Compile Include="Basic\Neutral\RaidLeader.cs" />
-    <Compile Include="Basic\Neutral\RiverCrocolisk.cs" />
-    <Compile Include="Basic\Neutral\Sen%27jinShieldmasta.cs" />
-    <Compile Include="Basic\Neutral\Sheep.cs" />
-    <Compile Include="Basic\Neutral\StormwindChampion.cs" />
-    <Compile Include="Basic\Neutral\Wolfrider.cs" />
+    <Compile Include="Classes\Hunter.cs" />
+    <Compile Include="Decks\Hunter\BasicHunter.cs" />
+    <Compile Include="Sets\Basic\Hunter\Minions\Houndmaster.cs" />
+    <Compile Include="Sets\Basic\Hunter\Minions\TimberWolf.cs" />
+    <Compile Include="Sets\Basic\Hunter\Spells\ArcaneShot.cs" />
+    <Compile Include="Sets\Basic\Hunter\Spells\MultiShot.cs" />
+    <Compile Include="Sets\Basic\Hunter\Spells\Tracking.cs" />
+    <Compile Include="Sets\Basic\Mage\Spells\ArcaneExplosion.cs" />
+    <Compile Include="Sets\Basic\Mage\Spells\ArcaneIntellect.cs" />
+    <Compile Include="Sets\Basic\Mage\Spells\ArcaneMissiles.cs" />
+    <Compile Include="Sets\Basic\Mage\Spells\Flamestrike.cs" />
+    <Compile Include="Sets\Basic\Mage\Spells\Fireball.cs" />
+    <Compile Include="Sets\Basic\Mage\Spells\Polymorph.cs" />
+    <Compile Include="Sets\Basic\Neutral\BloodfenRaptor.cs" />
+    <Compile Include="Sets\Basic\Neutral\Boar.cs" />
+    <Compile Include="Sets\Basic\Neutral\BoulderfistOgre.cs" />
+    <Compile Include="Sets\Basic\Neutral\IronforgeRifleman.cs" />
+    <Compile Include="Sets\Basic\Neutral\RazorfenHunter.cs" />
+    <Compile Include="Sets\Basic\Neutral\SilverbackPatriarch.cs" />
+    <Compile Include="Sets\Basic\Neutral\StonetuskBoar.cs" />
+    <Compile Include="Sets\Basic\Neutral\Coin.cs" />
+    <Compile Include="Sets\Basic\Neutral\CoreHound.cs" />
+    <Compile Include="Sets\Basic\Neutral\MurlocRaider.cs" />
+    <Compile Include="Sets\Basic\Neutral\Nightblade.cs" />
+    <Compile Include="Sets\Basic\Neutral\NoviceEngineer.cs" />
+    <Compile Include="Sets\Basic\Neutral\OasisSnapjaw.cs" />
+    <Compile Include="Sets\Basic\Neutral\RaidLeader.cs" />
+    <Compile Include="Sets\Basic\Neutral\RiverCrocolisk.cs" />
+    <Compile Include="Sets\Basic\Neutral\Sen%27jinShieldmasta.cs" />
+    <Compile Include="Sets\Basic\Neutral\Sheep.cs" />
+    <Compile Include="Sets\Basic\Neutral\StormpikeCommando.cs" />
+    <Compile Include="Sets\Basic\Neutral\StormwindChampion.cs" />
+    <Compile Include="Sets\Basic\Neutral\Wolfrider.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="Abstract Cards\Cards.cs" />
     <Compile Include="BoardContainers.cs" />
@@ -69,9 +81,12 @@
     <Compile Include="Abstract Cards\Minions\AuraMinions.cs" />
     <Compile Include="MinHeap.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Sets\Basic\Paladin\Minions\SilverHandRecruit.cs" />
+    <Compile Include="Sets\Un%27Goro\Paladin\Spells\LostInTheJungle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

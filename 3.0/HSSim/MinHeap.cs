@@ -4,10 +4,12 @@ class MinHeap
 {
     MasterBoardContainer[] items;
     int size;
+    bool min;
 
-    public MinHeap(int maxSize)
+    public MinHeap(int maxSize, bool min)
     {
         items = new MasterBoardContainer[maxSize];
+        this.min = min;
     }
 
     int parent(int index)
@@ -39,11 +41,11 @@ class MinHeap
         int l = left(index);
         int r = right(index);
         int smallest = index;
-        if (l < size && items[l].value.CompareTo(items[smallest].value) > 0)
+        if (l < size && (min ? items[l].value.CompareTo(items[smallest].value) < 0 : items[l].value.CompareTo(items[smallest].value) > 0))
         {
             smallest = l;
         }
-        if (r < size && items[r].value.CompareTo(items[smallest].value) > 0)
+        if (r < size && (min ? items[r].value.CompareTo(items[smallest].value) < 0 : items[r].value.CompareTo(items[smallest].value) > 0))
         {
             smallest = r;
         }
@@ -69,7 +71,7 @@ class MinHeap
     public void Decrease(int index, MasterBoardContainer item)
     {
         set(index, item);
-        while (index > 0 && items[parent(index)].value.CompareTo(item.value) < 0)
+        while (index > 0 && (min ? items[parent(index)].value.CompareTo(item.value) > 0 : items[parent(index)].value.CompareTo(item.value) < 0))
         {
             swap(index, parent(index));
             index = parent(index);

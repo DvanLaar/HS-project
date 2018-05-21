@@ -45,6 +45,7 @@ abstract class MinionAuraMinion : AuraMinion
     }
 
     protected abstract void Aura(Minion m);
+    protected abstract void AuraInvert(Minion m);
     public override void SetOwner(Hero newOwner)
     {
         if (auraActive)
@@ -52,5 +53,29 @@ abstract class MinionAuraMinion : AuraMinion
             newOwner.Summon += Aura;
         }
         base.SetOwner(newOwner);
+    }
+}
+
+abstract class FriendlyMinionAuraMinion : MinionAuraMinion
+{
+    public FriendlyMinionAuraMinion(int mana, int attack, int health) : base(mana, attack, health)
+    {
+
+    }
+
+    public override void AddAura()
+    {
+        base.AddAura();
+        foreach (Minion m in owner.onBoard)
+            Aura(m);
+        owner.Summon += Aura;
+    }
+
+    public override void RemoveAura()
+    {
+        base.RemoveAura();
+        foreach (Minion m in owner.onBoard)
+            AuraInvert(m);
+        owner.Summon -= Aura;
     }
 }

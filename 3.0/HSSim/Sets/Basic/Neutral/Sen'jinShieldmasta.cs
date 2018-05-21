@@ -6,4 +6,9 @@ class SenjinShieldmasta : Minion
     {
         Taunt = true;
     }
+
+    public override string ToString()
+    {
+        return "Sen'jin Shieldmasta";
+    }
 }
