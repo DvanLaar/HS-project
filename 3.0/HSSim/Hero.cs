@@ -5,21 +5,21 @@ using System.Collections.Specialized;
 abstract class Hero : IDamagable
 {
     public List<Card> hand;
-    public List<(Card, int)> deck;
+    public Dictionary<Card, int> deck;
+    public abstract Dictionary<Card, int> DeckList { get; set; }
     public List<Minion> onBoard;
-    private int health, attack, attacksLeft;
     protected int mana;
     public int maxMana;
     public bool id, HeroPowerUsed;
-    protected Func<Board, BoardContainer> HeroPower;
+    protected Func<Board, SubBoardContainer> HeroPower;
 
     public delegate void MinionHandler(Minion m);
     public event MinionHandler Summon;
 
-    public int Health { get => health; set => health = value; }
-    public int Attack { get => attack; set => attack = value; }
-    public int AttacksLeft { get => attacksLeft; set => attacksLeft = value; }
-    public int Mana { get => mana; set { if (value >= 10) mana = 10; mana = value; } }
+    public int Health { get; set; }
+    public int Attack { get; set; }
+    public int AttacksLeft { get; set; }
+    public int Mana { get => mana; set { if (value >= 10) mana = 10; else mana = value; } }
     public double value { get
         {
             return 2 * Math.Sqrt(Health) + (hand.Count > 3 ? (hand.Count - 3) * 2 + 9 : hand.Count * 3) + Math.Sqrt(cardsInDeck) + minionValue ;
@@ -27,8 +27,8 @@ abstract class Hero : IDamagable
     public int cardsInDeck { get
         {
             int res = 0;
-            foreach ((Card, int) ci in deck)
-                res += ci.Item2;
+            foreach (KeyValuePair<Card, int> ci in deck)
+                res += ci.Value;
             return res;
         } }
     public int minionValue{ get
@@ -42,18 +42,25 @@ abstract class Hero : IDamagable
         }
     }
 
-    public Hero(bool id) : this()
+    public Hero(bool id, bool nw) : this()
     {
         this.id = id;
+        if (nw)
+        {
+            foreach (KeyValuePair<Card, int> kvp in DeckList)
+            {
+                deck.Add(kvp.Key, kvp.Value);
+            }
+        }
     }
 
     public Hero()
     {
         hand = new List<Card>();
-        deck = new List<(Card, int)>();
+        deck = new Dictionary<Card, int>();
         onBoard = new List<Minion>();
-        health = 30;
-        attack = 0;
+        Health = 30;
+        Attack = 0;
         mana = 0;
         maxMana = 0;
         HeroPowerUsed = false;
@@ -71,11 +78,9 @@ abstract class Hero : IDamagable
             copy.SetOwner(h);
             h.hand.Add(copy); //Clone
         }
-        foreach ((Card, int) kvp in deck)
+        foreach (KeyValuePair<Card, int> kvp in deck)
         {
-            Card copy = kvp.Item1.Clone();
-            copy.SetOwner(h);
-            h.deck.Add((copy, kvp.Item2)); //Clone
+            h.deck.Add(kvp.Key, kvp.Value);
         }
         foreach (Minion m in onBoard)
         {
@@ -103,7 +108,7 @@ abstract class Hero : IDamagable
         onBoard.Add(m);
     }
 
-    public BoardContainer PerformAttack(Board b)
+    public SubBoardContainer PerformAttack(Board b)
     {
         if (Attack <= 0)
             return null;
@@ -130,7 +135,7 @@ abstract class Hero : IDamagable
             c.Attack(Att, Def);
             results.Add(c);
 
-            return new MultipleChoiceBoardContainer(results, this + " attacks");
+            return new ChoiceSubBoardContainer(results, b, this + " attacks");
         }
         // At least one minion has taunt
         foreach (Minion m in opp.onBoard)
@@ -145,32 +150,98 @@ abstract class Hero : IDamagable
             results.Add(clone);
         }
 
-        return new MultipleChoiceBoardContainer(results, this + " attacks");
+        return new ChoiceSubBoardContainer(results, b, this + " attacks");
     }
 
-    public BoardContainer UseHeroPower(Board b)
+    public SubBoardContainer UseHeroPower(Board b)
     {
         return HeroPower.Invoke(b);
     }
 
-    public BoardContainer DrawCard(Board b)
+    public MasterBoardContainer DrawCard(Board b, Card c)
     {
-        List<(Board, int)> result = new List<(Board, int)>();
-        foreach((Card, int) kvp in deck)
-        {
-            Board clone = b.Clone();
-            Hero me = b.me.id == id ? clone.me : clone.opp;
-            (Card, int) kopie = me.deck[deck.IndexOf(kvp)];
-            int inDeck = kopie.Item2;
-            kopie = (kopie.Item1, kopie.Item2 - 1);
-            me.deck[deck.IndexOf(kvp)] = kopie;
-            if (kopie.Item2 == 0)
-                me.deck.Remove(kopie);
-            me.hand.Add(kopie.Item1);
-            result.Add((clone, kopie.Item2));
-        }
+        Board clone = b.Clone();
+        Hero me = b.me.id == id ? clone.me : clone.opp;
+        me.deck[c]--;
+        if (me.deck[c] == 0)
+            me.deck.Remove(c);
+        Card cln = c.Clone();
+        me.hand.Add(cln);
+        cln.owner = me;
+        return new MasterBoardContainer(clone) { action = cln + "" } ;
 
-        return new MultipleBoardContainer(result, this + " draws card");
+        //return new MultipleBoardContainer(result, this + " draws card");
     }
 
+    public SubBoardContainer DrawOneCard(Board b)
+    {
+        List<(MasterBoardContainer, int)> result = new List<(MasterBoardContainer, int)>();
+        foreach (KeyValuePair<Card, int> c in deck)
+        {
+            result.Add((DrawCard(b, c.Key), c.Value));
+        }
+        return new RandomSubBoardContainer(result, b, "Draw One Card");
+    }
+
+    public SubBoardContainer DrawTwoCards(Board b)
+    {
+        List<(MasterBoardContainer, int)> result = new List<(MasterBoardContainer, int)>();
+        List<Card> seen = new List<Card>();
+        foreach (KeyValuePair<Card, int> c in deck)
+        {
+            MasterBoardContainer drawOne = DrawCard(b, c.Key);
+            foreach (KeyValuePair<Card, int> c2 in (drawOne.board.me.id == id ? drawOne.board.me : drawOne.board.opp).deck)
+            {
+                if (seen.Contains(c2.Key))
+                    continue;
+                MasterBoardContainer mbc = DrawCard(drawOne.board, c2.Key);
+                mbc.action = c.Key + " + " + c2.Key;
+                result.Add((mbc, c.Key == c2.Key ? 1 : c.Value * c2.Value));
+            }
+            seen.Add(c.Key);
+        }
+        return new RandomSubBoardContainer(result, b, "Draw Two Cards");
+    }
+
+    public SubBoardContainer DrawThreeCards(Board b)
+    {
+        List<(MasterBoardContainer, int)> result = new List<(MasterBoardContainer, int)>();
+        List<Card> seen = new List<Card>();
+        foreach (KeyValuePair<Card, int> c in deck)
+        {
+            List<Card> seen2 = new List<Card>();
+            MasterBoardContainer drawOne = DrawCard(b, c.Key);
+            foreach (KeyValuePair<Card, int> c2 in (drawOne.board.me.id == id ? drawOne.board.me : drawOne.board.opp).deck)
+            {
+                if (seen.Contains(c2.Key))
+                    continue;
+                MasterBoardContainer drawTwo = DrawCard(drawOne.board, c2.Key);
+                foreach (KeyValuePair<Card, int> c3 in (drawTwo.board.me.id == id ? drawTwo.board.me : drawTwo.board.opp).deck)
+                {
+                    if (seen2.Contains(c3.Key) || seen.Contains(c3.Key))
+                        continue;
+                    MasterBoardContainer mbc = DrawCard(drawTwo.board, c3.Key);
+                    mbc.action = "Draw " + c + " + " + c2 + " + " + c3;
+                    result.Add((mbc, c.Value * c2.Value * c3.Value));
+                }
+                seen2.Add(c2.Key);
+            }
+            seen.Add(c.Key);
+        }
+        return new RandomSubBoardContainer(result, b, "Draw Three Cards");
+    }
+
+
+
+    public void EndTurn()
+    {
+        
+    }
+
+    public SubBoardContainer StartTurn(Board b)
+    {
+        maxMana++;
+        mana = maxMana;
+        return DrawOneCard(b);
+    }
 }

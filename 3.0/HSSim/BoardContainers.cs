@@ -1,86 +1,190 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-abstract class BoardContainer
+class MasterBoardContainer
 {
-    public abstract double value { get; }
-    public abstract List<Board> boards { get; }
-    public string play;
-    public bool useOwnValue = true;
-    public BoardContainer succ;
-}
+    private static readonly double winValue = 1000, loseValue = -1000;
+    public string action;
 
-class SingleBoardContainer : BoardContainer
-{
-    public SingleBoardContainer(Board b, string play)
+    public List<SubBoardContainer> children;
+    public bool expanded;
+    public double value { get { if (board.opp.Health <= 0) return winValue; if (board.me.Health <= 0) return loseValue; return expanded ? children[0].value : board.value; } }
+    public Board board;
+
+    public MasterBoardContainer(Board b)
     {
-        this.b = b;
-        this.play = play;
-        this.succ = null;
+        board = b;
+        expanded = false;
+        children = new List<SubBoardContainer>();
     }
 
-    public override double value => b.value;
-    public override List<Board> boards => new List<Board>() { b };
-    public Board b;
-}
-
-class MultipleBoardContainer : BoardContainer
-{
-    public override double value { get
-        {
-            int total = 0;
-            foreach ((BoardContainer, int) bi in list)
-                total += bi.Item2;
-
-            double result = 0;
-            foreach ((BoardContainer, int) bi in list)
-                result += bi.Item1.value * (((double)bi.Item2) / total);
-            return result;
-        } }
-    public override List<Board> boards { get
-        {
-            List<Board> res = new List<Board>();
-            foreach ((BoardContainer, int) bi in list)
-                res.AddRange(bi.Item1.boards);
-            return res;
-        } }
-    public List<(BoardContainer, int)> list = new List<(BoardContainer, int)>();
-
-    public MultipleBoardContainer(List<(Board, int)> list, string play)
+    public void Expand()
     {
-        this.play = play;
-        this.list = new List<(BoardContainer, int)>();
-        foreach ((Board, int) bi in list)
+        expanded = true;
+        children = new List<SubBoardContainer>();
+        Hero currentPlayer = board.me.id == board.curr ? board.me : board.opp;
+
+        foreach (Card c in currentPlayer.hand)
         {
-            this.list.Add((new SingleBoardContainer(bi.Item1, ""), bi.Item2));
+            SubBoardContainer play = c.Play(board);
+            if (play != null)
+                children.Add(play);
         }
-        this.succ = null;
+        foreach (Minion m in currentPlayer.onBoard)
+        {
+            SubBoardContainer attack = m.PerformAttack(board);
+            if (attack != null)
+                children.Add(attack);
+        }
+        SubBoardContainer hattack = currentPlayer.PerformAttack(board);
+        if (hattack != null)
+            children.Add(hattack);
+
+        SubBoardContainer hp = currentPlayer.UseHeroPower(board);
+        if (hp != null)
+            children.Add(hp);
+
+
+        Board clone = board.Clone();
+        (clone.me.id == currentPlayer.id ? clone.me : clone.opp).EndTurn();
+        clone.curr = !clone.curr;
+        children.Add(new SingleSubBoardContainer(clone, board, "End turn"));
+    }
+
+    public void Sort()
+    {
+        if (!expanded)
+            return;
+        foreach (SubBoardContainer sbc in children)
+        {
+            foreach (MasterBoardContainer mbc in sbc.children)
+            {
+                mbc.Sort();
+            }
+            sbc.children.Sort((x, y) => board.curr ? y.value.CompareTo(x.value) : x.value.CompareTo(y.value));
+        }
+        children.Sort((x, y) => board.curr ? y.value.CompareTo(x.value) : x.value.CompareTo(y.value));
     }
 }
 
-class MultipleChoiceBoardContainer : BoardContainer
+abstract class SubBoardContainer
 {
-    List<BoardContainer> list = new List<BoardContainer>();
-    public override double value { get
-        {
-            double result = double.MinValue;
-            foreach (BoardContainer bi in list)
-                if (bi.value > result)
-                    result = bi.value;
-            return result;
-        } }
-    public override List<Board> boards { get
-        {
-            List<Board> lst = new List<Board>();
-            foreach (BoardContainer b in list)
-                lst.AddRange(b.boards);
-            return lst;
-        } }
+    public List<MasterBoardContainer> children;
+    public abstract double value { get; }
+    public Board parent;
+    public string action;
 
-    public MultipleChoiceBoardContainer(List<Board> list, string play)
+    public SubBoardContainer(Board parent, string action)
     {
-        this.play = play;
-        this.succ = null;
-        foreach (Board b in list)
-            this.list.Add(new SingleBoardContainer(b, ""));
+        this.action = action;
+        this.parent = parent;
     }
+}
+
+class SingleSubBoardContainer : SubBoardContainer
+{
+    public override double value => children[0].value;
+
+    public SingleSubBoardContainer(MasterBoardContainer b, Board parent, string action) : base(parent, action)
+    {
+        children = new List<MasterBoardContainer>() { b };
+    }
+
+    public SingleSubBoardContainer(Board b, Board parent, string action) : this(new MasterBoardContainer(b), parent, action)
+    {
+    }
+}
+
+class ChoiceSubBoardContainer : SubBoardContainer
+{
+    public override double value { get { double res = double.MinValue; foreach (MasterBoardContainer mbc in children) if (mbc.value > res) res = mbc.value; return res; } }
+
+    public ChoiceSubBoardContainer(List<Board> boards, Board parent, string action) : base(parent, action)
+    {
+        children = new List<MasterBoardContainer>();
+
+        foreach (Board b in boards)
+            children.Add(new MasterBoardContainer(b));
+    }
+
+    public ChoiceSubBoardContainer(List<MasterBoardContainer> mbcs, Board parent, string action) : base(parent, action)
+    {
+        children = mbcs;
+    }
+}
+
+class RandomSubBoardContainer : SubBoardContainer
+{
+    public List<int> occurences;
+
+    public override double value { get { double res = 0; int total = 0; foreach (int i in occurences) total += i; for (int i = 0; i < children.Count; i++) res += children[i].value * occurences[i] / total; return res; } }
+
+    public RandomSubBoardContainer(List<Board> boards, List<int> occurences, Board parent, string action) : base(parent, action)
+    {
+        children = new List<MasterBoardContainer>();
+        foreach (Board b in boards)
+            children.Add(new MasterBoardContainer(b));
+        this.occurences = occurences;
+    }
+
+    public RandomSubBoardContainer(List<(Board, int)> input, Board parent, string action) : base(parent, action)
+    {
+        children = new List<MasterBoardContainer>();
+        occurences = new List<int>();
+
+        foreach ((Board, int) kvp in input)
+        {
+            children.Add(new MasterBoardContainer(kvp.Item1));
+            occurences.Add(kvp.Item2);
+        }
+    }
+
+    public RandomSubBoardContainer(List<(MasterBoardContainer, int)> input, Board parent, string action) : base(parent, action)
+    {
+        children = new List<MasterBoardContainer>();
+        occurences = new List<int>();
+
+        foreach ((MasterBoardContainer, int) kvp in input)
+        {
+            children.Add(kvp.Item1);
+            occurences.Add(kvp.Item2);
+        }
+    }
+
+}
+
+class UnknownSubBoardContainer : SubBoardContainer
+{
+    readonly List<SubBoardContainer> options;
+
+    public UnknownSubBoardContainer(List<SubBoardContainer> options, Board parent, string action) : base(parent, action)
+    {
+        this.options = options;
+        children = new List<MasterBoardContainer>();
+        foreach (SubBoardContainer sbc in options)
+            foreach (MasterBoardContainer mbc in sbc.children)
+            {
+                mbc.action = sbc.action + " " + mbc.action;
+                children.Add(mbc);
+            }
+    }
+
+    public override double value { get { double res = double.MinValue; foreach (SubBoardContainer sbc in options) if (sbc.value > res) res = sbc.value; return res; } }
+}
+
+class RandomChoiceSubBoardContainer : SubBoardContainer
+{
+    public List<(List<MasterBoardContainer>, int, string)> options;
+
+    public RandomChoiceSubBoardContainer(List<(List<MasterBoardContainer>, int, string)> input, Board parent, string action) : base(parent, action)
+    {
+        children = new List<MasterBoardContainer>();
+        options = input;
+        foreach ((List<MasterBoardContainer>, int, string) results in input)
+            foreach (MasterBoardContainer mbc in results.Item1)
+                children.Add(mbc);
+
+    }
+
+    public override double value { get { double res = 0; foreach ((List<MasterBoardContainer>, int, string) kvp in options) { double mbcValue = double.MinValue; foreach (MasterBoardContainer mbc in kvp.Item1) if (mbc.value > mbcValue) mbcValue = mbc.value; res += mbcValue * kvp.Item2; } return res; } }
 }

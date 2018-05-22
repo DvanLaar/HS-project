@@ -4,10 +4,13 @@ using System.Collections.Generic;
 class Board
 {
     public Hero me, opp;
-    public Hero curr;
+    public bool curr;
     public double value { get
         {
-            return me.value - opp.value;
+            //if (curr)
+                return me.value - opp.value;
+            //else
+            //    return opp.value - me.value;
         } }
 
     public Board Clone()
@@ -15,7 +18,7 @@ class Board
         Board b = new Board();
         b.me = me.Clone();
         b.opp = opp.Clone();
-        b.curr = me.id == curr.id ? b.me : b.opp;
+        b.curr = curr;
 
         return b;
     }
@@ -38,16 +41,4 @@ class Board
     {
 
     }
-
-    public void EndTurn()
-    {
-        if (curr == me)
-            curr = opp;
-        else
-            curr = me;
-
-        curr.maxMana += 1;
-        curr.Mana = curr.maxMana;
-    }
-
 }
