@@ -21,6 +21,7 @@ class MasterBoardContainer
     public void Expand()
     {
         expanded = true;
+        children = new List<SubBoardContainer>();
         Hero currentPlayer = board.me.id == board.curr ? board.me : board.opp;
 
         foreach (Card c in currentPlayer.hand)

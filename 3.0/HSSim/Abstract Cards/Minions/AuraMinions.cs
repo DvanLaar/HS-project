@@ -35,6 +35,12 @@ abstract class AuraMinion : Minion
             }
         }
     }
+
+    public override void SetOwner(Hero owner)
+    {
+        base.SetOwner(owner);
+        owner.Summon += (m) => { if (m == this) AddAura(); };
+    }
 }
 
 abstract class MinionAuraMinion : AuraMinion

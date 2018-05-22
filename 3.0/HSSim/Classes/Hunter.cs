@@ -24,6 +24,7 @@ class Hunter : Hero
             Board cln = b.Clone();
             (cln.me.id == id ? cln.opp : cln.me).Health -= 2;
             (cln.me.id == id ? cln.me : cln.opp).Mana -= 2;
+            (cln.me.id == id ? cln.me : cln.opp).HeroPowerUsed = true;
             return new SingleSubBoardContainer(cln, b, "Use Hero Power");
         };
     }

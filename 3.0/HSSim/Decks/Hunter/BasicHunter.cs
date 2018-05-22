@@ -21,4 +21,14 @@ class BasicHunter : Hunter
         {new StormpikeCommando(), 2 },
         {new CoreHound(), 2 }
     };
+
+    public BasicHunter() : base()
+    {
+
+    }
+
+    public BasicHunter(bool id, bool nw) : base(id, nw)
+    {
+
+    }
 }

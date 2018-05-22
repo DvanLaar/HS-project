@@ -6,7 +6,7 @@ class Program
 {
     static void Main()
     {
-        Hero me = new BasicMage(true, true);
+        Hero me = new BasicHunter(true, true);
 
         Hero opp = new BasicHunter();
         opp.id = false;
@@ -180,6 +180,9 @@ class Program
                     int thisIndex = int.Parse(Console.ReadLine());
                     first = RCSBC.options[thisIndex].Item1[0];
                     Console.Clear();
+                    Console.WriteLine(RCSBC.options[thisIndex].Item1[0].action);
+                    Console.ReadKey();
+                    Console.Clear();
                     continue;
                 }
                 else
@@ -200,6 +203,11 @@ class Program
                 int resIndex = int.Parse(Console.ReadLine());
                 SubBoardContainer sbc = first.children[resIndex];
                 Console.Clear();
+                if (sbc.children.Count == 1)
+                {
+                    first = sbc.children[0];
+                    continue;
+                }
                 Console.WriteLine("What was the result?");
                 for (int i = 0; i < sbc.children.Count; i++)
                 {
