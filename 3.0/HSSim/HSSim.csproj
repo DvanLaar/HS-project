@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract Cards\Minions\BattlecryMinions.cs" />
+    <Compile Include="Classes\Warrior.cs" />
     <Compile Include="Classes\Hunter.cs" />
     <Compile Include="Decks\Hunter\BasicHunter.cs" />
     <Compile Include="Sets\Basic\Hunter\Minions\Houndmaster.cs" />

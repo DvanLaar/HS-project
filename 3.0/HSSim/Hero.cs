@@ -17,6 +17,7 @@ abstract class Hero : IDamagable
     public event MinionHandler Summon;
 
     public int Health { get; set; }
+    public int Armor { get; set; }
     public int Attack { get; set; }
     public int AttacksLeft { get; set; }
     public int Mana { get => mana; set { if (value >= 10) mana = 10; else mana = value; } }
@@ -151,6 +152,20 @@ abstract class Hero : IDamagable
         }
 
         return new ChoiceSubBoardContainer(results, b, this + " attacks");
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (amount > Armor)
+        {
+            int newAmount = amount - Armor;
+            Armor = 0;
+            Health -= amount;
+        }
+        else
+        {
+            Armor -= amount;
+        }
     }
 
     public SubBoardContainer UseHeroPower(Board b)
