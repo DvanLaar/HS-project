@@ -13,6 +13,8 @@ abstract class Hero : IDamagable
     public bool id, HeroPowerUsed;
     protected Func<Board, SubBoardContainer> HeroPower;
 
+    public List<Func<Board, SubBoardContainer>> EndTurnFuncs;
+
     public delegate void MinionHandler(Minion m);
     public event MinionHandler Summon;
 
@@ -21,6 +23,7 @@ abstract class Hero : IDamagable
     public int Attack { get; set; }
     public int AttacksLeft { get; set; }
     public int Mana { get => mana; set { if (value >= 10) mana = 10; else mana = value; } }
+    public int SpellDamage { get; set; }
     public double value { get
         {
             return 2 * Math.Sqrt(Health) + (hand.Count > 3 ? (hand.Count - 3) * 2 + 9 : hand.Count * 3) + Math.Sqrt(cardsInDeck) + minionValue ;
@@ -60,8 +63,11 @@ abstract class Hero : IDamagable
         hand = new List<Card>();
         deck = new Dictionary<Card, int>();
         onBoard = new List<Minion>();
+        EndTurnFuncs = new List<Func<Board, SubBoardContainer>>();
         Health = 30;
         Attack = 0;
+        Armor = 0;
+        SpellDamage = 0;
         mana = 0;
         maxMana = 0;
         HeroPowerUsed = false;
@@ -97,6 +103,7 @@ abstract class Hero : IDamagable
         h.Summon = Summon; //Correct?
         h.id = id;
         h.HeroPowerUsed = HeroPowerUsed;
+        h.SpellDamage = SpellDamage;
 
         return h;
     }
@@ -248,9 +255,13 @@ abstract class Hero : IDamagable
 
 
 
-    public void EndTurn()
+    public void EndTurn(Board mbc)
     {
-        
+        for (int i = EndTurnFuncs.Count - 1; i >= 0; i-- )
+        {
+            mbc.toPerform.Push(EndTurnFuncs[i]);
+        }
+        //mbc.children = new RandomSubBoardContainer(boards, mbc.board, )
     }
 
     public SubBoardContainer StartTurn(Board b)

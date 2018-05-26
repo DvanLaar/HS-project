@@ -11,6 +11,8 @@ class MasterBoardContainer
     public double value { get { if (board.opp.Health <= 0) return winValue; if (board.me.Health <= 0) return loseValue; return expanded ? children[0].value : board.value; } }
     public Board board;
 
+    
+
     public MasterBoardContainer(Board b)
     {
         board = b;
@@ -20,8 +22,21 @@ class MasterBoardContainer
 
     public void Expand()
     {
+        if (expanded)
+            return;
+
         expanded = true;
         children = new List<SubBoardContainer>();
+
+        if (board.toPerform.Count > 0)
+        {
+            Func<Board, SubBoardContainer> action = board.toPerform.Pop();
+            Board cln = board.Clone();
+            SubBoardContainer sbc = action(cln);
+            children.Add(sbc);
+            return;
+        }
+
         Hero currentPlayer = board.me.id == board.curr ? board.me : board.opp;
 
         foreach (Card c in currentPlayer.hand)
@@ -46,7 +61,7 @@ class MasterBoardContainer
 
 
         Board clone = board.Clone();
-        (clone.me.id == currentPlayer.id ? clone.me : clone.opp).EndTurn();
+        (clone.me.id == currentPlayer.id ? clone.me : clone.opp).EndTurn(board);
         clone.curr = !clone.curr;
         children.Add(new SingleSubBoardContainer(clone, board, "End turn"));
     }

@@ -37,6 +37,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract Cards\Minions\BattlecryMinions.cs" />
+    <Compile Include="Abstract Cards\Minions\EndOfTurnMinions.cs" />
+    <Compile Include="Classes\Shaman.cs" />
     <Compile Include="Classes\Warrior.cs" />
     <Compile Include="Classes\Hunter.cs" />
     <Compile Include="Decks\Hunter\BasicHunter.cs" />
@@ -83,6 +85,10 @@
     <Compile Include="MinHeap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Sets\Basic\Paladin\Minions\SilverHandRecruit.cs" />
+    <Compile Include="Sets\Basic\Shaman\Minions\HealingTotem.cs" />
+    <Compile Include="Sets\Basic\Shaman\Minions\SearingTotem.cs" />
+    <Compile Include="Sets\Basic\Shaman\Minions\StoneclawTotem.cs" />
+    <Compile Include="Sets\Basic\Shaman\Minions\WrathOfAirTotem.cs" />
     <Compile Include="Sets\Un%27Goro\Paladin\Spells\LostInTheJungle.cs" />
   </ItemGroup>
   <ItemGroup>

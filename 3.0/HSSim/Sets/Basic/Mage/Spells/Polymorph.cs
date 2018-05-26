@@ -16,6 +16,7 @@ class Polymorph : Spell
                 Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
                 Minion sheep = new Sheep();
                 sheep.SetOwner(opp);
+                opp.onBoard[opponent.onBoard.IndexOf(m)].StartTransform();
                 opp.onBoard[opponent.onBoard.IndexOf(m)] = sheep;
                 result.Add(new MasterBoardContainer(clone) { action = "Transform " + m });
             }

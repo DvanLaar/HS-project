@@ -6,11 +6,11 @@ class Warrior : Hero
 
     public Warrior() : base()
     {
-
+        SetHeropower();
     }
     public Warrior(bool id, bool nw) : base(id, nw)
     {
-
+        SetHeropower();
     }
 
     private void SetHeropower()
