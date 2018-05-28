@@ -12,11 +12,16 @@ abstract class Hero : IDamagable
     public int maxMana;
     public bool id, HeroPowerUsed;
     protected Func<Board, SubBoardContainer> HeroPower;
+    public Weapon CurrentWeapon;
 
     public List<Func<Board, SubBoardContainer>> EndTurnFuncs;
+    public List<int> SingleEndTurnFuncs;
 
     public delegate void MinionHandler(Minion m);
     public event MinionHandler Summon;
+
+    public delegate void WeaponHandler(Weapon w);
+    public event WeaponHandler DestroyWeapon;
 
     public int Health { get; set; }
     public int Armor { get; set; }
@@ -64,6 +69,7 @@ abstract class Hero : IDamagable
         deck = new Dictionary<Card, int>();
         onBoard = new List<Minion>();
         EndTurnFuncs = new List<Func<Board, SubBoardContainer>>();
+        SingleEndTurnFuncs = new List<int>();
         Health = 30;
         Attack = 0;
         Armor = 0;
@@ -114,6 +120,12 @@ abstract class Hero : IDamagable
         if (m.charge)
           m.AttacksLeft = m.maxAttacks;
         onBoard.Add(m);
+    }
+
+    public void StartDestroyWeapon(Weapon w)
+    {
+        DestroyWeapon?.Invoke(w);
+        CurrentWeapon = null;
     }
 
     public SubBoardContainer PerformAttack(Board b)
@@ -257,10 +269,16 @@ abstract class Hero : IDamagable
 
     public void EndTurn(Board mbc)
     {
-        for (int i = EndTurnFuncs.Count - 1; i >= 0; i-- )
+        for (int i = EndTurnFuncs.Count - 1; i >= 0; i--)
         {
             mbc.toPerform.Push(EndTurnFuncs[i]);
         }
+        for (int i = SingleEndTurnFuncs.Count - 1; i >= 0; i--)
+        {
+            EndTurnFuncs.RemoveAt(SingleEndTurnFuncs[i]);
+        }
+        SingleEndTurnFuncs = new List<int>();
+
         //mbc.children = new RandomSubBoardContainer(boards, mbc.board, )
     }
 

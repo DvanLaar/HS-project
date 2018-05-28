@@ -260,7 +260,6 @@ abstract class Spell : Card
 
     public override SubBoardContainer Play(Board curBoard)
     {
-        bool debug2 = owner.hand.Contains(this);
         if (!CanPlay(curBoard))
             return null;
 
@@ -270,6 +269,29 @@ abstract class Spell : Card
         own.Mana -= cost;
 
         return Cast.Invoke(clone);
+    }
+}
+
+abstract class Weapon : Card
+{
+    public int Attack { get; set; }
+    public int Durability { get => durability; set { if (value == 0) owner.StartDestroyWeapon(this); durability = value; } }
+    int durability;
+
+    public Weapon(int mana, int attack, int durability) : base(mana)
+    {
+
+    }
+
+    public override SubBoardContainer Play(Board curBoard)
+    {
+        Board clone = curBoard.Clone();
+        Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
+        if (me.CurrentWeapon != null)
+            me.StartDestroyWeapon(me.CurrentWeapon);
+        Weapon w = (Weapon)me.hand[owner.hand.IndexOf(this)];
+        me.CurrentWeapon = w;
+        return new SingleSubBoardContainer(clone, curBoard, "Play " + this);
     }
 }
 
