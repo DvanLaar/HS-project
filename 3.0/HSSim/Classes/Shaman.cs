@@ -30,6 +30,7 @@ class Shaman : Hero
                 m.SetOwner(own);
                 if (own.onBoard.TrueForAll((comp) => comp.GetType() != m.GetType()))
                 {
+                    own.Mana -= 2;
                     own.StartSummon(m);
                     result.Add((new MasterBoardContainer(clone) { action = "Summon " + m }, 1));
                 }
