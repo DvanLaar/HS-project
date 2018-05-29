@@ -130,7 +130,9 @@ abstract class Hero : IDamagable
 
     public void EquipWeapon(Weapon w)
     {
-
+        if (CurrentWeapon != null)
+            StartDestroyWeapon(CurrentWeapon);
+        CurrentWeapon = w;
     }
 
     public SubBoardContainer PerformAttack(Board b)

@@ -1,18 +1,8 @@
 ﻿using System.Collections.Generic;
 
-class Rogue : Hero
+class Warlock : Hero
 {
     public override Dictionary<Card, int> DeckList { get => new Dictionary<Card, int>(); set { } }
-
-    public Rogue() : base()
-    {
-        SetHeroPower();
-    }
-
-    public Rogue(bool id, bool nw) : base(id, nw)
-    {
-        SetHeroPower();
-    }
 
     private void SetHeroPower()
     {
@@ -24,8 +14,10 @@ class Rogue : Hero
             Board clone = b.Clone();
             Hero me = id == clone.me.id ? clone.me : clone.opp;
             me.Mana -= 2;
-            me.EquipWeapon(new WickedKnife());
-            return new SingleSubBoardContainer(clone, b, "Use Hero Power");
+            SubBoardContainer sbc = me.DrawOneCard(clone);
+            foreach (MasterBoardContainer mbc in sbc.children)
+                (mbc.board.me.id == id ? mbc.board.me : mbc.board.opp).Health -= 2;
+            return sbc;
         });
     }
 }

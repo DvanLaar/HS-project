@@ -6,7 +6,7 @@ class ArcaneShot : Spell
     {
         SetSpell((b) =>
         {
-            return DealDamage(2, b);
+            return DealDamage(2 + owner.SpellDamage, b);
         });
     }
 }

@@ -39,9 +39,11 @@
     <Compile Include="Abstract Cards\Minions\BattlecryMinions.cs" />
     <Compile Include="Abstract Cards\Minions\EndOfTurnMinions.cs" />
     <Compile Include="Classes\Druid.cs" />
+    <Compile Include="Classes\Paladin.cs" />
     <Compile Include="Classes\Priest.cs" />
     <Compile Include="Classes\Rogue.cs" />
     <Compile Include="Classes\Shaman.cs" />
+    <Compile Include="Classes\Warlock.cs" />
     <Compile Include="Classes\Warrior.cs" />
     <Compile Include="Classes\Hunter.cs" />
     <Compile Include="Decks\Hunter\BasicHunter.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="MinHeap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Sets\Basic\Paladin\Minions\SilverHandRecruit.cs" />
+    <Compile Include="Sets\Basic\Rogue\Weapons\WickedKnife.cs" />
     <Compile Include="Sets\Basic\Shaman\Minions\HealingTotem.cs" />
     <Compile Include="Sets\Basic\Shaman\Minions\SearingTotem.cs" />
     <Compile Include="Sets\Basic\Shaman\Minions\StoneclawTotem.cs" />
