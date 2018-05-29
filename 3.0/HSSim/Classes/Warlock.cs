@@ -4,6 +4,16 @@ class Warlock : Hero
 {
     public override Dictionary<Card, int> DeckList { get => new Dictionary<Card, int>(); set { } }
 
+    public Warlock() : base()
+    {
+        SetHeroPower();
+    }
+
+    public Warlock(bool id, bool nw) : base(id, nw)
+    {
+        SetHeroPower();
+    }
+
     private void SetHeroPower()
     {
         HeroPower = ((b) =>
