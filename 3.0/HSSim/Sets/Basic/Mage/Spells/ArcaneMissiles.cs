@@ -9,7 +9,7 @@ class ArcaneMissiles : Spell
         {
             List<(MasterBoardContainer, int)> temp = new List<(MasterBoardContainer, int)>();
             (MasterBoardContainer, int)[] result = new(MasterBoardContainer, int)[1] { (new MasterBoardContainer(b), 1) };
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < (3 + owner.SpellDamage); i++)
             {
                 foreach((MasterBoardContainer, int) brd in result)
                 {

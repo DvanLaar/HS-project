@@ -12,7 +12,7 @@ class ArcaneExplosion : Spell
             Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
             for (int i = 0; i < Opp.onBoard.Count; i++)
             {
-                Opp.onBoard[i].Health--;
+                Opp.onBoard[i].Health -= (1 + owner.SpellDamage);
             }
             return new SingleSubBoardContainer(clone, b, "Play Arcane Explosion");
         });
