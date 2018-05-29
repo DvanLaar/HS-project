@@ -287,10 +287,13 @@ abstract class Weapon : Card
     {
         Board clone = curBoard.Clone();
         Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
+
         if (me.CurrentWeapon != null)
             me.StartDestroyWeapon(me.CurrentWeapon);
         Weapon w = (Weapon)me.hand[owner.hand.IndexOf(this)];
         me.CurrentWeapon = w;
+        me.hand.Remove(w);
+        me.Mana -= cost;
         return new SingleSubBoardContainer(clone, curBoard, "Play " + this);
     }
 }

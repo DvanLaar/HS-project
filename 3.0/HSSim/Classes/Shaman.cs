@@ -6,12 +6,12 @@ class Shaman : Hero
 
     public Shaman() : base()
     {
-
+        SetHeroPower();
     }
 
     public Shaman(bool id, bool nw) : base(id, nw)
     {
-
+        SetHeroPower();
     }
 
     private void SetHeroPower()

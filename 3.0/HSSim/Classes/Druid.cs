@@ -7,12 +7,12 @@ class Druid : Hero
 
     public Druid() : base()
     {
-
+        SetHeroPower();
     }
 
     public Druid(bool id, bool nw) : base(id, nw)
     {
-
+        SetHeroPower();
     }
 
     private void SetHeroPower()

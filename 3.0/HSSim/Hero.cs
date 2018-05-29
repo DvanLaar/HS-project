@@ -128,6 +128,11 @@ abstract class Hero : IDamagable
         CurrentWeapon = null;
     }
 
+    public void EquipWeapon(Weapon w)
+    {
+
+    }
+
     public SubBoardContainer PerformAttack(Board b)
     {
         if (Attack <= 0)
@@ -264,8 +269,6 @@ abstract class Hero : IDamagable
         }
         return new RandomSubBoardContainer(result, b, "Draw Three Cards");
     }
-
-
 
     public void EndTurn(Board mbc)
     {

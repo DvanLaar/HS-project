@@ -40,6 +40,7 @@
     <Compile Include="Abstract Cards\Minions\EndOfTurnMinions.cs" />
     <Compile Include="Classes\Druid.cs" />
     <Compile Include="Classes\Priest.cs" />
+    <Compile Include="Classes\Rogue.cs" />
     <Compile Include="Classes\Shaman.cs" />
     <Compile Include="Classes\Warrior.cs" />
     <Compile Include="Classes\Hunter.cs" />
