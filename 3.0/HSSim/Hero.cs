@@ -12,14 +12,23 @@ abstract class Hero : IDamagable
     public int maxMana;
     public bool id, HeroPowerUsed;
     protected Func<Board, SubBoardContainer> HeroPower;
+    public Weapon CurrentWeapon;
+
+    public List<Func<Board, SubBoardContainer>> EndTurnFuncs;
+    public List<int> SingleEndTurnFuncs;
 
     public delegate void MinionHandler(Minion m);
     public event MinionHandler Summon;
 
+    public delegate void WeaponHandler(Weapon w);
+    public event WeaponHandler DestroyWeapon;
+
     public int Health { get; set; }
+    public int Armor { get; set; }
     public int Attack { get; set; }
     public int AttacksLeft { get; set; }
     public int Mana { get => mana; set { if (value >= 10) mana = 10; else mana = value; } }
+    public int SpellDamage { get; set; }
     public double value { get
         {
             return 2 * Math.Sqrt(Health) + (hand.Count > 3 ? (hand.Count - 3) * 2 + 9 : hand.Count * 3) + Math.Sqrt(cardsInDeck) + minionValue ;
@@ -59,8 +68,12 @@ abstract class Hero : IDamagable
         hand = new List<Card>();
         deck = new Dictionary<Card, int>();
         onBoard = new List<Minion>();
+        EndTurnFuncs = new List<Func<Board, SubBoardContainer>>();
+        SingleEndTurnFuncs = new List<int>();
         Health = 30;
         Attack = 0;
+        Armor = 0;
+        SpellDamage = 0;
         mana = 0;
         maxMana = 0;
         HeroPowerUsed = false;
@@ -96,6 +109,7 @@ abstract class Hero : IDamagable
         h.Summon = Summon; //Correct?
         h.id = id;
         h.HeroPowerUsed = HeroPowerUsed;
+        h.SpellDamage = SpellDamage;
 
         return h;
     }
@@ -106,6 +120,19 @@ abstract class Hero : IDamagable
         if (m.charge)
           m.AttacksLeft = m.maxAttacks;
         onBoard.Add(m);
+    }
+
+    public void StartDestroyWeapon(Weapon w)
+    {
+        DestroyWeapon?.Invoke(w);
+        CurrentWeapon = null;
+    }
+
+    public void EquipWeapon(Weapon w)
+    {
+        if (CurrentWeapon != null)
+            StartDestroyWeapon(CurrentWeapon);
+        CurrentWeapon = w;
     }
 
     public SubBoardContainer PerformAttack(Board b)
@@ -151,6 +178,20 @@ abstract class Hero : IDamagable
         }
 
         return new ChoiceSubBoardContainer(results, b, this + " attacks");
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (amount > Armor)
+        {
+            int newAmount = amount - Armor;
+            Armor = 0;
+            Health -= amount;
+        }
+        else
+        {
+            Armor -= amount;
+        }
     }
 
     public SubBoardContainer UseHeroPower(Board b)
@@ -231,11 +272,19 @@ abstract class Hero : IDamagable
         return new RandomSubBoardContainer(result, b, "Draw Three Cards");
     }
 
-
-
-    public void EndTurn()
+    public void EndTurn(Board mbc)
     {
-        
+        for (int i = EndTurnFuncs.Count - 1; i >= 0; i--)
+        {
+            mbc.toPerform.Push(EndTurnFuncs[i]);
+        }
+        for (int i = SingleEndTurnFuncs.Count - 1; i >= 0; i--)
+        {
+            EndTurnFuncs.RemoveAt(SingleEndTurnFuncs[i]);
+        }
+        SingleEndTurnFuncs = new List<int>();
+
+        //mbc.children = new RandomSubBoardContainer(boards, mbc.board, )
     }
 
     public SubBoardContainer StartTurn(Board b)

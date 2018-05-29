@@ -5,6 +5,8 @@ class Board
 {
     public Hero me, opp;
     public bool curr;
+    public Stack<Func<Board, SubBoardContainer>> toPerform;
+
     public double value { get
         {
             //if (curr)
@@ -19,6 +21,7 @@ class Board
         b.me = me.Clone();
         b.opp = opp.Clone();
         b.curr = curr;
+        b.toPerform = new Stack<Func<Board, SubBoardContainer>>(toPerform.ToArray());
 
         return b;
     }
@@ -35,10 +38,11 @@ class Board
     {
         this.me = me;
         this.opp = opp;
+        toPerform = new Stack<Func<Board, SubBoardContainer>>();
     }
 
     public Board()
     {
-
+        toPerform = new Stack<Func<Board, SubBoardContainer>>();
     }
 }

@@ -7,7 +7,7 @@ class Fireball : Spell
     {
         SetSpell((b) =>
         {
-            return DealDamage(6, b);
+            return DealDamage(6 + owner.SpellDamage, b);
         });
     }
 }

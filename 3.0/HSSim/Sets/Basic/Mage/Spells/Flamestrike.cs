@@ -10,7 +10,7 @@ class Flamestrike : Spell
             Hero opp = cln.me.id == owner.id ? cln.opp : cln.me;
             foreach (Minion m in opp.onBoard)
             {
-                m.ReduceHealth(4);
+                m.ReduceHealth(4 + owner.SpellDamage);
             }
             return new SingleSubBoardContainer(cln, b, "Play Flamestrike");
         });

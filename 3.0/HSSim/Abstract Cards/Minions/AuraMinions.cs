@@ -6,6 +6,7 @@ abstract class AuraMinion : Minion
     public AuraMinion(int mana, int attack, int health) : base(mana, attack, health)
     {
         auraActive = false;
+        Transform += RemoveAura;
     }
 
     public virtual void AddAura()
