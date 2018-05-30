@@ -90,10 +90,11 @@ abstract class Minion : Card, IDamagable
 {
     int baseAttack, baseHealth, maxHealth;
     protected int curHealth;
-    public bool Taunt = false, charge = false, windfury = false, megaWindfury = false;
+    public bool Taunt = false, windfury = false, megaWindfury = false, cantAttackHeroes = false;
     public int maxAttacks { get { if (megaWindfury) return 4; if (windfury) return 2; return 1; } }
 
     public bool Beast = false, Totem = false;
+    private bool charge;
 
     public delegate void EmptyHandler();
     public event EmptyHandler Transform;
@@ -113,6 +114,7 @@ abstract class Minion : Card, IDamagable
     }
     public int Attack { get; set; }
     public int AttacksLeft { get; set; }
+    public bool Charge { get => charge; set { if (value) if (charge) charge = value; else { charge = value; AttacksLeft = maxAttacks; } else charge = value; } }
 
     public Minion(int mana, int attack, int health) : base(mana)
     {
@@ -218,11 +220,14 @@ abstract class Minion : Card, IDamagable
                 results.Add(new MasterBoardContainer(b) { action = "Attacks " + Defender });
             }
 
-            Board clone = curBoard.Clone();
-            Hero Opp = clone.me.id == opponent.id ? clone.me : clone.opp;
-            Minion Att = clone.me.id == owner.id ? clone.me.onBoard[myIndex] : clone.opp.onBoard[myIndex];
-            clone.Attack(Att, Opp);
-            results.Add(new MasterBoardContainer(clone) { action = "Attacks Face" });
+            if (!cantAttackHeroes)
+            {
+                Board clone = curBoard.Clone();
+                Hero Opp = clone.me.id == opponent.id ? clone.me : clone.opp;
+                Minion Att = clone.me.id == owner.id ? clone.me.onBoard[myIndex] : clone.opp.onBoard[myIndex];
+                clone.Attack(Att, Opp);
+                results.Add(new MasterBoardContainer(clone) { action = "Attacks Face" });
+            }
 
             return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
         }
@@ -276,6 +281,8 @@ abstract class Weapon : Card
 {
     public int Attack { get; set; }
     public int Durability { get => durability; set { if (value == 0) owner.StartDestroyWeapon(this); durability = value; } }
+    public bool Active { get => _active; set { if (_active == value) return; if (value) owner.Attack += Attack; else owner.Attack -= Attack; _active = value; } }
+    private bool _active;
     int durability;
 
     public Weapon(int mana, int attack, int durability) : base(mana)
@@ -287,13 +294,15 @@ abstract class Weapon : Card
     {
         Board clone = curBoard.Clone();
         Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
-
+        
         if (me.CurrentWeapon != null)
             me.StartDestroyWeapon(me.CurrentWeapon);
         Weapon w = (Weapon)me.hand[owner.hand.IndexOf(this)];
         me.CurrentWeapon = w;
         me.hand.Remove(w);
         me.Mana -= cost;
+        Active = me.id == clone.curr;
+
         return new SingleSubBoardContainer(clone, curBoard, "Play " + this);
     }
 }

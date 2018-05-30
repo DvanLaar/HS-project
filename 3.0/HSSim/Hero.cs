@@ -117,7 +117,7 @@ abstract class Hero : IDamagable
     public void StartSummon(Minion m)
     {
         Summon?.Invoke(m);
-        if (m.charge)
+        if (m.Charge)
           m.AttacksLeft = m.maxAttacks;
         onBoard.Add(m);
     }
@@ -283,6 +283,8 @@ abstract class Hero : IDamagable
             EndTurnFuncs.RemoveAt(SingleEndTurnFuncs[i]);
         }
         SingleEndTurnFuncs = new List<int>();
+        if (CurrentWeapon != null)
+            CurrentWeapon.Active = false;
 
         //mbc.children = new RandomSubBoardContainer(boards, mbc.board, )
     }
@@ -291,6 +293,8 @@ abstract class Hero : IDamagable
     {
         maxMana++;
         mana = maxMana;
+        if (CurrentWeapon != null)
+            CurrentWeapon.Active = true;
         return DrawOneCard(b);
     }
 }
