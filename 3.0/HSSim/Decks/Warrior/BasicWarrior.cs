@@ -10,7 +10,7 @@ class BasicWarrior : Warrior
         { new Execute(), 2 },
         { new FrostwolfGrunt(), 2 },
         { new HeroicStrike(), 2 },
-        { new MurlocRaider(), 2 },
+        { new MurlocTidehunter(), 2 },
         { new FieryWarAxe(), 2 },
         { new RazorfenHunter(), 2 },
         { new WarsongCommander(), 2 },

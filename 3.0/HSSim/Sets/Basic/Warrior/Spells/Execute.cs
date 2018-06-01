@@ -25,4 +25,9 @@ class Execute : Spell
             return new ChoiceSubBoardContainer(result, b, "Play " + this);
         });
     }
+
+    public override bool CanPlay(Board b)
+    {
+        return base.CanPlay(b) && !(b.me.id == owner.id ? b.opp : b.me).onBoard.TrueForAll((m) => !m.Damaged);
+    }
 }

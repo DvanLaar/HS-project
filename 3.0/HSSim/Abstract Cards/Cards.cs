@@ -117,7 +117,7 @@ abstract class Minion : Card, IDamagable
     public int Attack { get; set; }
     public int AttacksLeft { get; set; }
     public bool Charge { get => charge; set { if (value) if (charge) charge = value; else { charge = value; AttacksLeft = maxAttacks; } else charge = value; } }
-    public bool Damaged { get => Health == maxHealth; }
+    public bool Damaged { get => Health != maxHealth; }
 
     public Minion(int mana, int attack, int health) : base(mana)
     {
@@ -296,7 +296,9 @@ abstract class Weapon : Card
 
     public Weapon(int mana, int attack, int durability) : base(mana)
     {
-
+        Attack = attack;
+        Durability = durability;
+        Active = false;
     }
 
     public override SubBoardContainer Play(Board curBoard)

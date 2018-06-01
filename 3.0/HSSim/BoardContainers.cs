@@ -25,6 +25,11 @@ class MasterBoardContainer
         if (expanded)
             return;
 
+        if (value > 999 || value < -999)
+        {
+            expanded = true;
+            return;
+        }
         expanded = true;
         children = new List<SubBoardContainer>();
 

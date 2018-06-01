@@ -137,10 +137,10 @@ abstract class Hero : IDamagable
 
     public SubBoardContainer PerformAttack(Board b)
     {
-        if (Attack <= 0)
+        if (Attack <= 0 || AttacksLeft <= 0)
             return null;
 
-        List<Board> results = new List<Board>();
+        List<MasterBoardContainer> results = new List<MasterBoardContainer>();
 
         Hero me = b.me.id == id ? b.me : b.opp;
         Hero opp = b.me.id == id ? b.opp : b.me;
@@ -153,14 +153,16 @@ abstract class Hero : IDamagable
                 Hero Attacker = clone.me.id == id ? clone.me : clone.opp;
                 Minion Defender = clone.me.id == opp.id ? clone.me.onBoard[opp.onBoard.IndexOf(m)] : clone.opp.onBoard[opp.onBoard.IndexOf(m)];
                 clone.Attack(Attacker, Defender);
-                results.Add(clone);
+                Attacker.AttacksLeft--;
+                results.Add(new MasterBoardContainer(clone) { action = "Attacks " + m });
             }
 
             Board c = b.Clone();
             Hero Att = c.me.id == id ? c.me : c.opp;
             Hero Def = c.me.id == opp.id ? c.me : c.opp;
             c.Attack(Att, Def);
-            results.Add(c);
+            Att.AttacksLeft--;
+            results.Add(new MasterBoardContainer(c) { action = "Attacks Face" });
 
             return new ChoiceSubBoardContainer(results, b, this + " attacks");
         }
@@ -174,7 +176,8 @@ abstract class Hero : IDamagable
             Hero Attacker = clone.me.id == id ? clone.me : clone.opp;
             Minion Defender = clone.me.id == opp.id ? clone.me.onBoard[opp.onBoard.IndexOf(m)] : clone.opp.onBoard[opp.onBoard.IndexOf(m)];
             clone.Attack(Attacker, Defender);
-            results.Add(clone);
+            results.Add(new MasterBoardContainer(clone) { action = "Attacks " + m });
+     
         }
 
         return new ChoiceSubBoardContainer(results, b, this + " attacks");
@@ -293,6 +296,7 @@ abstract class Hero : IDamagable
     {
         maxMana++;
         mana = maxMana;
+        AttacksLeft = 1;
         if (CurrentWeapon != null)
             CurrentWeapon.Active = true;
         return DrawOneCard(b);
