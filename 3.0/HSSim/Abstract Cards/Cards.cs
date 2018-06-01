@@ -93,28 +93,31 @@ abstract class Minion : Card, IDamagable
     public bool Taunt = false, windfury = false, megaWindfury = false, cantAttackHeroes = false;
     public int maxAttacks { get { if (megaWindfury) return 4; if (windfury) return 2; return 1; } }
 
-    public bool Beast = false, Totem = false;
+    public bool Beast = false, Totem = false, Mech = false, Murloc = false;
     private bool charge;
 
     public delegate void EmptyHandler();
     public event EmptyHandler Transform;
     public event EmptyHandler Destroy;
+    public event EmptyHandler OnDamaged;
 
     public virtual int Health
     {
         get => curHealth; set
         {
+            if (value < curHealth)
+                OnDamaged?.Invoke();
             curHealth = value;
             if (curHealth <= 0)
             {
-                Destroy?.Invoke();
-                owner.onBoard.Remove(this);
+                StartDestroy();
             }
         }
     }
     public int Attack { get; set; }
     public int AttacksLeft { get; set; }
     public bool Charge { get => charge; set { if (value) if (charge) charge = value; else { charge = value; AttacksLeft = maxAttacks; } else charge = value; } }
+    public bool Damaged { get => Health == maxHealth; }
 
     public Minion(int mana, int attack, int health) : base(mana)
     {
@@ -154,6 +157,12 @@ abstract class Minion : Card, IDamagable
     public void StartTransform() //Maybe include target, perform transform too
     {
         Transform?.Invoke();
+    }
+
+    public void StartDestroy()
+    {
+        Destroy?.Invoke();
+        owner.onBoard.Remove(this);
     }
 
     public void AddHealth(int increase)
