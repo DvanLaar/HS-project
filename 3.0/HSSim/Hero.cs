@@ -112,6 +112,8 @@ abstract class Hero : IDamagable
         h.SpellDamage = SpellDamage;
         h.Armor = Armor;
         h.CurrentWeapon = CurrentWeapon == null ? null : (Weapon)CurrentWeapon.Clone();
+        if (h.CurrentWeapon != null)
+            h.CurrentWeapon.SetOwner(h);
 
         return h;
     }
@@ -301,6 +303,8 @@ abstract class Hero : IDamagable
         AttacksLeft = 1;
         if (CurrentWeapon != null)
             CurrentWeapon.Active = true;
+        foreach (Minion m in onBoard)
+            m.AttacksLeft = 1;
         return DrawOneCard(b);
     }
 }

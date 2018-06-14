@@ -331,7 +331,7 @@ abstract class Weapon : Card
     public override Card Clone()
     {
         Weapon w = (Weapon)base.Clone();
-        w.Active = Active;
+        w._active = _active;
         w.Attack = Attack;
         w.Durability = Durability;
         return w;

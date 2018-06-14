@@ -66,8 +66,9 @@ class MasterBoardContainer
 
 
         Board clone = board.Clone();
-        (clone.me.id == currentPlayer.id ? clone.me : clone.opp).EndTurn(board);
+        (clone.me.id == clone.curr ? clone.me : clone.opp).EndTurn(board);
         clone.curr = !clone.curr;
+        (clone.me.id == clone.curr ? clone.me : clone.opp).StartTurn(board);
         children.Add(new SingleSubBoardContainer(clone, board, "End turn"));
     }
 
