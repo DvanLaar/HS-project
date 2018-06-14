@@ -28,8 +28,8 @@ class Board
 
     public void Attack(IDamagable attacker, IDamagable defender)
     {
-        defender.Health -= attacker.Attack;
-        attacker.Health -= defender.Attack;
+        defender.TakeDamage(attacker.Attack);
+        attacker.TakeDamage(defender.Attack);
 
         attacker.AttacksLeft--;
     }

@@ -31,13 +31,13 @@ class ArcaneMissiles : Spell
         {
             Board clone = b.Clone();
             Hero Opp = clone.me.id == opponent.id ? clone.me : clone.opp;
-            Opp.onBoard[opponent.onBoard.IndexOf(m)].Health--;
+            Opp.onBoard[opponent.onBoard.IndexOf(m)].TakeDamage(1);
             result.Add((new MasterBoardContainer(clone) {action = prevAction + " Hit " + m}, 1));
         }
 
         Board cln = b.Clone();
         Hero guy = cln.me.id == opponent.id ? cln.me : cln.opp;
-        guy.Health--;
+        guy.TakeDamage(1);
         result.Add((new MasterBoardContainer(cln) { action = prevAction + " Hit Face" }, 1));
 
         return result.ToArray();

@@ -31,7 +31,7 @@ abstract class Hero : IDamagable
     public int SpellDamage { get; set; }
     public double value { get
         {
-            return 2 * Math.Sqrt(Health) + (hand.Count > 3 ? (hand.Count - 3) * 2 + 9 : hand.Count * 3) + Math.Sqrt(cardsInDeck) + minionValue ;
+            return 2 * Math.Sqrt(Health + Armor) + (hand.Count > 3 ? (hand.Count - 3) * 2 + 9 : hand.Count * 3) + Math.Sqrt(cardsInDeck) + minionValue ;
         } }
     public int cardsInDeck { get
         {
@@ -110,6 +110,8 @@ abstract class Hero : IDamagable
         h.id = id;
         h.HeroPowerUsed = HeroPowerUsed;
         h.SpellDamage = SpellDamage;
+        h.Armor = Armor;
+        h.CurrentWeapon = CurrentWeapon == null ? null : (Weapon)CurrentWeapon.Clone();
 
         return h;
     }
