@@ -50,6 +50,8 @@ class Program
             
         b.opp.hand.Add(new Coin { owner = b.opp });
 
+        b.me.StartTurn(b);
+
         MasterBoardContainer first = new MasterBoardContainer(b);
 
         while (true)
@@ -76,12 +78,12 @@ class Program
                 j++;
             }
 
-            b.me.maxMana += 1;
-            b.me.Mana = b.me.maxMana;
-            foreach (Minion m in b.me.onBoard)
-                m.AttacksLeft = m.maxAttacks;
-            b.me.AttacksLeft = 1;
-            b.me.HeroPowerUsed = false;
+            //b.me.maxMana += 1;
+            //b.me.Mana = b.me.maxMana;
+            //foreach (Minion m in b.me.onBoard)
+            //    m.AttacksLeft = m.maxAttacks;
+            //b.me.AttacksLeft = 1;
+            //b.me.HeroPowerUsed = false;
 
             bool running = true;
             Timer tmr = new Timer(20000);
@@ -99,6 +101,7 @@ class Program
                 MasterBoardContainer mbc = mh.MinimumExtract();
                 if (mbc.board.curr != me.id)
                 {
+                    mbc.board.me.EndTurn(mbc.board);
                     turnEnded.Add(mbc);
                     continue;
                 }
@@ -131,6 +134,7 @@ class Program
                 if (mbc.board.curr != opp.id)
                 {
                     //turnEnded.Add(mbc);
+                    mbc.board.opp.EndTurn(mbc.board);
                     continue;
                 }
                 mbc.Expand();

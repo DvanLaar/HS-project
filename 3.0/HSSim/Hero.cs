@@ -289,6 +289,9 @@ abstract class Hero : IDamagable
         {
             EndTurnFuncs.RemoveAt(SingleEndTurnFuncs[i]);
         }
+
+        if (EndTurnFuncs.Count > 0)
+            Console.Write("");
         SingleEndTurnFuncs = new List<int>();
         if (CurrentWeapon != null)
             CurrentWeapon.Active = false;

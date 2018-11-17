@@ -2,6 +2,7 @@
 
 class BasicWarrior : Warrior
 {
+    // AAECAQcADymdAb8BgQKhAtgCkQOLBPsEgAaRBtAH7wfxB5YNAA==
     public override Dictionary<Card, int> DeckList { get => deckList; set => deckList = value; }
     private Dictionary<Card, int> deckList = new Dictionary<Card, int>()
     {
