@@ -6,9 +6,9 @@ class Program
 {
     static void Main()
     {
-        Hero me = new BasicWarrior(true, true);
+        Hero me = new BasicHunter(true, true);
 
-        Hero opp = new BasicWarrior();
+        Hero opp = new BasicHunter();
         opp.id = false;
 
         Board b = new Board(me, opp);

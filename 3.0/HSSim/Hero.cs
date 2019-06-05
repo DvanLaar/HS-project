@@ -114,6 +114,14 @@ abstract class Hero : IDamagable
         h.CurrentWeapon = CurrentWeapon == null ? null : (Weapon)CurrentWeapon.Clone();
         if (h.CurrentWeapon != null)
             h.CurrentWeapon.SetOwner(h);
+        foreach (Func<Board, SubBoardContainer> effect in EndTurnFuncs)
+        {
+            h.EndTurnFuncs.Add(effect);
+        }
+        foreach (int effect in SingleEndTurnFuncs)
+        {
+            h.SingleEndTurnFuncs.Add(effect);
+        }
 
         return h;
     }
@@ -290,7 +298,7 @@ abstract class Hero : IDamagable
             EndTurnFuncs.RemoveAt(SingleEndTurnFuncs[i]);
         }
 
-        if (EndTurnFuncs.Count > 0)
+        if (mbc.toPerform.Count > 0)
             Console.Write("");
         SingleEndTurnFuncs = new List<int>();
         if (CurrentWeapon != null)
@@ -307,7 +315,7 @@ abstract class Hero : IDamagable
         if (CurrentWeapon != null)
             CurrentWeapon.Active = true;
         foreach (Minion m in onBoard)
-            m.AttacksLeft = 1;
+            m.AttacksLeft = m.maxAttacks;
         return DrawOneCard(b);
     }
 }

@@ -48,6 +48,7 @@
     <Compile Include="Classes\Hunter.cs" />
     <Compile Include="Decks\Hunter\BasicHunter.cs" />
     <Compile Include="Decks\Warrior\BasicWarrior.cs" />
+    <Compile Include="Enchantment.cs" />
     <Compile Include="Sets\Basic\Hunter\Minions\Houndmaster.cs" />
     <Compile Include="Sets\Basic\Hunter\Minions\TimberWolf.cs" />
     <Compile Include="Sets\Basic\Hunter\Spells\ArcaneShot.cs" />

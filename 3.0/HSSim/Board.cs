@@ -22,7 +22,6 @@ class Board
         b.opp = opp.Clone();
         b.curr = curr;
         b.toPerform = new Stack<Func<Board, SubBoardContainer>>(toPerform.ToArray());
-
         return b;
     }
 
