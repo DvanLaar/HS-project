@@ -50,6 +50,8 @@ class Program
             
         b.opp.hand.Add(new Coin { owner = b.opp });
 
+        b.me.StartTurn(b);
+
         MasterBoardContainer first = new MasterBoardContainer(b);
 
         while (true)
@@ -76,11 +78,12 @@ class Program
                 j++;
             }
 
-            b.me.maxMana += 1;
-            b.me.Mana = b.me.maxMana;
-            foreach (Minion m in b.me.onBoard)
-                m.AttacksLeft = m.maxAttacks;
-            b.me.HeroPowerUsed = false;
+            //b.me.maxMana += 1;
+            //b.me.Mana = b.me.maxMana;
+            //foreach (Minion m in b.me.onBoard)
+            //    m.AttacksLeft = m.maxAttacks;
+            //b.me.AttacksLeft = 1;
+            //b.me.HeroPowerUsed = false;
 
             bool running = true;
             Timer tmr = new Timer(20000);
@@ -98,6 +101,7 @@ class Program
                 MasterBoardContainer mbc = mh.MinimumExtract();
                 if (mbc.board.curr != me.id)
                 {
+                    mbc.board.me.EndTurn(mbc.board);
                     turnEnded.Add(mbc);
                     continue;
                 }
@@ -114,13 +118,7 @@ class Program
             MinHeap mhopp = new MinHeap(1000000, true);
             for (int i = 0; i < turnEnded.Count; i++)
             {
-                turnEnded[i].board.opp.maxMana += 1;
-                turnEnded[i].board.opp.Mana = turnEnded[i].board.opp.maxMana;
-                foreach (Minion m in turnEnded[i].board.opp.onBoard)
-                    m.AttacksLeft = m.maxAttacks;
-                foreach (Card c in turnEnded[i].board.opp.deck.Keys)
-                    turnEnded[i].board = turnEnded[i].board.opp.DrawCard(turnEnded[i].board, c).board;
-                turnEnded[i].board.opp.HeroPowerUsed = false;
+                turnEnded[i].board.opp.EndTurn(turnEnded[i].board);
                 if (i < 10)
                     mhopp.Insert(turnEnded[i]);
             }
@@ -136,6 +134,7 @@ class Program
                 if (mbc.board.curr != opp.id)
                 {
                     //turnEnded.Add(mbc);
+                    mbc.board.opp.EndTurn(mbc.board);
                     continue;
                 }
                 mbc.Expand();
@@ -153,6 +152,8 @@ class Program
             {
                 if (first.children.Count == 0)
                     first.Expand();
+                Console.WriteLine(first.board.opp.Health);
+                Console.WriteLine(first.board.opp.Armor);
                 SubBoardContainer sbc = first.children[0];
                 Console.WriteLine(sbc.action);
                 int resultingIndex = 0;
@@ -218,5 +219,5 @@ class Program
                 Console.Clear();
             }
         }
-     }
+    }
 }

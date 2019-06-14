@@ -28,7 +28,7 @@ class Mage : Hero
             {
                 Board clone = b.Clone();
                 Hero I = clone.me.id == id ? clone.me : clone.opp;
-                (clone.me.id == opponent.id ? clone.me : clone.opp).onBoard[opponent.onBoard.IndexOf(m)].Health--;
+                (clone.me.id == opponent.id ? clone.me : clone.opp).onBoard[opponent.onBoard.IndexOf(m)].TakeDamage(1);
                 I.Mana -= 2;
                 I.HeroPowerUsed = true;
                 results.Add(new MasterBoardContainer(clone) { action = "Ping " + m });
@@ -39,19 +39,19 @@ class Mage : Hero
                 Hero I = clone.me.id == id ? clone.me : clone.opp;
                 I.Mana -= 2;
                 I.HeroPowerUsed = true;
-                (clone.me.id == id ? clone.me : clone.opp).onBoard[onBoard.IndexOf(m)].Health--;
+                (clone.me.id == id ? clone.me : clone.opp).onBoard[onBoard.IndexOf(m)].TakeDamage(1);
                 results.Add(new MasterBoardContainer(clone) { action = "Ping " + m });
             }
 
             Board c = b.Clone();
-            (c.me.id == opponent.id ? c.me : c.opp).Health--;
+            (c.me.id == opponent.id ? c.me : c.opp).TakeDamage(1);
             Hero me = c.me.id == id ? c.me : c.opp;
             me.Mana -= 2;
             me.HeroPowerUsed = true;
             results.Add(new MasterBoardContainer(c) { action = "Ping Face" });
 
             c = b.Clone();
-            (c.me.id == id ? c.me : c.opp).Health--;
+            (c.me.id == id ? c.me : c.opp).TakeDamage(1);
             me = c.me.id == id ? c.me : c.opp;
             me.Mana -= 2;
             me.HeroPowerUsed = true;

@@ -47,6 +47,8 @@
     <Compile Include="Classes\Warrior.cs" />
     <Compile Include="Classes\Hunter.cs" />
     <Compile Include="Decks\Hunter\BasicHunter.cs" />
+    <Compile Include="Decks\Warrior\BasicWarrior.cs" />
+    <Compile Include="Enchantment.cs" />
     <Compile Include="Sets\Basic\Hunter\Minions\Houndmaster.cs" />
     <Compile Include="Sets\Basic\Hunter\Minions\TimberWolf.cs" />
     <Compile Include="Sets\Basic\Hunter\Spells\ArcaneShot.cs" />
@@ -61,7 +63,14 @@
     <Compile Include="Sets\Basic\Neutral\BloodfenRaptor.cs" />
     <Compile Include="Sets\Basic\Neutral\Boar.cs" />
     <Compile Include="Sets\Basic\Neutral\BoulderfistOgre.cs" />
+    <Compile Include="Sets\Basic\Neutral\DragonlingMechanic.cs" />
+    <Compile Include="Sets\Basic\Neutral\FrostwolfGrunt.cs" />
+    <Compile Include="Sets\Basic\Neutral\GurubashiBerserker.cs" />
     <Compile Include="Sets\Basic\Neutral\IronforgeRifleman.cs" />
+    <Compile Include="Sets\Basic\Neutral\LordoftheArena.cs" />
+    <Compile Include="Sets\Basic\Neutral\MechanicalDragonling.cs" />
+    <Compile Include="Sets\Basic\Neutral\MurlocScout.cs" />
+    <Compile Include="Sets\Basic\Neutral\MurlocTidehunter.cs" />
     <Compile Include="Sets\Basic\Neutral\RazorfenHunter.cs" />
     <Compile Include="Sets\Basic\Neutral\SilverbackPatriarch.cs" />
     <Compile Include="Sets\Basic\Neutral\StonetuskBoar.cs" />
@@ -95,6 +104,11 @@
     <Compile Include="Sets\Basic\Shaman\Minions\SearingTotem.cs" />
     <Compile Include="Sets\Basic\Shaman\Minions\StoneclawTotem.cs" />
     <Compile Include="Sets\Basic\Shaman\Minions\WrathOfAirTotem.cs" />
+    <Compile Include="Sets\Basic\Warrior\Minions\WarsongCommander.cs" />
+    <Compile Include="Sets\Basic\Warrior\Spells\Charge.cs" />
+    <Compile Include="Sets\Basic\Warrior\Spells\Execute.cs" />
+    <Compile Include="Sets\Basic\Warrior\Spells\HeroicStrike.cs" />
+    <Compile Include="Sets\Basic\Warrior\Weapons\FieryWarAxe.cs" />
     <Compile Include="Sets\Un%27Goro\Paladin\Spells\LostInTheJungle.cs" />
   </ItemGroup>
   <ItemGroup>

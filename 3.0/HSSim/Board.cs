@@ -22,14 +22,13 @@ class Board
         b.opp = opp.Clone();
         b.curr = curr;
         b.toPerform = new Stack<Func<Board, SubBoardContainer>>(toPerform.ToArray());
-
         return b;
     }
 
     public void Attack(IDamagable attacker, IDamagable defender)
     {
-        defender.Health -= attacker.Attack;
-        attacker.Health -= defender.Attack;
+        defender.TakeDamage(attacker.Attack);
+        attacker.TakeDamage(defender.Attack);
 
         attacker.AttacksLeft--;
     }

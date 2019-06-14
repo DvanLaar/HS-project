@@ -25,6 +25,11 @@ class MasterBoardContainer
         if (expanded)
             return;
 
+        if (value > 999 || value < -999)
+        {
+            expanded = true;
+            return;
+        }
         expanded = true;
         children = new List<SubBoardContainer>();
 
@@ -61,8 +66,9 @@ class MasterBoardContainer
 
 
         Board clone = board.Clone();
-        (clone.me.id == currentPlayer.id ? clone.me : clone.opp).EndTurn(board);
+        (clone.me.id == clone.curr ? clone.me : clone.opp).EndTurn(board);
         clone.curr = !clone.curr;
+        (clone.me.id == clone.curr ? clone.me : clone.opp).StartTurn(clone);
         children.Add(new SingleSubBoardContainer(clone, board, "End turn"));
     }
 

@@ -15,8 +15,8 @@ class MultiShot : Spell
                     Board cln = b.Clone();
                     Hero oppCln = cln.me.id == owner.id ? cln.opp : cln.me;
                     string targets = oppCln.onBoard[j] + " + " + oppCln.onBoard[i];
-                    oppCln.onBoard[j].Health -= (3 + owner.SpellDamage);
-                    oppCln.onBoard[i].Health -= (3 + owner.SpellDamage);
+                    oppCln.onBoard[j].TakeDamage(3 + owner.SpellDamage);
+                    oppCln.onBoard[i].TakeDamage(3 + owner.SpellDamage);
 
                     result.Add((new MasterBoardContainer(cln) { action = targets }, 1));
                 }

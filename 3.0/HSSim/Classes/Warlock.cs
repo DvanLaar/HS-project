@@ -26,7 +26,7 @@ class Warlock : Hero
             me.Mana -= 2;
             SubBoardContainer sbc = me.DrawOneCard(clone);
             foreach (MasterBoardContainer mbc in sbc.children)
-                (mbc.board.me.id == id ? mbc.board.me : mbc.board.opp).Health -= 2;
+                (mbc.board.me.id == id ? mbc.board.me : mbc.board.opp).TakeDamage(2);
             return sbc;
         });
     }

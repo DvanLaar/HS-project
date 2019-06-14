@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 class BasicMage : Mage
 {
+    // AAECAY0WAA9NvwHYAZwCoQK7Ar8DqwS0BPsEngXZCtoK+QqWDQA=
     public override Dictionary<Card, int> DeckList { get => deckList; set => deckList = value; }
     private Dictionary<Card, int> deckList = new Dictionary<Card, int>()
     {

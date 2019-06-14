@@ -2,6 +2,7 @@
 
 class BasicHunter : Hunter
 {
+    // AAECAR8AD0PYAYECpALTAp0D3gSIBe0G6weXCNkK2gr5CpcNAA==
     public override Dictionary<Card, int> DeckList { get => deckList; set => deckList = value; }
     private Dictionary<Card, int> deckList = new Dictionary<Card, int>()
     {
@@ -9,7 +10,7 @@ class BasicHunter : Hunter
         {new StonetuskBoar(), 2},
         {new TimberWolf(), 2 },
         {new Tracking(), 2 },
-        { new BloodfenRaptor(), 2 },
+        {new BloodfenRaptor(), 2 },
         {new RiverCrocolisk(), 2 },
         {new IronforgeRifleman(), 2 },
         {new RaidLeader(), 2 },
