@@ -14,15 +14,15 @@ class MinHeap
 
     int parent(int index)
     {
-        return (index + 1) / 2 - 1;
+        return ((index + 1) / 2) - 1;
     }
     int left(int index)
     {
-        return index * 2 + 1;
+        return (index * 2) + 1;
     }
     int right(int index)
     {
-        return index * 2 + 2;
+        return (index * 2) + 2;
     }
     void set(int index, MasterBoardContainer value)
     {

@@ -1,6 +1,4 @@
-﻿
-
-class TimberWolf : FriendlyMinionAuraMinion
+﻿class TimberWolf : FriendlyMinionAuraMinion
 {
     public TimberWolf() : base(1, 1, 1)
     {

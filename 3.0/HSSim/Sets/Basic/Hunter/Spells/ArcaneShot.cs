@@ -1,6 +1,4 @@
-﻿
-
-class ArcaneShot : Spell
+﻿class ArcaneShot : Spell
 {
     public ArcaneShot() : base(1)
     {

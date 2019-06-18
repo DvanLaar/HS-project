@@ -6,7 +6,6 @@ abstract class BattlecryMinion : Minion
 
     public BattlecryMinion(int mana, int attack, int health) : base(mana, attack, health)
     {
-
     }
 
     public void SetBattlecry(Func<Board, SubBoardContainer> bc)

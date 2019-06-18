@@ -31,7 +31,7 @@ abstract class Hero : IDamagable
     public int SpellDamage { get; set; }
     public double value { get
         {
-            return 2 * Math.Sqrt(Health + Armor) + (hand.Count > 3 ? (hand.Count - 3) * 2 + 9 : hand.Count * 3) + Math.Sqrt(cardsInDeck) + minionValue ;
+            return (2 * Math.Sqrt(Health + Armor)) + (hand.Count > 3 ? ((hand.Count - 3) * 2) + 9 : hand.Count * 3) + Math.Sqrt(cardsInDeck) + minionValue;
         } }
     public int cardsInDeck { get
         {
@@ -77,7 +77,6 @@ abstract class Hero : IDamagable
         mana = 0;
         maxMana = 0;
         HeroPowerUsed = false;
-
 
         //TEMP
     }
@@ -189,7 +188,6 @@ abstract class Hero : IDamagable
             Minion Defender = clone.me.id == opp.id ? clone.me.onBoard[opp.onBoard.IndexOf(m)] : clone.opp.onBoard[opp.onBoard.IndexOf(m)];
             clone.Attack(Attacker, Defender);
             results.Add(new MasterBoardContainer(clone) { action = "Attacks " + m });
-     
         }
 
         return new ChoiceSubBoardContainer(results, b, this + " attacks");
@@ -224,7 +222,7 @@ abstract class Hero : IDamagable
         Card cln = c.Clone();
         me.hand.Add(cln);
         cln.owner = me;
-        return new MasterBoardContainer(clone) { action = cln + "" } ;
+        return new MasterBoardContainer(clone) { action = cln + "" };
 
         //return new MultipleBoardContainer(result, this + " draws card");
     }

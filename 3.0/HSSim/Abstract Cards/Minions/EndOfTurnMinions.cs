@@ -1,6 +1,4 @@
-﻿
-
-abstract class EndOfTurnMinion : Minion
+﻿abstract class EndOfTurnMinion : Minion
 {
     public EndOfTurnMinion(int mana, int attack, int health) : base(mana, attack, health)
     {
@@ -24,5 +22,4 @@ abstract class EndOfTurnMinion : Minion
     {
         owner.EndTurnFuncs.Remove(EoTEffect);
     }
-
 }

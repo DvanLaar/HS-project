@@ -26,11 +26,9 @@ class BasicMage : Mage
 
     public BasicMage() : base()
     {
-
     }
 
     public BasicMage(bool id, bool nw) : base(id, nw)
     {
-
     }
 }

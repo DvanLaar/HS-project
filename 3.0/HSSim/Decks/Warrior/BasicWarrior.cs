@@ -25,11 +25,9 @@ class BasicWarrior : Warrior
 
     public BasicWarrior() : base()
     {
-
     }
 
     public BasicWarrior(bool id, bool nw) : base(id, nw)
     {
-
     }
 }
