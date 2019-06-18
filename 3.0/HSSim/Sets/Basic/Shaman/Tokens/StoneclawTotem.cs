@@ -1,6 +1,4 @@
-﻿
-
-class StoneclawTotem : Minion
+﻿class StoneclawTotem : Minion
 {
     public StoneclawTotem() : base(1, 0, 2)
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-class Coin : Spell
+﻿class Coin : Spell
 {
     public Coin() : base(0)
     {
@@ -13,5 +11,4 @@ class Coin : Spell
             return new SingleSubBoardContainer(clone, b, "Play The Coin");
         });
     }
-
 }

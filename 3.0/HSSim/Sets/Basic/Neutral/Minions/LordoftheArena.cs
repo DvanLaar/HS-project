@@ -1,6 +1,4 @@
-﻿
-
-class LordOfTheArena : Minion
+﻿class LordOfTheArena : Minion
 {
     public LordOfTheArena() : base(6, 6, 5)
     {

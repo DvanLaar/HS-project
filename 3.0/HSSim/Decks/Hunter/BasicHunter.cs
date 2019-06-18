@@ -25,11 +25,9 @@ class BasicHunter : Hunter
 
     public BasicHunter() : base()
     {
-
     }
 
     public BasicHunter(bool id, bool nw) : base(id, nw)
     {
-
     }
 }

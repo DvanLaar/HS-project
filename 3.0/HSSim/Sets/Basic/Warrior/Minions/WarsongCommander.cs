@@ -1,10 +1,7 @@
-﻿
-
-class WarsongCommander : MinionAuraMinion
+﻿class WarsongCommander : MinionAuraMinion
 {
     public WarsongCommander() : base(3, 2, 3)
     {
-
     }
 
     protected override void AuraInvert(Minion m)

@@ -1,6 +1,4 @@
-﻿
-
-class WrathOfAirTotem : Minion
+﻿class WrathOfAirTotem : Minion
 {
     public WrathOfAirTotem() : base(1, 0, 2)
     {

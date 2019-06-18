@@ -30,11 +30,10 @@ class Polymorph : Spell
                 Minion sheep = new Sheep();
                 sheep.SetOwner(me);
                 me.onBoard[owner.onBoard.IndexOf(m)] = sheep;
-                result.Add(new MasterBoardContainer(clone) { action = "Transform " + m }) ;
+                result.Add(new MasterBoardContainer(clone) { action = "Transform " + m });
             }
             return new ChoiceSubBoardContainer(result, b, "Play Polymorph");
         });
-
     }
     public override bool CanPlay(Board b)
     {

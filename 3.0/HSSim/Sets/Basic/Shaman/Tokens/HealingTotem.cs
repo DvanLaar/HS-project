@@ -1,6 +1,4 @@
-﻿
-
-class HealingTotem : EndOfTurnMinion
+﻿class HealingTotem : EndOfTurnMinion
 {
     public HealingTotem() : base(1, 0, 2)
     {

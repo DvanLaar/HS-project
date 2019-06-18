@@ -1,6 +1,4 @@
-﻿
-
-class IronforgeRifleman : BattlecryMinion
+﻿class IronforgeRifleman : BattlecryMinion
 {
     public IronforgeRifleman() : base(3, 2, 2)
     {

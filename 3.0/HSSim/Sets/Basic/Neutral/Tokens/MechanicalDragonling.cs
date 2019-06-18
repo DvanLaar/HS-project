@@ -1,6 +1,4 @@
-﻿
-
-class MechanicalDragonling : Minion
+﻿class MechanicalDragonling : Minion
 {
     public MechanicalDragonling() : base(1, 2, 1)
     {

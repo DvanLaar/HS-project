@@ -1,6 +1,4 @@
-﻿
-
-class DragonlingMechanic : BattlecryMinion
+﻿class DragonlingMechanic : BattlecryMinion
 {
     public DragonlingMechanic() : base(4, 2, 4)
     {

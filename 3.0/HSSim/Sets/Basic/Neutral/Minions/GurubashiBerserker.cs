@@ -1,6 +1,4 @@
-﻿
-
-class GurubashiBerserker : Minion
+﻿class GurubashiBerserker : Minion
 {
     public GurubashiBerserker() : base(5, 2, 7)
     {

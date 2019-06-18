@@ -1,6 +1,4 @@
-﻿
-
-class SearingTotem : Minion
+﻿class SearingTotem : Minion
 {
     public SearingTotem() : base(1, 1, 1)
     {

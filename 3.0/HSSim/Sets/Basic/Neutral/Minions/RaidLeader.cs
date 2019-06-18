@@ -4,7 +4,6 @@ class RaidLeader : FriendlyMinionAuraMinion
 {
     public RaidLeader() : base(3, 2, 2)
     {
-
     }
 
     public override void AddAura()

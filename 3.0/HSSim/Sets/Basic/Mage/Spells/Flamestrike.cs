@@ -15,5 +15,4 @@ class Flamestrike : Spell
             return new SingleSubBoardContainer(cln, b, "Play Flamestrike");
         });
     }
-       
 }

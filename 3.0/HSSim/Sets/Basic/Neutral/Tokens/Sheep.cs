@@ -1,6 +1,4 @@
-﻿using System;
-
-class Sheep : Minion
+﻿class Sheep : Minion
 {
     public Sheep() : base(1, 1, 1)
     {

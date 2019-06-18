@@ -36,8 +36,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract Cards\Minions\AuraMinions\FriendlyMinionAuraMinion.cs" />
+    <Compile Include="Abstract Cards\Minions\AuraMinions\MinionAuraMinion.cs" />
     <Compile Include="Abstract Cards\Minions\BattlecryMinions.cs" />
     <Compile Include="Abstract Cards\Minions\EndOfTurnMinions.cs" />
+    <Compile Include="Abstract Cards\Minions\Minion.cs" />
+    <Compile Include="Abstract Cards\Spell.cs" />
+    <Compile Include="Abstract Cards\UnknownCard.cs" />
     <Compile Include="Classes\Druid.cs" />
     <Compile Include="Classes\Paladin.cs" />
     <Compile Include="Classes\Priest.cs" />
@@ -88,14 +93,14 @@
     <Compile Include="Sets\Basic\Neutral\StormwindChampion.cs" />
     <Compile Include="Sets\Basic\Neutral\Wolfrider.cs" />
     <Compile Include="Board.cs" />
-    <Compile Include="Abstract Cards\Cards.cs" />
+    <Compile Include="Abstract Cards\Card.cs" />
     <Compile Include="BoardContainers.cs" />
     <Compile Include="Classes\Mage.cs" />
     <Compile Include="Decks\Mage\BasicMage.cs" />
     <Compile Include="Enumerables.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="Interfaces.cs" />
-    <Compile Include="Abstract Cards\Minions\AuraMinions.cs" />
+    <Compile Include="Abstract Cards\Minions\AuraMinions\AuraMinion.cs" />
     <Compile Include="MinHeap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Sets\Basic\Paladin\Minions\SilverHandRecruit.cs" />

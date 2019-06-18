@@ -1,6 +1,4 @@
-﻿
-
-class MurlocTidehunter : BattlecryMinion
+﻿class MurlocTidehunter : BattlecryMinion
 {
     public MurlocTidehunter() : base(2, 2, 1)
     {
