@@ -1,6 +1,4 @@
-﻿
-
-class SilverbackPatriarch : Minion
+﻿class SilverbackPatriarch : Minion
 {
     public SilverbackPatriarch() : base(3, 1, 4)
     {

@@ -2,7 +2,6 @@
 {
     public MinionAuraMinion(int mana, int attack, int health) : base(mana, attack, health)
     {
-
     }
 
     protected abstract void Aura(Minion m);

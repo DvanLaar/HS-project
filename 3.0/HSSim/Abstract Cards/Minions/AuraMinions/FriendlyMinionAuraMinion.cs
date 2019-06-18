@@ -2,7 +2,6 @@
 {
     public FriendlyMinionAuraMinion(int mana, int attack, int health) : base(mana, attack, health)
     {
-
     }
 
     public override void AddAura()

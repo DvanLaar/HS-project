@@ -1,6 +1,4 @@
-﻿
-
-class RazorfenHunter : BattlecryMinion
+﻿class RazorfenHunter : BattlecryMinion
 {
     public RazorfenHunter() : base(3, 2, 3)
     {
