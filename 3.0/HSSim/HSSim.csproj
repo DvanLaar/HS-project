@@ -106,6 +106,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Sets\Basic\Paladin\Tokens\SilverHandRecruit.cs" />
     <Compile Include="Sets\Basic\Rogue\Tokens\WickedKnife.cs" />
+    <Compile Include="Sets\Basic\Shaman\Spells\AncestralHealing.cs" />
+    <Compile Include="Sets\Basic\Shaman\Spells\FrostShock.cs" />
+    <Compile Include="Sets\Basic\Shaman\Spells\RockbiterWeapon.cs" />
     <Compile Include="Sets\Basic\Shaman\Tokens\HealingTotem.cs" />
     <Compile Include="Sets\Basic\Shaman\Tokens\SearingTotem.cs" />
     <Compile Include="Sets\Basic\Shaman\Tokens\StoneclawTotem.cs" />

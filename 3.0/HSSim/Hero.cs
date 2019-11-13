@@ -27,6 +27,7 @@ abstract class Hero : IDamagable
     public int Armor { get; set; }
     public int Attack { get; set; }
     public int AttacksLeft { get; set; }
+    public bool Frozen { get; set; }
     public int Mana { get => mana; set { if (value >= 10) mana = 10; else mana = value; } }
     public int SpellDamage { get; set; }
     public double value { get
@@ -309,11 +310,26 @@ abstract class Hero : IDamagable
     {
         maxMana++;
         mana = maxMana;
-        AttacksLeft = 1;
+        if (Frozen)
+        {
+            Frozen = false;
+        }
+        {
+            AttacksLeft = 1;
+        }
         if (CurrentWeapon != null)
             CurrentWeapon.Active = true;
         foreach (Minion m in onBoard)
-            m.AttacksLeft = m.maxAttacks;
+        {   //Waar is de methode hiervoor?
+            if (m.Frozen)
+            {
+                m.Frozen = false;
+            }
+            else
+            {
+                m.AttacksLeft = m.maxAttacks;
+            }
+        }
         return DrawOneCard(b);
     }
 }

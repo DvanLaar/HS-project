@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 abstract class Minion : Card, IDamagable
 {
-    int baseAttack, baseHealth, maxHealth;
+    public int baseAttack, baseHealth, maxHealth;
     protected int curHealth;
     public bool Taunt = false, windfury = false, megaWindfury = false, cantAttackHeroes = false;
     public int maxAttacks { get { if (megaWindfury) return 4; if (windfury) return 2; return 1; } }
@@ -30,6 +31,7 @@ abstract class Minion : Card, IDamagable
     }
     public int Attack { get; set; }
     public int AttacksLeft { get; set; }
+    public bool Frozen { get; set; }
     public bool Charge { get => charge; set { if (value) if (charge) charge = value; else { charge = value; AttacksLeft = maxAttacks; } else charge = value; } }
     public bool Damaged { get => Health != maxHealth; }
 
@@ -94,6 +96,13 @@ abstract class Minion : Card, IDamagable
         maxHealth -= decrease;
         if (curHealth > maxHealth)
             curHealth = maxHealth;
+    }
+
+    public void Heal(int amount)
+    {
+        if (amount < 0)
+            return;
+        curHealth = Math.Min(maxHealth, curHealth + amount);
     }
 
     public void AlterAttack(int alteration)
