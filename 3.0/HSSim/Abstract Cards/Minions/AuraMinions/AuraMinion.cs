@@ -1,43 +1,46 @@
-﻿abstract class AuraMinion : Minion
+﻿namespace HSSim.Abstract_Cards.Minions.AuraMinions
 {
-    protected bool auraActive;
-    public AuraMinion(int mana, int attack, int health) : base(mana, attack, health)
+    internal abstract class AuraMinion : Minion
     {
-        auraActive = false;
-        Transform += RemoveAura;
-    }
+        protected bool AuraActive;
 
-    public virtual void AddAura()
-    {
-        auraActive = true;
-    }
-    public virtual void RemoveAura()
-    {
-        auraActive = false;
-    }
-    public override Card Clone()
-    {
-        AuraMinion am = (AuraMinion)base.Clone();
-        am.auraActive = auraActive;
-        return am;
-    }
-
-    public override int Health
-    {
-        get => curHealth; set
+        protected AuraMinion(int mana, int attack, int health) : base(mana, attack, health)
         {
-            curHealth = value;
-            if (curHealth <= 0)
+            AuraActive = false;
+            Transform += RemoveAura;
+        }
+
+        protected virtual void AddAura()
+        {
+            AuraActive = true;
+        }
+
+        protected virtual void RemoveAura()
+        {
+            AuraActive = false;
+        }
+        public override Card Clone()
+        {
+            var am = (AuraMinion)base.Clone();
+            am.AuraActive = AuraActive;
+            return am;
+        }
+
+        public override int Health
+        {
+            get => CurHealth; set
             {
-                owner.onBoard.Remove(this);
+                CurHealth = value;
+                if (CurHealth > 0) return;
+                Owner.OnBoard.Remove(this);
                 RemoveAura();
             }
         }
-    }
 
-    public override void SetOwner(Hero owner)
-    {
-        base.SetOwner(owner);
-        owner.Summon += (m) => { if (m == this) AddAura(); };
+        public override void SetOwner(Hero owner)
+        {
+            base.SetOwner(owner);
+            owner.Summon += m => { if (m == this) AddAura(); };
+        }
     }
 }

@@ -1,14 +1,19 @@
-﻿class Coin : Spell
+﻿using HSSim.Abstract_Cards;
+
+namespace HSSim.Sets.Basic.Neutral.Spells
 {
-    public Coin() : base(0)
+    internal class Coin : Spell
     {
-        SetSpell((b) =>
+        public Coin() : base(0)
         {
-            Board clone = b.Clone();
-            Hero ownerClone = b.me.id == owner.id ? clone.me : clone.opp;
-            ownerClone.Mana -= cost;
-            ownerClone.Mana += 1;
-            return new SingleSubBoardContainer(clone, b, "Play The Coin");
-        });
+            SetSpell(b =>
+            {
+                var clone = b.Clone();
+                var ownerClone = b.Me.Id == Owner.Id ? clone.Me : clone.Opp;
+                ownerClone.Mana -= Cost;
+                ownerClone.Mana += 1;
+                return new SingleSubBoardContainer(clone, b, "Play The Coin");
+            });
+        }
     }
 }

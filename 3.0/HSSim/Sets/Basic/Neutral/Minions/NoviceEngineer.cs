@@ -1,12 +1,12 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards.Minions;
 
-class NoviceEngineer : BattlecryMinion
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public NoviceEngineer() : base(2, 1, 1)
+    internal class NoviceEngineer : BattlecryMinion
     {
-        SetBattlecry((b) =>
+        public NoviceEngineer() : base(2, 1, 1)
         {
-            return owner.DrawOneCard(b);
-        });
+            SetBattlecry(b => Owner.DrawOneCard(b));
+        }
     }
 }

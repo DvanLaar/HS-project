@@ -1,8 +1,13 @@
-﻿class StonetuskBoar : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public StonetuskBoar() : base(1, 1, 1)
+    internal class StonetuskBoar : Minion
     {
-        Charge = true;
-        Beast = true;
+        public StonetuskBoar() : base(1, 1, 1)
+        {
+            Charge = true;
+            Beast = true;
+        }
     }
 }

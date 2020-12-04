@@ -1,10 +1,12 @@
-﻿class ArcaneShot : Spell
+﻿using HSSim.Abstract_Cards;
+
+namespace HSSim.Sets.Basic.Hunter.Spells
 {
-    public ArcaneShot() : base(1)
+    internal class ArcaneShot : Spell
     {
-        SetSpell((b) =>
+        public ArcaneShot() : base(1)
         {
-            return DealDamage(2 + owner.SpellDamage, b);
-        });
+            SetSpell(b => DealDamage(2 + Owner.SpellDamage, b));
+        }
     }
 }

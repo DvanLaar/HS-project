@@ -1,223 +1,228 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
+using HSSim.Abstract_Cards;
+using HSSim.Decks.Hunter;
+using HSSim.Sets.Basic.Neutral.Spells;
 
-class Program
+namespace HSSim
 {
-    static void Main()
+    internal static class Program
     {
-        Hero me = new BasicHunter(true, true);
-
-        Hero opp = new BasicHunter();
-        opp.id = false;
-
-        Board b = new Board(me, opp);
-        b.curr = true;
-
-        foreach(KeyValuePair<Card, int> kvp in me.deck)
+        private static void Main()
         {
-            kvp.Key.SetOwner(me);
-        }
+            Hero me = new BasicHunter(true, true);
 
-        for (int i = 0; i < 3; i++)
-        {
-            Console.WriteLine("What cards did you draw?");
-            int j = 0;
-            foreach (Card c in b.me.deck.Keys)
+            Hero opp = new BasicHunter();
+            opp.Id = false;
+
+            var b = new Board(me, opp) {Curr = true};
+
+            foreach(var kvp in me.Deck)
             {
-                Console.WriteLine(j + ": " + c);
-                j++;
+                kvp.Key.SetOwner(me);
             }
-            int index = int.Parse(Console.ReadLine());
-            Console.Clear();
-            j = 0;
-            foreach (Card c in b.me.deck.Keys)
+
+            for (var i = 0; i < 3; i++)
             {
-                if (j == index)
+                Console.WriteLine("What cards did you draw?");
+                var j = 0;
+                foreach (var c in b.Me.Deck.Keys)
                 {
-                    b = b.me.DrawCard(b, c).board;
-                    break;
+                    Console.WriteLine(j + ": " + c);
+                    j++;
                 }
-                j++;
+                var index = int.Parse(Console.ReadLine());
+                Console.Clear();
+                j = 0;
+                foreach (var c in b.Me.Deck.Keys)
+                {
+                    if (j == index)
+                    {
+                        b = b.Me.DrawCard(b, c).Board;
+                        break;
+                    }
+                    j++;
+                }
             }
-        }
 
-        UnknownCard uc = new UnknownCard(b.opp.DeckList) { owner = opp };
-        b.opp.deck.Add(uc, 30);
+            var uc = new UnknownCard(b.Opp.DeckList) { Owner = opp };
+            b.Opp.Deck.Add(uc, 30);
 
-        for (int i = 0; i < 4; i++)
-            b = b.opp.DrawCard(b, uc).board;
+            for (var i = 0; i < 4; i++)
+                b = b.Opp.DrawCard(b, uc).Board;
             
-        b.opp.hand.Add(new Coin { owner = b.opp });
+            b.Opp.Hand.Add(new Coin { Owner = b.Opp });
 
-        b.me.StartTurn(b);
+            b.Me.StartTurn(b);
 
-        MasterBoardContainer first = new MasterBoardContainer(b);
+            var first = new MasterBoardContainer(b);
 
-        while (true)
-        {
-            b = first.board;
-
-            Console.WriteLine("What card did you draw?");
-            int j = 0;
-            foreach (Card c in b.me.deck.Keys)
+            while (true)
             {
-                Console.WriteLine(j + ": " + c);
-                j++;
-            }
-            int index = int.Parse(Console.ReadLine());
-            Console.Clear();
-            j = 0;
-            foreach (Card c in b.me.deck.Keys)
-            {
-                if (j == index)
+                b = first.Board;
+
+                Console.WriteLine("What card did you draw?");
+                var j = 0;
+                foreach (var c in b.Me.Deck.Keys)
                 {
-                    b = b.me.DrawCard(b, c).board;
-                    break;
+                    Console.WriteLine(j + ": " + c);
+                    j++;
                 }
-                j++;
-            }
-
-            //b.me.maxMana += 1;
-            //b.me.Mana = b.me.maxMana;
-            //foreach (Minion m in b.me.onBoard)
-            //    m.AttacksLeft = m.maxAttacks;
-            //b.me.AttacksLeft = 1;
-            //b.me.HeroPowerUsed = false;
-
-            bool running = true;
-            Timer tmr = new Timer(20000);
-            tmr.Elapsed += (o, e) => { running = false; };
-            int ownstatesvisited = 0;
-
-            MinHeap mh = new MinHeap(1000000, false);
-            List<MasterBoardContainer> turnEnded = new List<MasterBoardContainer>();
-            first = new MasterBoardContainer(b);
-            mh.Insert(first);
-
-            tmr.Start();
-            while (running && !mh.Empty())
-            {
-                MasterBoardContainer mbc = mh.MinimumExtract();
-                if (mbc.board.curr != me.id)
+                var index = int.Parse(Console.ReadLine());
+                Console.Clear();
+                j = 0;
+                foreach (var c in b.Me.Deck.Keys)
                 {
-                    mbc.board.me.EndTurn(mbc.board);
-                    turnEnded.Add(mbc);
-                    continue;
+                    if (j == index)
+                    {
+                        b = b.Me.DrawCard(b, c).Board;
+                        break;
+                    }
+                    j++;
                 }
-                mbc.Expand();
-                ownstatesvisited++;
 
-                foreach (SubBoardContainer sbc in mbc.children)
-                    foreach (MasterBoardContainer newMbc in sbc.children)
+                //b.me.maxMana += 1;
+                //b.me.Mana = b.me.maxMana;
+                //foreach (Minion m in b.me.onBoard)
+                //    m.AttacksLeft = m.maxAttacks;
+                //b.me.AttacksLeft = 1;
+                //b.me.HeroPowerUsed = false;
+
+                var running = true;
+                var tmr = new Timer(20000);
+                tmr.Elapsed += (o, e) => { running = false; };
+                var ownStatesVisited = 0;
+
+                var mh = new MinHeap(1000000, false);
+                var turnEnded = new List<MasterBoardContainer>();
+                first = new MasterBoardContainer(b);
+                mh.Insert(first);
+
+                tmr.Start();
+                while (running && !mh.Empty())
+                {
+                    var mbc = mh.MinimumExtract();
+                    if (mbc.Board.Curr != me.Id)
+                    {
+                        mbc.Board.Me.EndTurn(mbc.Board);
+                        turnEnded.Add(mbc);
+                        continue;
+                    }
+                    mbc.Expand();
+                    ownStatesVisited++;
+
+                    foreach (var newMbc in mbc.Children.SelectMany(sbc => sbc.Children))
                         mh.Insert(newMbc);
-            }
-
-            turnEnded.Sort((a1, a2) => a1.value.CompareTo(a2.value));
-
-            MinHeap mhopp = new MinHeap(1000000, true);
-            for (int i = 0; i < turnEnded.Count; i++)
-            {
-                turnEnded[i].board.opp.EndTurn(turnEnded[i].board);
-                if (i < 10)
-                    mhopp.Insert(turnEnded[i]);
-            }
-
-            Timer tmr2 = new Timer(20000);
-            bool running2 = true;
-            tmr2.Elapsed += (o, a) => running2 = false;
-
-            tmr2.Start();
-            while (running2 && !mhopp.Empty())
-            {
-                MasterBoardContainer mbc = mhopp.MinimumExtract();
-                if (mbc.board.curr != opp.id)
-                {
-                    //turnEnded.Add(mbc);
-                    mbc.board.opp.EndTurn(mbc.board);
-                    continue;
                 }
-                mbc.Expand();
 
-                foreach (SubBoardContainer sbc in mbc.children)
-                    foreach (MasterBoardContainer newMbc in sbc.children)
-                        mhopp.Insert(newMbc);
-            }
+                turnEnded.Sort((a1, a2) => a1.Value.CompareTo(a2.Value));
 
-            first.Sort();
-
-            Console.WriteLine(ownstatesvisited);
-
-            while (first.board.curr)
-            {
-                if (first.children.Count == 0)
-                    first.Expand();
-                Console.WriteLine(first.board.opp.Health);
-                Console.WriteLine(first.board.opp.Armor);
-                SubBoardContainer sbc = first.children[0];
-                Console.WriteLine(sbc.action);
-                int resultingIndex = 0;
-                if (sbc.GetType() == typeof(RandomSubBoardContainer) || sbc.GetType() == typeof(UnknownSubBoardContainer))
+                var minHeapOpponent = new MinHeap(1000000, true);
+                for (var i = 0; i < turnEnded.Count; i++)
                 {
-                    //Console.WriteLine("Iets met een random effect! Hier ga ik opties geven en vragen wat er is gebeurd");
-                    for (int i = 0; i < sbc.children.Count; i++)
+                    turnEnded[i].Board.Opp.EndTurn(turnEnded[i].Board);
+                    if (i < 10)
+                        minHeapOpponent.Insert(turnEnded[i]);
+                }
+
+                var tmr2 = new Timer(20000);
+                var running2 = true;
+                tmr2.Elapsed += (o, a) => running2 = false;
+
+                tmr2.Start();
+                while (running2 && !minHeapOpponent.Empty())
+                {
+                    var mbc = minHeapOpponent.MinimumExtract();
+                    if (mbc.Board.Curr != opp.Id)
                     {
-                        Console.WriteLine(i + ": " + sbc.children[i].action);
+                        //turnEnded.Add(mbc);
+                        mbc.Board.Opp.EndTurn(mbc.Board);
+                        continue;
                     }
-                    resultingIndex = int.Parse(Console.ReadLine());
-                }
-                else if (sbc.GetType() == typeof(ChoiceSubBoardContainer))
-                {
-                    Console.WriteLine(sbc.children[0].action);
-                    Console.ReadKey();
-                }
-                else if (sbc.GetType() == typeof(RandomChoiceSubBoardContainer))
-                {
-                    RandomChoiceSubBoardContainer RCSBC = (RandomChoiceSubBoardContainer)sbc;
-                    for (int i = 0; i < RCSBC.options.Count; i++)
-                    {
-                        Console.WriteLine(i + ": " + RCSBC.options[i].Item3);
-                    }
-                    int thisIndex = int.Parse(Console.ReadLine());
-                    first = RCSBC.options[thisIndex].Item1[0];
-                    Console.Clear();
-                    Console.WriteLine(RCSBC.options[thisIndex].Item1[0].action);
-                    Console.ReadKey();
-                    Console.Clear();
-                    continue;
-                }
-                else
-                    Console.ReadKey();
-                Console.Clear();
+                    mbc.Expand();
 
-                first = sbc.children[resultingIndex];
+                    foreach (var sbc in mbc.Children)
+                    foreach (var newMbc in sbc.Children)
+                        minHeapOpponent.Insert(newMbc);
+                }
+
+                first.Sort();
+
+                Console.WriteLine(ownStatesVisited);
+
+                while (first.Board.Curr)
+                {
+                    if (first.Children.Count == 0)
+                        first.Expand();
+                    Console.WriteLine(first.Board.Opp.Health);
+                    Console.WriteLine(first.Board.Opp.Armor);
+                    var sbc = first.Children[0];
+                    Console.WriteLine(sbc.Action);
+                    var resultingIndex = 0;
+                    if (sbc.GetType() == typeof(RandomSubBoardContainer) || sbc.GetType() == typeof(UnknownSubBoardContainer))
+                    {
+                        for (var i = 0; i < sbc.Children.Count; i++)
+                        {
+                            Console.WriteLine(i + ": " + sbc.Children[i].Action);
+                        }
+                        resultingIndex = int.Parse(Console.ReadLine());
+                    }
+                    else if (sbc.GetType() == typeof(ChoiceSubBoardContainer))
+                    {
+                        Console.WriteLine(sbc.Children[0].Action);
+                        Console.ReadKey();
+                    }
+                    else if (sbc.GetType() == typeof(RandomChoiceSubBoardContainer))
+                    {
+                        var rcsbc = (RandomChoiceSubBoardContainer)sbc;
+                        for (var i = 0; i < rcsbc.Options.Count; i++)
+                        {
+                            Console.WriteLine(i + ": " + rcsbc.Options[i].Item3);
+                        }
+                        var thisIndex = int.Parse(Console.ReadLine());
+                        first = rcsbc.Options[thisIndex].Item1[0];
+                        Console.Clear();
+                        Console.WriteLine(rcsbc.Options[thisIndex].Item1[0].Action);
+                        Console.ReadKey();
+                        Console.Clear();
+                        continue;
+                    }
+                    else
+                        Console.ReadKey();
+                    Console.Clear();
+
+                    first = sbc.Children[resultingIndex];
+                }
+                while (!first.Board.Curr)
+                {
+                    if (first.Children.Count == 0)
+                        first.Expand();
+                    Console.WriteLine("What did your opponent do?");
+                    for (var i = 0; i < first.Children.Count; i++)
+                    {
+                        Console.WriteLine(i + ": " + first.Children[i].Action);
+                    }
+                    var resIndex = int.Parse(Console.ReadLine());
+                    var sbc = first.Children[resIndex];
+                    Console.Clear();
+                    if (sbc.Children.Count == 1)
+                    {
+                        first = sbc.Children[0];
+                        continue;
+                    }
+                    Console.WriteLine("What was the result?");
+                    for (var i = 0; i < sbc.Children.Count; i++)
+                    {
+                        Console.WriteLine(i + ": " + sbc.Children[i].Action);
+                    }
+                    resIndex = int.Parse(Console.ReadLine());
+                    first = sbc.Children[resIndex];
+                    Console.Clear();
+                }
             }
-            while (!first.board.curr)
-            {
-                if (first.children.Count == 0)
-                    first.Expand();
-                Console.WriteLine("What did your opponent do?");
-                for (int i = 0; i < first.children.Count; i++)
-                {
-                    Console.WriteLine(i + ": " + first.children[i].action);
-                }
-                int resIndex = int.Parse(Console.ReadLine());
-                SubBoardContainer sbc = first.children[resIndex];
-                Console.Clear();
-                if (sbc.children.Count == 1)
-                {
-                    first = sbc.children[0];
-                    continue;
-                }
-                Console.WriteLine("What was the result?");
-                for (int i = 0; i < sbc.children.Count; i++)
-                {
-                    Console.WriteLine(i + ": " + sbc.children[i].action);
-                }
-                resIndex = int.Parse(Console.ReadLine());
-                first = sbc.children[resIndex];
-                Console.Clear();
-            }
+            // ReSharper disable once FunctionNeverReturns
         }
     }
 }

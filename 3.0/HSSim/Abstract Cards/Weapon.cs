@@ -1,58 +1,61 @@
-﻿abstract class Weapon : Card
+﻿namespace HSSim.Abstract_Cards
 {
-    public int Attack { get; set; }
-    public int Durability { get => durability; set { if (value == 0) owner.StartDestroyWeapon(this); durability = value; } }
-    public bool Active
+    internal abstract class Weapon : Card
     {
-        get => _active; set
+        private int Attack { get; set; }
+        private int Durability { get => _durability; set { if (value == 0) Owner.StartDestroyWeapon(this); _durability = value; } }
+        public bool Active
         {
-            if (_active == value) return;
-            if (value)
-                owner.Attack += Attack;
-            else owner.Attack -= Attack; _active = value;
+            get => _active; set
+            {
+                if (_active == value) return;
+                if (value)
+                    Owner.Attack += Attack;
+                else Owner.Attack -= Attack; _active = value;
+            }
         }
-    }
-    private bool _active;
-    int durability;
+        private bool _active;
+        private int _durability;
 
-    public Weapon(int mana, int attack, int durability) : base(mana)
-    {
-        Attack = attack;
-        Durability = durability;
-    }
+        protected Weapon(int mana, int attack, int durability) : base(mana)
+        {
+            Attack = attack;
+            Durability = durability;
+        }
 
-    public override void SetOwner(Hero owner)
-    {
-        base.SetOwner(owner);
-        Active = false;
-    }
+        public override void SetOwner(Hero owner)
+        {
+            base.SetOwner(owner);
+            Active = false;
+        }
 
-    public override SubBoardContainer Play(Board curBoard)
-    {
-        if (!CanPlay(curBoard))
-            return null;
+        public override SubBoardContainer Play(Board curBoard)
+        {
+            if (!CanPlay(curBoard))
+                return null;
 
-        Board clone = curBoard.Clone();
-        Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
+            var clone = curBoard.Clone();
+            var me = clone.Me.Id == Owner.Id ? clone.Me : clone.Opp;
 
-        if (me.CurrentWeapon != null)
-            me.StartDestroyWeapon(me.CurrentWeapon);
+            if (me.CurrentWeapon != null)
+                me.StartDestroyWeapon(me.CurrentWeapon);
 
-        Weapon w = (Weapon)me.hand[owner.hand.IndexOf(this)];
-        me.CurrentWeapon = w;
-        me.hand.Remove(w);
-        me.Mana -= cost;
-        w.Active = me.id == clone.curr;
+            var w = (Weapon)me.Hand[Owner.Hand.IndexOf(this)];
+            me.CurrentWeapon = w;
+            me.Hand.Remove(w);
+            me.Mana -= Cost;
+            w.Active = me.Id == clone.Curr;
 
-        return new SingleSubBoardContainer(clone, curBoard, "Play " + this);
-    }
+            return new SingleSubBoardContainer(clone, curBoard, "Play " + this);
+        }
 
-    public override Card Clone()
-    {
-        Weapon w = (Weapon)base.Clone();
-        w._active = _active;
-        w.Attack = Attack;
-        w.Durability = Durability;
-        return w;
+        public override Card Clone()
+        {
+            var w = (Weapon)base.Clone();
+            w._active = _active;
+            w.Attack = Attack;
+            w.Durability = Durability;
+            return w;
+        }
     }
 }

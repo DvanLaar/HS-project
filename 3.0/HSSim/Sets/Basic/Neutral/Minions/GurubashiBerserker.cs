@@ -1,10 +1,15 @@
-﻿class GurubashiBerserker : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public GurubashiBerserker() : base(5, 2, 7)
+    internal class GurubashiBerserker : Minion
     {
-        OnDamaged += () =>
+        public GurubashiBerserker() : base(5, 2, 7)
         {
-            AlterAttack(3);
-        };
+            OnDamaged += () =>
+            {
+                AlterAttack(3);
+            };
+        }
     }
 }

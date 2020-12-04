@@ -1,18 +1,21 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards;
 
-class Flamestrike : Spell
+namespace HSSim.Sets.Basic.Mage.Spells
 {
-    public Flamestrike() : base(7)
+    internal class Flamestrike : Spell
     {
-        SetSpell((b) =>
+        public Flamestrike() : base(7)
         {
-            Board cln = b.Clone();
-            Hero opp = cln.me.id == owner.id ? cln.opp : cln.me;
-            foreach (Minion m in opp.onBoard)
+            SetSpell(b =>
             {
-                m.ReduceHealth(4 + owner.SpellDamage);
-            }
-            return new SingleSubBoardContainer(cln, b, "Play Flamestrike");
-        });
+                var cln = b.Clone();
+                var opp = cln.Me.Id == Owner.Id ? cln.Opp : cln.Me;
+                foreach (var m in opp.OnBoard)
+                {
+                    m.ReduceHealth(4 + Owner.SpellDamage);
+                }
+                return new SingleSubBoardContainer(cln, b, "Play Flamestrike");
+            });
+        }
     }
 }

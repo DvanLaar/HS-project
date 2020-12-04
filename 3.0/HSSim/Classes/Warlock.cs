@@ -1,33 +1,37 @@
 ﻿using System.Collections.Generic;
+using HSSim.Abstract_Cards;
 
-class Warlock : Hero
+namespace HSSim.Classes
 {
-    public override Dictionary<Card, int> DeckList { get => new Dictionary<Card, int>(); set { } }
-
-    public Warlock() : base()
+    internal class Warlock : Hero
     {
-        SetHeroPower();
-    }
+        public override Dictionary<Card, int> DeckList => new Dictionary<Card, int>();
 
-    public Warlock(bool id, bool nw) : base(id, nw)
-    {
-        SetHeroPower();
-    }
-
-    private void SetHeroPower()
-    {
-        HeroPower = ((b) =>
+        public Warlock()
         {
-            if (Mana < 2 || HeroPowerUsed)
-                return null;
+            SetHeroPower();
+        }
 
-            Board clone = b.Clone();
-            Hero me = id == clone.me.id ? clone.me : clone.opp;
-            me.Mana -= 2;
-            SubBoardContainer sbc = me.DrawOneCard(clone);
-            foreach (MasterBoardContainer mbc in sbc.children)
-                (mbc.board.me.id == id ? mbc.board.me : mbc.board.opp).TakeDamage(2);
-            return sbc;
-        });
+        public Warlock(bool id, bool nw) : base(id, nw)
+        {
+            SetHeroPower();
+        }
+
+        private void SetHeroPower()
+        {
+            HeroPower = (b =>
+            {
+                if (Mana < 2 || HeroPowerUsed)
+                    return null;
+
+                var clone = b.Clone();
+                var me = Id == clone.Me.Id ? clone.Me : clone.Opp;
+                me.Mana -= 2;
+                var sbc = me.DrawOneCard(clone);
+                foreach (var mbc in sbc.Children)
+                    (mbc.Board.Me.Id == Id ? mbc.Board.Me : mbc.Board.Opp).TakeDamage(2);
+                return sbc;
+            });
+        }
     }
 }

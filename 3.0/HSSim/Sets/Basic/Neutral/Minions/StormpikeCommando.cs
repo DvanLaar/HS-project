@@ -1,10 +1,12 @@
-﻿class StormpikeCommando : BattlecryMinion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public StormpikeCommando() : base(5, 4, 2)
+    internal class StormpikeCommando : BattlecryMinion
     {
-        SetBattlecry((b) =>
+        public StormpikeCommando() : base(5, 4, 2)
         {
-            return DealDamage(2, b);
-        });
+            SetBattlecry(b => DealDamage(2, b));
+        }
     }
 }

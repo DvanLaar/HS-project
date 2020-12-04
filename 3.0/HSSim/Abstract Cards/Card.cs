@@ -1,87 +1,88 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Reflection;
 
-abstract class Card
+namespace HSSim.Abstract_Cards
 {
-    public int baseCost { get; set; }
-    protected int cost;
-    public Hero owner;
-    public abstract SubBoardContainer Play(Board curBoard);
-    public virtual Card Clone()
+    internal abstract class Card
     {
-        Card c = (Card)GetType().InvokeMember("", System.Reflection.BindingFlags.CreateInstance, null, null, null);
-        c.baseCost = baseCost;
-        c.cost = cost;
-        return c;
-    }
-
-    public virtual void SetOwner(Hero owner)
-    {
-        this.owner = owner;
-    }
-
-    public virtual bool CanPlay(Board b)
-    {
-        return cost <= owner.Mana;
-    }
-
-    public Card(int mana)
-    {
-        baseCost = mana;
-        cost = mana;
-    }
-
-    public override string ToString()
-    {
-        string bs = base.ToString();
-        for (int i = 1; i < bs.Length; i++)
+        public int BaseCost { get; set; }
+        protected int Cost;
+        public Hero Owner;
+        public abstract SubBoardContainer Play(Board curBoard);
+        public virtual Card Clone()
         {
-            if (bs[i] >= 'A' && bs[i] <= 'Z')
+            var c = (Card)GetType().InvokeMember("", BindingFlags.CreateInstance, null, null, null);
+            c.BaseCost = BaseCost;
+            c.Cost = Cost;
+            return c;
+        }
+
+        public virtual void SetOwner(Hero owner)
+        {
+            Owner = owner;
+        }
+
+        public virtual bool CanPlay(Board b)
+        {
+            return Cost <= Owner.Mana;
+        }
+
+        protected Card(int mana)
+        {
+            BaseCost = mana;
+            Cost = mana;
+        }
+
+        public override string ToString()
+        {
+            var bs = base.ToString();
+            for (var i = 1; i < bs.Length; i++)
             {
-                bs = bs.Insert(i, " ");
-                i++;
+                if (bs[i] >= 'A' && bs[i] <= 'Z')
+                {
+                    bs = bs.Insert(i, " ");
+                    i++;
+                }
             }
+            return bs;
         }
-        return bs;
-    }
 
-    public SubBoardContainer DealDamage(int dmg, Board b)
-    {
-        List<MasterBoardContainer> result = new List<MasterBoardContainer>();
-        Hero opponent = b.me.id == owner.id ? b.opp : b.me;
-
-        Board clone;
-
-        clone = b.Clone();
-        clone.me.TakeDamage(dmg);
-        (clone.me.id == owner.id ? clone.me : clone.opp).Mana -= cost;
-        result.Add(new MasterBoardContainer(clone) { action = "Hit Own Face" });
-
-        clone = b.Clone();
-        clone.opp.TakeDamage(dmg);
-        (clone.me.id == owner.id ? clone.me : clone.opp).Mana -= cost;
-        result.Add(new MasterBoardContainer(clone) { action = "Hit Face" });
-
-        foreach (Minion m in owner.onBoard)
+        protected SubBoardContainer DealDamage(int dmg, Board b)
         {
-            clone = b.Clone();
-            Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
-            me.Mana -= cost;
-            Minion target = me.onBoard[owner.onBoard.IndexOf(m)];
-            target.TakeDamage(dmg);
-            result.Add(new MasterBoardContainer(clone) { action = "Hit " + target });
-        }
+            var result = new List<MasterBoardContainer>();
+            var opponent = b.Me.Id == Owner.Id ? b.Opp : b.Me;
 
-        foreach (Minion m in opponent.onBoard)
-        {
-            clone = b.Clone();
-            Hero Opponent = clone.me.id == opponent.id ? clone.me : clone.opp;
-            (clone.me.id == owner.id ? clone.me : clone.opp).Mana -= cost;
-            Minion target = Opponent.onBoard[opponent.onBoard.IndexOf(m)];
-            target.TakeDamage(dmg);
-            result.Add(new MasterBoardContainer(clone) { action = "Hit " + target });
-        }
+            var clone = b.Clone();
+            clone.Me.TakeDamage(dmg);
+            (clone.Me.Id == Owner.Id ? clone.Me : clone.Opp).Mana -= Cost;
+            result.Add(new MasterBoardContainer(clone) { Action = "Hit Own Face" });
 
-        return new ChoiceSubBoardContainer(result, b, "play " + this);
+            clone = b.Clone();
+            clone.Opp.TakeDamage(dmg);
+            (clone.Me.Id == Owner.Id ? clone.Me : clone.Opp).Mana -= Cost;
+            result.Add(new MasterBoardContainer(clone) { Action = "Hit Face" });
+
+            foreach (var m in Owner.OnBoard)
+            {
+                clone = b.Clone();
+                var me = clone.Me.Id == Owner.Id ? clone.Me : clone.Opp;
+                me.Mana -= Cost;
+                var target = me.OnBoard[Owner.OnBoard.IndexOf(m)];
+                target.TakeDamage(dmg);
+                result.Add(new MasterBoardContainer(clone) { Action = "Hit " + target });
+            }
+
+            foreach (var m in opponent.OnBoard)
+            {
+                clone = b.Clone();
+                var cloneOpp = clone.Me.Id == opponent.Id ? clone.Me : clone.Opp;
+                (clone.Me.Id == Owner.Id ? clone.Me : clone.Opp).Mana -= Cost;
+                var target = cloneOpp.OnBoard[opponent.OnBoard.IndexOf(m)];
+                target.TakeDamage(dmg);
+                result.Add(new MasterBoardContainer(clone) { Action = "Hit " + target });
+            }
+
+            return new ChoiceSubBoardContainer(result, b, "play " + this);
+        }
     }
 }

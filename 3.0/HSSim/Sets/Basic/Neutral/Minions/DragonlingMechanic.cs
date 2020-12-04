@@ -1,13 +1,19 @@
-﻿class DragonlingMechanic : BattlecryMinion
+﻿using HSSim.Abstract_Cards.Minions;
+using HSSim.Sets.Basic.Neutral.Tokens;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public DragonlingMechanic() : base(4, 2, 4)
+    internal class DragonlingMechanic : BattlecryMinion
     {
-        SetBattlecry((b) =>
+        public DragonlingMechanic() : base(4, 2, 4)
         {
-            Board clone = b.Clone();
-            Hero me = owner.id == clone.me.id ? clone.me : clone.opp;
-            me.StartSummon(new MechanicalDragonling());
-            return new SingleSubBoardContainer(clone, b, "Play " + this);
-        });
+            SetBattlecry(b =>
+            {
+                var clone = b.Clone();
+                var me = Owner.Id == clone.Me.Id ? clone.Me : clone.Opp;
+                me.StartSummon(new MechanicalDragonling());
+                return new SingleSubBoardContainer(clone, b, "Play " + this);
+            });
+        }
     }
 }

@@ -1,9 +1,12 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards.Minions;
 
-class Wolfrider : Minion
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public Wolfrider() : base(3, 3, 1)
+    internal class Wolfrider : Minion
     {
-        Charge = true;
+        public Wolfrider() : base(3, 3, 1)
+        {
+            Charge = true;
+        }
     }
 }

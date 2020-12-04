@@ -1,67 +1,71 @@
 ﻿using System.Collections.Generic;
+using HSSim.Abstract_Cards;
 
-class Tracking : Spell
+namespace HSSim.Sets.Basic.Hunter.Spells
 {
-    public Tracking() : base(1)
+    internal class Tracking : Spell
     {
-        SetSpell((b) =>
+        public Tracking() : base(1)
         {
-            List<(List<MasterBoardContainer>, int, string)> result = new List<(List<MasterBoardContainer>, int, string)>();
-            List<Card> seen = new List<Card>();
-            foreach (KeyValuePair<Card, int> c in owner.deck)
+            SetSpell(b =>
             {
-                List<Card> seen2 = new List<Card>();
-                Board cln = b.Clone();
-                Hero me = owner.id == cln.me.id ? cln.me : cln.opp;
-
-                me.deck[c.Key]--;
-                if (me.deck[c.Key] == 0)
-                    me.deck.Remove(c.Key);
-
-                foreach (KeyValuePair<Card, int> c2 in me.deck)
+                var result = new List<(List<MasterBoardContainer>, int, string)>();
+                var seen = new List<Card>();
+                foreach (var c in Owner.Deck)
                 {
-                    if (seen.Contains(c2.Key))
-                        continue;
+                    var seen2 = new List<Card>();
+                    var cln = b.Clone();
+                    var me = Owner.Id == cln.Me.Id ? cln.Me : cln.Opp;
 
-                    Board cln2 = cln.Clone();
-                    Hero me2 = owner.id == cln2.me.id ? cln2.me : cln2.opp;
+                    me.Deck[c.Key]--;
+                    if (me.Deck[c.Key] == 0)
+                        me.Deck.Remove(c.Key);
 
-                    me2.deck[c2.Key]--;
-                    if (me2.deck[c2.Key] == 0)
-                        me2.deck.Remove(c2.Key);
-
-                    foreach (KeyValuePair<Card, int> c3 in me2.deck)
+                    foreach (var c2 in me.Deck)
                     {
-                        if (seen2.Contains(c3.Key) || seen.Contains(c3.Key))
+                        if (seen.Contains(c2.Key))
                             continue;
 
-                        Board cln3 = cln.Clone();
-                        Hero me3 = owner.id == cln3.me.id ? cln3.me : cln3.opp;
+                        var cln2 = cln.Clone();
+                        var me2 = Owner.Id == cln2.Me.Id ? cln2.Me : cln2.Opp;
 
-                        me3.deck[c3.Key]--;
-                        if (me3.deck[c3.Key] == 0)
-                            me3.deck.Remove(c3.Key);
+                        me2.Deck[c2.Key]--;
+                        if (me2.Deck[c2.Key] == 0)
+                            me2.Deck.Remove(c2.Key);
 
-                        Board res1 = cln3.Clone();
-                        (res1.me.id == owner.id ? res1.me : res1.opp).hand.Add(c.Key);
-                        MasterBoardContainer mbc1 = new MasterBoardContainer(res1) { action = "Pick " + c.Key };
+                        foreach (var c3 in me2.Deck)
+                        {
+                            if (seen2.Contains(c3.Key) || seen.Contains(c3.Key))
+                                continue;
 
-                        Board res2 = cln3.Clone();
-                        (res2.me.id == owner.id ? res2.me : res2.opp).hand.Add(c2.Key);
-                        MasterBoardContainer mbc2 = new MasterBoardContainer(res2) { action = "Pick " + c2.Key };
+                            var cln3 = cln.Clone();
+                            var me3 = Owner.Id == cln3.Me.Id ? cln3.Me : cln3.Opp;
 
-                        Board res3 = cln3.Clone();
-                        (res3.me.id == owner.id ? res3.me : res3.opp).hand.Add(c3.Key);
-                        MasterBoardContainer mbc3 = new MasterBoardContainer(res3) { action = "Pick " + c3.Key };
+                            me3.Deck[c3.Key]--;
+                            if (me3.Deck[c3.Key] == 0)
+                                me3.Deck.Remove(c3.Key);
 
-                        result.Add((new List<MasterBoardContainer> { mbc1, mbc2, mbc3 }, c.Value * c2.Value * c3.Value, c + " + " + c2 + " + " + c3));
+                            var res1 = cln3.Clone();
+                            (res1.Me.Id == Owner.Id ? res1.Me : res1.Opp).Hand.Add(c.Key);
+                            var mbc1 = new MasterBoardContainer(res1) { Action = "Pick " + c.Key };
+
+                            var res2 = cln3.Clone();
+                            (res2.Me.Id == Owner.Id ? res2.Me : res2.Opp).Hand.Add(c2.Key);
+                            var mbc2 = new MasterBoardContainer(res2) { Action = "Pick " + c2.Key };
+
+                            var res3 = cln3.Clone();
+                            (res3.Me.Id == Owner.Id ? res3.Me : res3.Opp).Hand.Add(c3.Key);
+                            var mbc3 = new MasterBoardContainer(res3) { Action = "Pick " + c3.Key };
+
+                            result.Add((new List<MasterBoardContainer> { mbc1, mbc2, mbc3 }, c.Value * c2.Value * c3.Value, c + " + " + c2 + " + " + c3));
+                        }
+                        seen2.Add(c2.Key);
                     }
-                    seen2.Add(c2.Key);
+                    seen.Add(c.Key);
                 }
-                seen.Add(c.Key);
-            }
 
-            return new RandomChoiceSubBoardContainer(result, b, "Play " + this);
-        });
+                return new RandomChoiceSubBoardContainer(result, b, "Play " + this);
+            });
+        }
     }
 }

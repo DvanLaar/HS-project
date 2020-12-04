@@ -1,31 +1,35 @@
 ﻿using System.Collections.Generic;
+using HSSim.Abstract_Cards;
 
-class Hunter : Hero
+namespace HSSim.Classes
 {
-    public override Dictionary<Card, int> DeckList { get => new Dictionary<Card, int>(); set { } }
-
-    public Hunter() : base()
+    internal class Hunter : Hero
     {
-        SetHeropower();
-    }
+        public override Dictionary<Card, int> DeckList => new Dictionary<Card, int>();
 
-    public Hunter(bool id, bool nw) : base(id, nw)
-    {
-        SetHeropower();
-    }
-
-    private void SetHeropower()
-    {
-        HeroPower = (b) =>
+        protected Hunter()
         {
-            if (mana < 2 || HeroPowerUsed)
-                return null;
+            SetHeropower();
+        }
 
-            Board cln = b.Clone();
-            (cln.me.id == id ? cln.opp : cln.me).TakeDamage(2);
-            (cln.me.id == id ? cln.me : cln.opp).Mana -= 2;
-            (cln.me.id == id ? cln.me : cln.opp).HeroPowerUsed = true;
-            return new SingleSubBoardContainer(cln, b, "Use Hero Power");
-        };
+        protected Hunter(bool id, bool nw) : base(id, nw)
+        {
+            SetHeropower();
+        }
+
+        private void SetHeropower()
+        {
+            HeroPower = b =>
+            {
+                if (ManaProtected < 2 || HeroPowerUsed)
+                    return null;
+
+                var cln = b.Clone();
+                (cln.Me.Id == Id ? cln.Opp : cln.Me).TakeDamage(2);
+                (cln.Me.Id == Id ? cln.Me : cln.Opp).Mana -= 2;
+                (cln.Me.Id == Id ? cln.Me : cln.Opp).HeroPowerUsed = true;
+                return new SingleSubBoardContainer(cln, b, "Use Hero Power");
+            };
+        }
     }
 }

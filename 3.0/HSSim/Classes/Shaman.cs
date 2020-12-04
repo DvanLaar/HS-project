@@ -1,43 +1,47 @@
 ﻿using System.Collections.Generic;
+using HSSim.Abstract_Cards;
+using HSSim.Abstract_Cards.Minions;
+using HSSim.Sets.Basic.Shaman.Tokens;
 
-class Shaman : Hero
+namespace HSSim.Classes
 {
-    public override Dictionary<Card, int> DeckList { get => new Dictionary<Card, int>(); set { } }
-
-    public Shaman() : base()
+    internal class Shaman : Hero
     {
-        SetHeroPower();
-    }
+        public override Dictionary<Card, int> DeckList => new Dictionary<Card, int>();
 
-    public Shaman(bool id, bool nw) : base(id, nw)
-    {
-        SetHeroPower();
-    }
-
-    private void SetHeroPower()
-    {
-        HeroPower = ((b) =>
+        public Shaman()
         {
-            if (HeroPowerUsed || Mana < 2 || onBoard.Count >= 7)
-                return null;
+            SetHeroPower();
+        }
 
-            Minion[] totems = new Minion[] {new HealingTotem(), new SearingTotem(), new StoneclawTotem(), new WrathOfAirTotem() };
-            List<(MasterBoardContainer, int)> result = new List<(MasterBoardContainer, int)>();
-            foreach (Minion m in totems)
+        public Shaman(bool id, bool nw) : base(id, nw)
+        {
+            SetHeroPower();
+        }
+
+        private void SetHeroPower()
+        {
+            HeroPower = (b =>
             {
-                Board clone = b.Clone();
-                Hero own = id == clone.me.id ? clone.me : clone.opp;
-                m.SetOwner(own);
-                if (own.onBoard.TrueForAll((comp) => comp.GetType() != m.GetType()))
+                if (HeroPowerUsed || Mana < 2 || OnBoard.Count >= 7)
+                    return null;
+
+                var totems = new Minion[] {new HealingTotem(), new SearingTotem(), new StoneclawTotem(), new WrathOfAirTotem() };
+                var result = new List<(MasterBoardContainer, int)>();
+                foreach (var m in totems)
                 {
-                    own.Mana -= 2;
-                    own.StartSummon(m);
-                    result.Add((new MasterBoardContainer(clone) { action = "Summon " + m }, 1));
+                    var clone = b.Clone();
+                    var own = Id == clone.Me.Id ? clone.Me : clone.Opp;
+                    m.SetOwner(own);
+                    if (own.OnBoard.TrueForAll(comp => comp.GetType() != m.GetType()))
+                    {
+                        own.Mana -= 2;
+                        own.StartSummon(m);
+                        result.Add((new MasterBoardContainer(clone) { Action = "Summon " + m }, 1));
+                    }
                 }
-            }
-            if (result.Count == 0)
-                return null;
-            return new RandomSubBoardContainer(result, b, "Use Hero Power");
-        });
+                return result.Count == 0 ? null : new RandomSubBoardContainer(result, b, "Use Hero Power");
+            });
+        }
     }
 }

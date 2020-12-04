@@ -1,6 +1,11 @@
-﻿class FieryWarAxe : Weapon
+﻿using HSSim.Abstract_Cards;
+
+namespace HSSim.Sets.Basic.Warrior.Weapons
 {
-    public FieryWarAxe() : base(3, 3, 2)
+    internal class FieryWarAxe : Weapon
     {
+        public FieryWarAxe() : base(3, 3, 2)
+        {
+        }
     }
 }

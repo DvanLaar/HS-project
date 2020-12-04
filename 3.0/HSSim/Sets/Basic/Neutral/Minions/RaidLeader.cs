@@ -1,46 +1,47 @@
-﻿using System;
+﻿using System.Linq;
+using HSSim.Abstract_Cards.Minions;
+using HSSim.Abstract_Cards.Minions.AuraMinions;
 
-class RaidLeader : FriendlyMinionAuraMinion
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public RaidLeader() : base(3, 2, 2)
+    internal class RaidLeader : FriendlyMinionAuraMinion
     {
-    }
+        public RaidLeader() : base(3, 2, 2)
+        {
+        }
 
-    public override void AddAura()
-    {
-        base.AddAura();
-        foreach (Minion m in owner.onBoard)
+        protected override void AddAura()
+        {
+            base.AddAura();
+            foreach (var m in Owner.OnBoard.Where(m => m != this))
+            {
+                m.AlterAttack(1);
+            }
+            Owner.Summon += Aura;
+        }
+
+        protected override void RemoveAura()
+        {
+            base.RemoveAura();
+            foreach (var m in Owner.OnBoard.Where(m => m != this))
+            {
+                m.AlterAttack(-1);
+            }
+            Owner.Summon -= Aura;
+        }
+
+        protected override void Aura(Minion m)
         {
             if (m == this)
-                continue;
+                return;
             m.AlterAttack(1);
         }
-        owner.Summon += Aura;
-    }
 
-    public override void RemoveAura()
-    {
-        base.RemoveAura();
-        foreach (Minion m in owner.onBoard)
+        protected override void AuraInvert(Minion m)
         {
             if (m == this)
-                continue;
+                return;
             m.AlterAttack(-1);
         }
-        owner.Summon -= Aura;
-    }
-
-    protected override void Aura(Minion m)
-    {
-        if (m == this)
-            return;
-        m.AlterAttack(1);
-    }
-
-    protected override void AuraInvert(Minion m)
-    {
-        if (m == this)
-            return;
-        m.AlterAttack(-1);
     }
 }

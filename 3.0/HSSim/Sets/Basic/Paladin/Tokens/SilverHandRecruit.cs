@@ -1,6 +1,11 @@
-﻿class SilverHandRecruit : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Paladin.Tokens
 {
-    public SilverHandRecruit() : base(1, 1, 1)
+    internal class SilverHandRecruit : Minion
     {
+        public SilverHandRecruit() : base(1, 1, 1)
+        {
+        }
     }
 }
