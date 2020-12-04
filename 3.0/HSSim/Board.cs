@@ -1,47 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class Board
+namespace HSSim
 {
-    public Hero me, opp;
-    public bool curr;
-    public Stack<Func<Board, SubBoardContainer>> toPerform;
+    internal class Board
+    {
+        public Hero Me, Opp;
+        public bool Curr;
+        public Stack<Func<Board, SubBoardContainer>> ToPerform;
 
-    public double value { get
+        public double Value =>
+            Me.Value - Opp.Value;
+
+        public Board Clone()
         {
-            //if (curr)
-                return me.CalcValue() - opp.CalcValue();
-            //else
-            //    return opp.value - me.value;
-        } }
+            var b = new Board
+            {
+                Me = Me.Clone(),
+                Opp = Opp.Clone(),
+                Curr = Curr,
+                ToPerform = new Stack<Func<Board, SubBoardContainer>>(ToPerform.ToArray())
+            };
+            return b;
+        }
 
-    public Board Clone()
-    {
-        Board b = new Board();
-        b.me = me.Clone();
-        b.opp = opp.Clone();
-        b.curr = curr;
-        b.toPerform = new Stack<Func<Board, SubBoardContainer>>(toPerform.ToArray());
-        return b;
-    }
+        public static void Attack(IDamagable attacker, IDamagable defender)
+        {
+            defender.TakeDamage(attacker.Attack);
+            attacker.TakeDamage(defender.Attack);
 
-    public void Attack(IDamagable attacker, IDamagable defender)
-    {
-        defender.TakeDamage(attacker.Attack);
-        attacker.TakeDamage(defender.Attack);
+            attacker.AttacksLeft--;
+        }
 
-        attacker.AttacksLeft--;
-    }
+        public Board(Hero me, Hero opp)
+        {
+            Me = me;
+            Opp = opp;
+            ToPerform = new Stack<Func<Board, SubBoardContainer>>();
+        }
 
-    public Board(Hero me, Hero opp)
-    {
-        this.me = me;
-        this.opp = opp;
-        toPerform = new Stack<Func<Board, SubBoardContainer>>();
-    }
-
-    public Board()
-    {
-        toPerform = new Stack<Func<Board, SubBoardContainer>>();
+        private Board()
+        {
+            ToPerform = new Stack<Func<Board, SubBoardContainer>>();
+        }
     }
 }

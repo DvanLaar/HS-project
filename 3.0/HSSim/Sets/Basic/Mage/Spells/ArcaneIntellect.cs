@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HSSim.Abstract_Cards;
 
-class ArcaneIntellect : Spell
+namespace HSSim.Sets.Basic.Mage.Spells
 {
-    public ArcaneIntellect() : base(3)
+    internal class ArcaneIntellect : Spell
     {
-        SetSpell((b) =>
+        public ArcaneIntellect() : base(3)
         {
-            Board b2 = b.Clone();
-            return owner.DrawTwoCards(b2);
-        });
+            SetSpell(b =>
+            {
+                var b2 = b.Clone();
+                return Owner.DrawTwoCards(b2);
+            });
+        }
     }
 
     public override double DeltaBoardValue(Board b)

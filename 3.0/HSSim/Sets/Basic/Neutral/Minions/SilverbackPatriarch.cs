@@ -1,8 +1,13 @@
-﻿class SilverbackPatriarch : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public SilverbackPatriarch() : base(3, 1, 4)
+    internal class SilverbackPatriarch : Minion
     {
-        Taunt = true;
-        Beast = true;
+        public SilverbackPatriarch() : base(3, 1, 4)
+        {
+            Taunt = true;
+            Beast = true;
+        }
     }
 }

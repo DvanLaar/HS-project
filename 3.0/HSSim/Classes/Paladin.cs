@@ -1,31 +1,36 @@
 ﻿using System.Collections.Generic;
+using HSSim.Abstract_Cards;
+using HSSim.Sets.Basic.Paladin.Tokens;
 
-class Paladin : Hero
+namespace HSSim.Classes
 {
-    public override Dictionary<Card, int> DeckList { get => new Dictionary<Card, int>(); set { } }
-
-    public Paladin() : base()
+    internal class Paladin : Hero
     {
-        SetHeroPower();
-    }
+        public override Dictionary<Card, int> DeckList => new Dictionary<Card, int>();
 
-    public Paladin(bool id, bool nw) : base()
-    {
-        SetHeroPower();
-    }
-
-    private void SetHeroPower()
-    {
-        HeroPower = ((b) =>
+        public Paladin()
         {
-            if (Mana < 2 || HeroPowerUsed || onBoard.Count >= 7)
-                return null;
+            SetHeroPower();
+        }
 
-            Board clone = b.Clone();
-            Hero me = id == clone.me.id ? clone.me : clone.opp;
-            me.StartSummon(new SilverHandRecruit());
-            me.Mana -= 2;
-            return new SingleSubBoardContainer(clone, b, "Use Hero Power");
-        });
+        public Paladin(bool id, bool nw)
+        {
+            SetHeroPower();
+        }
+
+        private void SetHeroPower()
+        {
+            HeroPower = (b =>
+            {
+                if (Mana < 2 || HeroPowerUsed || OnBoard.Count >= 7)
+                    return null;
+
+                var clone = b.Clone();
+                var me = Id == clone.Me.Id ? clone.Me : clone.Opp;
+                me.StartSummon(new SilverHandRecruit());
+                me.Mana -= 2;
+                return new SingleSubBoardContainer(clone, b, "Use Hero Power");
+            });
+        }
     }
 }

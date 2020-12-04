@@ -1,7 +1,12 @@
-﻿class WickedKnife : Weapon
+﻿using HSSim.Abstract_Cards;
+
+namespace HSSim.Sets.Basic.Rogue.Tokens
 {
-    public WickedKnife() : base(1, 1, 2)
+    internal class WickedKnife : Weapon
     {
+        public WickedKnife() : base(1, 1, 2)
+        {
+        }
     }
 
     public override double DeltaBoardValue(Board b)

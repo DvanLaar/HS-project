@@ -1,14 +1,17 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards.Minions;
 
-class SenjinShieldmasta : Minion
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public SenjinShieldmasta() : base(4, 3, 5)
+    internal class SenjinShieldmasta : Minion
     {
-        Taunt = true;
-    }
+        public SenjinShieldmasta() : base(4, 3, 5)
+        {
+            Taunt = true;
+        }
 
-    public override string ToString()
-    {
-        return "Sen'jin Shieldmasta";
+        public override string ToString()
+        {
+            return "Sen'jin Shieldmasta";
+        }
     }
 }

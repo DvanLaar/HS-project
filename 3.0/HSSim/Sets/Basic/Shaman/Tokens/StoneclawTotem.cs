@@ -1,8 +1,13 @@
-﻿class StoneclawTotem : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Shaman.Tokens
 {
-    public StoneclawTotem() : base(1, 0, 2)
+    internal class StoneclawTotem : Minion
     {
-        Taunt = true;
-        Totem = true;
+        public StoneclawTotem() : base(1, 0, 2)
+        {
+            Taunt = true;
+            Totem = true;
+        }
     }
 }

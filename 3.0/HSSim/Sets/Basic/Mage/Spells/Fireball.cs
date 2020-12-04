@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HSSim.Abstract_Cards;
 
-class Fireball : Spell
+namespace HSSim.Sets.Basic.Mage.Spells
 {
-    public Fireball() : base(4)
+    internal class Fireball : Spell
     {
-        SetSpell((b) =>
+        public Fireball() : base(4)
         {
-            return DealDamage(6 + owner.SpellDamage, b);
-        });
+            SetSpell(b => DealDamage(6 + Owner.SpellDamage, b));
+        }
     }
 
     public override double DeltaBoardValue(Board b)

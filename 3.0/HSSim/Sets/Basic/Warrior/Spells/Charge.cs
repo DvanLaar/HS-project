@@ -1,37 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using HSSim.Abstract_Cards;
 
-class Charge : Spell
+namespace HSSim.Sets.Basic.Warrior.Spells
 {
-    public Charge() : base(1)
+    internal class Charge : Spell
     {
-        SetSpell((b) =>
+        public Charge() : base(1)
         {
-            List<MasterBoardContainer> result = new List<MasterBoardContainer>();
-            for (int i = 0; i < owner.onBoard.Count; i++)
+            SetSpell(b =>
             {
-                Board clone = b.Clone();
-                Hero me = owner.id == clone.me.id ? clone.me : clone.opp;
-                Minion m = me.onBoard[i];
-
-                m.Charge = true;
-                m.cantAttackHeroes = true;
-                Func<Board, SubBoardContainer> func = (brd) =>
+                var result = new List<MasterBoardContainer>();
+                for (var i = 0; i < Owner.OnBoard.Count; i++)
                 {
-                    m.cantAttackHeroes = false;
-                    return new SingleSubBoardContainer(brd, brd, m + "loses can't attack heroes");
-                };
-                me.EndTurnFuncs.Add(func);
-                me.SingleEndTurnFuncs.Add(me.EndTurnFuncs.IndexOf(func));
-                result.Add(new MasterBoardContainer(clone) { action = "Target " + m });
-            }
-            return new ChoiceSubBoardContainer(result, b, "Play " + this);
-        });
-    }
+                    var clone = b.Clone();
+                    var me = Owner.Id == clone.Me.Id ? clone.Me : clone.Opp;
+                    var m = me.OnBoard[i];
 
-    public override bool CanPlay(Board b)
-    {
-        return base.CanPlay(b) && owner.onBoard.Count > 0;
+                    m.Charge = true;
+                    m.CantAttackHeroes = true;
+                    SubBoardContainer Func(Board brd)
+                    {
+                        m.CantAttackHeroes = false;
+                        return new SingleSubBoardContainer(brd, brd, m + "loses can't attack heroes");
+                    }
+                    me.EndTurnFuncs.Add(Func);
+                    me.SingleEndTurnFuncs.Add(me.EndTurnFuncs.IndexOf(Func));
+                    result.Add(new MasterBoardContainer(clone) { Action = "Target " + m });
+                }
+                return new ChoiceSubBoardContainer(result, b, "Play " + this);
+            });
+        }
+
+        public override bool CanPlay(Board b)
+        {
+            return base.CanPlay(b) && Owner.OnBoard.Count > 0;
+        }
     }
 
     public override double DeltaBoardValue(Board b)

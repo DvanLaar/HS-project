@@ -1,12 +1,18 @@
-﻿class RazorfenHunter : BattlecryMinion
+﻿using HSSim.Abstract_Cards.Minions;
+using HSSim.Sets.Basic.Neutral.Tokens;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public RazorfenHunter() : base(3, 2, 3)
+    internal class RazorfenHunter : BattlecryMinion
     {
-        SetBattlecry((b) =>
+        public RazorfenHunter() : base(3, 2, 3)
         {
-            Board clone = b.Clone();
-            (clone.me.id == owner.id ? clone.me : clone.opp).StartSummon(new Boar() { owner = owner });
-            return new SingleSubBoardContainer(clone, b, "Play " + this);
-        });
+            SetBattlecry(b =>
+            {
+                var clone = b.Clone();
+                (clone.Me.Id == Owner.Id ? clone.Me : clone.Opp).StartSummon(new Boar { Owner = Owner });
+                return new SingleSubBoardContainer(clone, b, "Play " + this);
+            });
+        }
     }
 }

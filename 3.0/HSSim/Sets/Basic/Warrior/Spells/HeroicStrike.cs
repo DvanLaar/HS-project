@@ -1,25 +1,30 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards;
 
-class HeroicStrike : Spell
+namespace HSSim.Sets.Basic.Warrior.Spells
 {
-    public HeroicStrike() : base(2)
+    internal class HeroicStrike : Spell
     {
-        SetSpell((b) =>
+        public HeroicStrike() : base(2)
         {
-            Board clone = b.Clone();
-            Hero me = owner.id == clone.me.id ? clone.me : clone.opp;
-            me.Attack += 4;
-            Func<Board, SubBoardContainer> function = (brd) =>
+            SetSpell(b =>
             {
-                Board cln = brd.Clone();
-                Hero hero = owner.id == cln.me.id ? cln.me : cln.opp;
-                hero.Attack -= 4;
-                return new SingleSubBoardContainer(cln, brd, "End of " + this + " effect");
-            };
-            me.EndTurnFuncs.Add(function);
-            me.SingleEndTurnFuncs.Add(me.EndTurnFuncs.IndexOf(function));
-            return new SingleSubBoardContainer(clone, b, "Play " + this);
-        });
+                var clone = b.Clone();
+                var me = Owner.Id == clone.Me.Id ? clone.Me : clone.Opp;
+                me.Attack += 4;
+
+                SubBoardContainer Function(Board brd)
+                {
+                    var cln = brd.Clone();
+                    var hero = Owner.Id == cln.Me.Id ? cln.Me : cln.Opp;
+                    hero.Attack -= 4;
+                    return new SingleSubBoardContainer(cln, brd, "End of " + this + " effect");
+                }
+
+                me.EndTurnFuncs.Add(Function);
+                me.SingleEndTurnFuncs.Add(me.EndTurnFuncs.IndexOf(Function));
+                return new SingleSubBoardContainer(clone, b, "Play " + this);
+            });
+        }
     }
 
     public override double DeltaBoardValue(Board b)

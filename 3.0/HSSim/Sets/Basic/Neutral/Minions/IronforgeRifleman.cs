@@ -1,10 +1,12 @@
-﻿class IronforgeRifleman : BattlecryMinion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public IronforgeRifleman() : base(3, 2, 2)
+    internal class IronforgeRifleman : BattlecryMinion
     {
-        SetBattlecry((b) =>
+        public IronforgeRifleman() : base(3, 2, 2)
         {
-            return DealDamage(1, b);
-        });
+            SetBattlecry(b => DealDamage(1, b));
+        }
     }
 }

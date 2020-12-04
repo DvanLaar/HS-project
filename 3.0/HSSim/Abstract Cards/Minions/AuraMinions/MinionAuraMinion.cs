@@ -1,17 +1,20 @@
-﻿abstract class MinionAuraMinion : AuraMinion
+﻿namespace HSSim.Abstract_Cards.Minions.AuraMinions
 {
-    public MinionAuraMinion(int mana, int attack, int health) : base(mana, attack, health)
+    internal abstract class MinionAuraMinion : AuraMinion
     {
-    }
-
-    protected abstract void Aura(Minion m);
-    protected abstract void AuraInvert(Minion m);
-    public override void SetOwner(Hero newOwner)
-    {
-        if (auraActive)
+        protected MinionAuraMinion(int mana, int attack, int health) : base(mana, attack, health)
         {
-            newOwner.Summon += Aura;
         }
-        base.SetOwner(newOwner);
+
+        protected abstract void Aura(Minion m);
+        protected abstract void AuraInvert(Minion m);
+        public override void SetOwner(Hero newOwner)
+        {
+            if (AuraActive)
+            {
+                newOwner.Summon += Aura;
+            }
+            base.SetOwner(newOwner);
+        }
     }
 }

@@ -1,9 +1,12 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards.Minions;
 
-class OasisSnapjaw : Minion
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public OasisSnapjaw() : base(4, 2, 7)
+    internal class OasisSnapjaw : Minion
     {
-        Beast = true;
+        public OasisSnapjaw() : base(4, 2, 7)
+        {
+            Beast = true;
+        }
     }
 }

@@ -1,9 +1,12 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards.Minions;
 
-class RiverCrocolisk : Minion
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public RiverCrocolisk() : base(2, 2, 3)
+    internal class RiverCrocolisk : Minion
     {
-        Beast = true;
+        public RiverCrocolisk() : base(2, 2, 3)
+        {
+            Beast = true;
+        }
     }
 }

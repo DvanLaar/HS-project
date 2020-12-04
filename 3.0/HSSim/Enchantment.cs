@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HSSim
 {
-    abstract class Enchantment
+    internal abstract class Enchantment
     {
-        abstract public void Apply();
-        abstract public void Resolve();
+        public abstract void Apply();
+        public abstract void Resolve();
     }
 
-    class AttackEnchantment : Enchantment
+    internal class AttackEnchantment : Enchantment
     {
-        int attack;
+        private int Attack { get; }
 
         public AttackEnchantment(int attack)
         {
-            this.attack = attack;
+            Attack = attack;
         }
         
         public override void Apply()

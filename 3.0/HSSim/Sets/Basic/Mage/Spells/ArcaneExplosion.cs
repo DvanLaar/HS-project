@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HSSim.Abstract_Cards;
 
-class ArcaneExplosion : Spell
+namespace HSSim.Sets.Basic.Mage.Spells
 {
-    public ArcaneExplosion() : base(2)
+    internal class ArcaneExplosion : Spell
     {
-        SetSpell((b) =>
+        public ArcaneExplosion() : base(2)
         {
-            Board clone = b.Clone();
-            Hero Opp = clone.me.id == owner.id ? clone.opp : clone.me;
-            Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
-            for (int i = 0; i < Opp.onBoard.Count; i++)
+            SetSpell(b =>
             {
-                Opp.onBoard[i].TakeDamage(1 + owner.SpellDamage);
-            }
-            return new SingleSubBoardContainer(clone, b, "Play Arcane Explosion");
-        });
+                var clone = b.Clone();
+                var opp = clone.Me.Id == Owner.Id ? clone.Opp : clone.Me;
+                foreach (var minion in opp.OnBoard)
+                {
+                    minion.TakeDamage(1 + Owner.SpellDamage);
+                }
+                return new SingleSubBoardContainer(clone, b, "Play Arcane Explosion");
+            });
+        }
     }
 
     public override double DeltaBoardValue(Board b)

@@ -1,7 +1,12 @@
-﻿class SearingTotem : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Shaman.Tokens
 {
-    public SearingTotem() : base(1, 1, 1)
+    internal class SearingTotem : Minion
     {
-        Totem = true;
+        public SearingTotem() : base(1, 1, 1)
+        {
+            Totem = true;
+        }
     }
 }

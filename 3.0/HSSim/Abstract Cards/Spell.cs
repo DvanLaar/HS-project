@@ -1,28 +1,31 @@
 ﻿using System;
 
-abstract class Spell : Card
+namespace HSSim.Abstract_Cards
 {
-    protected Func<Board, SubBoardContainer> Cast;
-
-    public Spell(int mana) : base(mana)
+    internal abstract class Spell : Card
     {
-    }
+        private Func<Board, SubBoardContainer> _cast;
 
-    public void SetSpell(Func<Board, SubBoardContainer> effect)
-    {
-        Cast = effect;
-    }
+        protected Spell(int mana) : base(mana)
+        {
+        }
 
-    public override SubBoardContainer Play(Board curBoard)
-    {
-        if (!CanPlay(curBoard))
-            return null;
+        protected void SetSpell(Func<Board, SubBoardContainer> effect)
+        {
+            _cast = effect;
+        }
 
-        Board clone = curBoard.Clone();
-        Hero own = owner.id == clone.me.id ? clone.me : clone.opp; //Move to card
-        own.hand.RemoveAt(owner.hand.IndexOf(this));
-        own.Mana -= cost;
+        public override SubBoardContainer Play(Board curBoard)
+        {
+            if (!CanPlay(curBoard))
+                return null;
 
-        return Cast.Invoke(clone);
+            var clone = curBoard.Clone();
+            var own = Owner.Id == clone.Me.Id ? clone.Me : clone.Opp; //Move to card
+            own.Hand.RemoveAt(Owner.Hand.IndexOf(this));
+            own.Mana -= Cost;
+
+            return _cast.Invoke(clone);
+        }
     }
 }
