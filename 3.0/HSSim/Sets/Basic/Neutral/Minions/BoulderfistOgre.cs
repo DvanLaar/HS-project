@@ -1,6 +1,11 @@
-﻿class BoulderfistOgre : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public BoulderfistOgre() : base(6, 6, 7)
+    internal class BoulderfistOgre : Minion
     {
+        public BoulderfistOgre() : base(6, 6, 7)
+        {
+        }
     }
 }

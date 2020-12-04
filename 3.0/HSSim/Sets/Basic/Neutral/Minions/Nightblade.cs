@@ -1,15 +1,18 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards.Minions;
 
-class Nightblade : BattlecryMinion 
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public Nightblade() : base(5, 4, 4)
+    internal class Nightblade : BattlecryMinion 
     {
-        SetBattlecry((b) =>
+        public Nightblade() : base(5, 4, 4)
         {
-            Board clone = b.Clone();
-            Hero OppClone = owner.id != clone.me.id ? clone.me : clone.opp;
-            OppClone.TakeDamage(3);
-            return new SingleSubBoardContainer(clone, b, "Play Nightblade");
-        });
+            SetBattlecry(b =>
+            {
+                var clone = b.Clone();
+                var oppClone = Owner.Id != clone.Me.Id ? clone.Me : clone.Opp;
+                oppClone.TakeDamage(3);
+                return new SingleSubBoardContainer(clone, b, "Play Nightblade");
+            });
+        }
     }
 }

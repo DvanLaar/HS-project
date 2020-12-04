@@ -1,9 +1,12 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards.Minions;
 
-class BloodfenRaptor : Minion
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public BloodfenRaptor() : base (2, 3, 2)
+    internal class BloodfenRaptor : Minion
     {
-        Beast = true;
+        public BloodfenRaptor() : base (2, 3, 2)
+        {
+            Beast = true;
+        }
     }
 }

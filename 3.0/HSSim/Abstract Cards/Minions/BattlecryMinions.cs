@@ -1,24 +1,27 @@
 ﻿using System;
 
-abstract class BattlecryMinion : Minion
+namespace HSSim.Abstract_Cards.Minions
 {
-    Func<Board, SubBoardContainer> Battlecry;
-
-    public BattlecryMinion(int mana, int attack, int health) : base(mana, attack, health)
+    internal abstract class BattlecryMinion : Minion
     {
-    }
+        private Func<Board, SubBoardContainer> _battlecry;
 
-    public void SetBattlecry(Func<Board, SubBoardContainer> bc)
-    {
-        Battlecry = bc;
-    }
+        protected BattlecryMinion(int mana, int attack, int health) : base(mana, attack, health)
+        {
+        }
 
-    public override SubBoardContainer Play(Board curBoard)
-    {
-        if (!CanPlay(curBoard))
-            return null;
+        protected void SetBattlecry(Func<Board, SubBoardContainer> bc)
+        {
+            _battlecry = bc;
+        }
 
-        SubBoardContainer b = base.Play(curBoard);
-        return Battlecry.Invoke(b.children[0].board);        
+        public override SubBoardContainer Play(Board curBoard)
+        {
+            if (!CanPlay(curBoard))
+                return null;
+
+            var b = base.Play(curBoard);
+            return _battlecry.Invoke(b.Children[0].Board);        
+        }
     }
 }

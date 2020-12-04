@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using HSSim.Abstract_Cards;
+using HSSim.Sets.Basic.Paladin.Tokens;
 
-class LostInTheJungle : Spell
+namespace HSSim.Sets.Paladin.Spells
 {
-    public LostInTheJungle() : base(1)
+    internal class LostInTheJungle : Spell
     {
-        SetSpell((b) =>
+        public LostInTheJungle() : base(1)
         {
-            Board cln = b.Clone();
-            Hero me = owner.id == cln.me.id ? cln.me : cln.opp;
-            me.StartSummon(new SilverHandRecruit());
-            me.StartSummon(new SilverHandRecruit());
-            me.Mana -= cost;
-            return new SingleSubBoardContainer(cln, b, "Play " + this);
-        });
-    }
+            SetSpell(b =>
+            {
+                var cln = b.Clone();
+                var me = Owner.Id == cln.Me.Id ? cln.Me : cln.Opp;
+                me.StartSummon(new SilverHandRecruit());
+                me.StartSummon(new SilverHandRecruit());
+                me.Mana -= Cost;
+                return new SingleSubBoardContainer(cln, b, "Play " + this);
+            });
+        }
 
-    public override bool CanPlay(Board b)
-    {
-        return base.CanPlay(b) && owner.onBoard.Count < 7;
+        public override bool CanPlay(Board b)
+        {
+            return base.CanPlay(b) && Owner.OnBoard.Count < 7;
+        }
     }
 }

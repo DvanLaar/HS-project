@@ -1,7 +1,12 @@
-﻿class MechanicalDragonling : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Tokens
 {
-    public MechanicalDragonling() : base(1, 2, 1)
+    internal class MechanicalDragonling : Minion
     {
-        Mech = true;
+        public MechanicalDragonling() : base(1, 2, 1)
+        {
+            Mech = true;
+        }
     }
 }

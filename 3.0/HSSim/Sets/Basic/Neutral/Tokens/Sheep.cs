@@ -1,7 +1,12 @@
-﻿class Sheep : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Tokens
 {
-    public Sheep() : base(1, 1, 1)
+    internal class Sheep : Minion
     {
-        Beast = true;
+        public Sheep() : base(1, 1, 1)
+        {
+            Beast = true;
+        }
     }
 }

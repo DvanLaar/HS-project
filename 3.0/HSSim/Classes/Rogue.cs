@@ -1,31 +1,36 @@
 ﻿using System.Collections.Generic;
+using HSSim.Abstract_Cards;
+using HSSim.Sets.Basic.Rogue.Tokens;
 
-class Rogue : Hero
+namespace HSSim.Classes
 {
-    public override Dictionary<Card, int> DeckList { get => new Dictionary<Card, int>(); set { } }
-
-    public Rogue() : base()
+    internal class Rogue : Hero
     {
-        SetHeroPower();
-    }
+        public override Dictionary<Card, int> DeckList => new Dictionary<Card, int>();
 
-    public Rogue(bool id, bool nw) : base(id, nw)
-    {
-        SetHeroPower();
-    }
-
-    private void SetHeroPower()
-    {
-        HeroPower = ((b) =>
+        public Rogue()
         {
-            if (Mana < 2 || HeroPowerUsed)
-                return null;
+            SetHeroPower();
+        }
 
-            Board clone = b.Clone();
-            Hero me = id == clone.me.id ? clone.me : clone.opp;
-            me.Mana -= 2;
-            me.EquipWeapon(new WickedKnife());
-            return new SingleSubBoardContainer(clone, b, "Use Hero Power");
-        });
+        public Rogue(bool id, bool nw) : base(id, nw)
+        {
+            SetHeroPower();
+        }
+
+        private void SetHeroPower()
+        {
+            HeroPower = (b =>
+            {
+                if (Mana < 2 || HeroPowerUsed)
+                    return null;
+
+                var clone = b.Clone();
+                var me = Id == clone.Me.Id ? clone.Me : clone.Opp;
+                me.Mana -= 2;
+                me.EquipWeapon(new WickedKnife());
+                return new SingleSubBoardContainer(clone, b, "Use Hero Power");
+            });
+        }
     }
 }

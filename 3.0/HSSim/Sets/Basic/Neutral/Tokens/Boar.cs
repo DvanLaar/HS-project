@@ -1,7 +1,12 @@
-﻿class Boar : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Tokens
 {
-    public Boar() : base(1, 1, 1)
+    internal class Boar : Minion
     {
-        Beast = true;
+        public Boar() : base(1, 1, 1)
+        {
+            Beast = true;
+        }
     }
 }

@@ -1,7 +1,12 @@
-﻿class MurlocScout : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Tokens
 {
-    public MurlocScout() : base(1, 1, 1)
+    internal class MurlocScout : Minion
     {
-        Murloc = true;
+        public MurlocScout() : base(1, 1, 1)
+        {
+            Murloc = true;
+        }
     }
 }

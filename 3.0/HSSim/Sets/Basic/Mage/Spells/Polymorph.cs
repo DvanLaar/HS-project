@@ -1,45 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using HSSim.Abstract_Cards;
+using HSSim.Abstract_Cards.Minions;
+using HSSim.Sets.Basic.Neutral.Tokens;
 
-class Polymorph : Spell
+namespace HSSim.Sets.Basic.Mage.Spells
 {
-    public Polymorph() : base(4)
+    internal class Polymorph : Spell
     {
-        SetSpell((b) =>
+        public Polymorph() : base(4)
         {
-            List<MasterBoardContainer> result = new List<MasterBoardContainer>();
-            Hero opponent = b.me.id == owner.id ? b.opp : b.me;
-            foreach (Minion m in opponent.onBoard)
+            SetSpell(b =>
             {
-                Board clone = b.Clone();
-                Hero opp = clone.me.id == opponent.id ? clone.me : clone.opp;
-                Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
-                Minion sheep = new Sheep();
-                sheep.SetOwner(opp);
-                opp.onBoard[opponent.onBoard.IndexOf(m)].StartTransform();
-                opp.onBoard[opponent.onBoard.IndexOf(m)] = sheep;
-                result.Add(new MasterBoardContainer(clone) { action = "Transform " + m });
-            }
+                var result = new List<MasterBoardContainer>();
+                var opponent = b.Me.Id == Owner.Id ? b.Opp : b.Me;
+                foreach (var m in opponent.OnBoard)
+                {
+                    var clone = b.Clone();
+                    var opp = clone.Me.Id == opponent.Id ? clone.Me : clone.Opp;
+                    Minion sheep = new Sheep();
+                    sheep.SetOwner(opp);
+                    opp.OnBoard[opponent.OnBoard.IndexOf(m)].StartTransform();
+                    opp.OnBoard[opponent.OnBoard.IndexOf(m)] = sheep;
+                    result.Add(new MasterBoardContainer(clone) { Action = "Transform " + m });
+                }
 
-            foreach (Minion m in owner.onBoard)
-            {
-                Board clone = b.Clone();
-                Hero opp = clone.me.id == opponent.id ? clone.me : clone.opp;
-                Hero me = clone.me.id == owner.id ? clone.me : clone.opp;
-                me.Mana -= cost;
-                Minion sheep = new Sheep();
-                sheep.SetOwner(me);
-                me.onBoard[owner.onBoard.IndexOf(m)] = sheep;
-                result.Add(new MasterBoardContainer(clone) { action = "Transform " + m });
-            }
-            return new ChoiceSubBoardContainer(result, b, "Play Polymorph");
-        });
-    }
-    public override bool CanPlay(Board b)
-    {
-        if (!base.CanPlay(b))
-            return false;
+                foreach (var m in Owner.OnBoard)
+                {
+                    var clone = b.Clone();
+                    var me = clone.Me.Id == Owner.Id ? clone.Me : clone.Opp;
+                    me.Mana -= Cost;
+                    Minion sheep = new Sheep();
+                    sheep.SetOwner(me);
+                    me.OnBoard[Owner.OnBoard.IndexOf(m)] = sheep;
+                    result.Add(new MasterBoardContainer(clone) { Action = "Transform " + m });
+                }
+                return new ChoiceSubBoardContainer(result, b, "Play Polymorph");
+            });
+        }
+        public override bool CanPlay(Board b)
+        {
+            if (!base.CanPlay(b))
+                return false;
 
-        return b.me.onBoard.Count > 0 || b.opp.onBoard.Count > 0;
+            return b.Me.OnBoard.Count > 0 || b.Opp.OnBoard.Count > 0;
+        }
     }
 }

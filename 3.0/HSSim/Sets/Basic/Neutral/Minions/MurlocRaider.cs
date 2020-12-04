@@ -1,6 +1,11 @@
-﻿class MurlocRaider : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public MurlocRaider() : base(1, 2, 1)
+    internal class MurlocRaider : Minion
     {
+        public MurlocRaider() : base(1, 2, 1)
+        {
+        }
     }
 }

@@ -1,22 +1,25 @@
-﻿abstract class FriendlyMinionAuraMinion : MinionAuraMinion
+﻿namespace HSSim.Abstract_Cards.Minions.AuraMinions
 {
-    public FriendlyMinionAuraMinion(int mana, int attack, int health) : base(mana, attack, health)
+    internal abstract class FriendlyMinionAuraMinion : MinionAuraMinion
     {
-    }
+        protected FriendlyMinionAuraMinion(int mana, int attack, int health) : base(mana, attack, health)
+        {
+        }
 
-    public override void AddAura()
-    {
-        base.AddAura();
-        foreach (Minion m in owner.onBoard)
-            Aura(m);
-        owner.Summon += Aura;
-    }
+        protected override void AddAura()
+        {
+            base.AddAura();
+            foreach (var m in Owner.OnBoard)
+                Aura(m);
+            Owner.Summon += Aura;
+        }
 
-    public override void RemoveAura()
-    {
-        base.RemoveAura();
-        foreach (Minion m in owner.onBoard)
-            AuraInvert(m);
-        owner.Summon -= Aura;
+        protected override void RemoveAura()
+        {
+            base.RemoveAura();
+            foreach (var m in Owner.OnBoard)
+                AuraInvert(m);
+            Owner.Summon -= Aura;
+        }
     }
 }

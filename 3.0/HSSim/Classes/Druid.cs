@@ -1,36 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using HSSim.Abstract_Cards;
 
-class Druid : Hero
+namespace HSSim.Classes
 {
-    public override Dictionary<Card, int> DeckList { get => new Dictionary<Card, int>(); set { } }
-
-    public Druid() : base()
+    internal class Druid : Hero
     {
-        SetHeroPower();
-    }
+        public override Dictionary<Card, int> DeckList => new Dictionary<Card, int>();
 
-    public Druid(bool id, bool nw) : base(id, nw)
-    {
-        SetHeroPower();
-    }
-
-    private void SetHeroPower()
-    {
-        HeroPower = ((b) =>
+        public Druid()
         {
-            if (mana < 2 || HeroPowerUsed)
-                return null;
+            SetHeroPower();
+        }
 
-            Board cln = b.Clone();
-            Hero own = cln.me.id == id ? cln.me : cln.opp;
-            own.Armor++;
-            own.Attack++;
-            own.Mana -= 2;
-            Func<Board, SubBoardContainer> function = (brd) => { Board clone = brd.Clone(); (clone.me.id == id ? clone.me : clone.opp).Attack--; return new SingleSubBoardContainer(clone, brd, this + " Hero Power attack buff wears off"); };
-            own.EndTurnFuncs.Add(function);
-            own.SingleEndTurnFuncs.Add(own.EndTurnFuncs.IndexOf(function));
-            return new SingleSubBoardContainer(cln, b, "Use Hero Power");
-        });
+        public Druid(bool id, bool nw) : base(id, nw)
+        {
+            SetHeroPower();
+        }
+
+        private void SetHeroPower()
+        {
+            HeroPower = (b =>
+            {
+                if (ManaProtected < 2 || HeroPowerUsed)
+                    return null;
+
+                var cln = b.Clone();
+                var own = cln.Me.Id == Id ? cln.Me : cln.Opp;
+                own.Armor++;
+                own.Attack++;
+                own.Mana -= 2;
+
+                SubBoardContainer Function(Board brd)
+                {
+                    var clone = brd.Clone();
+                    (clone.Me.Id == Id ? clone.Me : clone.Opp).Attack--;
+                    return new SingleSubBoardContainer(clone, brd, this + " Hero Power attack buff wears off");
+                }
+
+                own.EndTurnFuncs.Add(Function);
+                own.SingleEndTurnFuncs.Add(own.EndTurnFuncs.IndexOf(Function));
+                return new SingleSubBoardContainer(cln, b, "Use Hero Power");
+            });
+        }
     }
 }

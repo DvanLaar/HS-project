@@ -1,9 +1,12 @@
-﻿using System;
+﻿using HSSim.Abstract_Cards.Minions;
 
-class CoreHound : Minion
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public CoreHound() : base(7, 9, 5)
+    internal class CoreHound : Minion
     {
-        Beast = true;
+        public CoreHound() : base(7, 9, 5)
+        {
+            Beast = true;
+        }
     }
 }

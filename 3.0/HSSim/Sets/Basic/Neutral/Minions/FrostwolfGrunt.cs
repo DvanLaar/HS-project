@@ -1,7 +1,12 @@
-﻿class FrostwolfGrunt : Minion
+﻿using HSSim.Abstract_Cards.Minions;
+
+namespace HSSim.Sets.Basic.Neutral.Minions
 {
-    public FrostwolfGrunt() : base(2, 2, 2)
+    internal class FrostwolfGrunt : Minion
     {
-        Taunt = true;
+        public FrostwolfGrunt() : base(2, 2, 2)
+        {
+            Taunt = true;
+        }
     }
 }

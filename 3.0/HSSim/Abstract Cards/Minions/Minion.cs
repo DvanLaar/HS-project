@@ -1,173 +1,182 @@
 ﻿using System.Collections.Generic;
 
-abstract class Minion : Card, IDamagable
+namespace HSSim.Abstract_Cards.Minions
 {
-    int baseAttack, baseHealth, maxHealth;
-    protected int curHealth;
-    public bool Taunt = false, windfury = false, megaWindfury = false, cantAttackHeroes = false;
-    public int maxAttacks { get { if (megaWindfury) return 4; if (windfury) return 2; return 1; } }
-
-    public bool Beast = false, Totem = false, Mech = false, Murloc = false;
-    private bool charge;
-
-    public delegate void EmptyHandler();
-    public event EmptyHandler Transform;
-    public event EmptyHandler Destroy;
-    public event EmptyHandler OnDamaged;
-
-    public virtual int Health
+    internal abstract class Minion : Card, IDamagable
     {
-        get => curHealth; set
+        private int _baseAttack, _baseHealth, _maxHealth;
+        protected int CurHealth;
+        public bool Taunt = false;
+        private const bool Windfury = false;
+        private const bool MegaWindfury = false;
+        public bool CantAttackHeroes = false;
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        public static int MaxAttacks { get { if (MegaWindfury) return 4; return Windfury ? 2 : 1;
+        } }
+
+        public bool Beast = false;
+        protected bool Totem = false;
+        protected bool Mech { get; set; } = false;
+        protected bool Murloc = false;
+        private bool _charge;
+
+        public delegate void EmptyHandler();
+        public event EmptyHandler Transform;
+        public event EmptyHandler Destroy;
+        public event EmptyHandler OnDamaged;
+
+        public virtual int Health
         {
-            if (value < curHealth)
-                OnDamaged?.Invoke();
-            curHealth = value;
-            if (curHealth <= 0)
+            get => CurHealth; set
             {
-                StartDestroy();
+                if (value < CurHealth)
+                    OnDamaged?.Invoke();
+                CurHealth = value;
+                if (CurHealth <= 0)
+                {
+                    StartDestroy();
+                }
             }
         }
-    }
-    public int Attack { get; set; }
-    public int AttacksLeft { get; set; }
-    public bool Charge { get => charge; set { if (value) if (charge) charge = value; else { charge = value; AttacksLeft = maxAttacks; } else charge = value; } }
-    public bool Damaged { get => Health != maxHealth; }
+        public int Attack { get; set; }
+        public int AttacksLeft { get; set; }
+        public bool Charge { get => _charge; set { if (value) if (_charge) _charge = true; else { _charge = true; AttacksLeft = MaxAttacks; } else _charge = false; } }
+        public bool Damaged => Health != _maxHealth;
 
-    public Minion(int mana, int attack, int health) : base(mana)
-    {
-        baseAttack = attack;
-        Attack = attack;
-        baseHealth = health;
-        curHealth = health;
-        maxHealth = health;
-        cost = mana;
-        AttacksLeft = 0;
-    }
-
-    public override Card Clone()
-    {
-        Minion m = (Minion)base.Clone();
-        m.baseAttack = baseAttack;
-        m.baseHealth = baseHealth;
-        m.cost = cost;
-        m.maxHealth = maxHealth;
-        m.curHealth = curHealth;
-        m.Attack = Attack;
-        m.AttacksLeft = AttacksLeft;
-
-        return m;
-    }
-
-    public void TakeDamage(int dmg)
-    {
-        Health -= dmg;
-    }
-
-    public override bool CanPlay(Board b)
-    {
-        return owner.onBoard.Count < 7 && base.CanPlay(b);
-    }
-
-    public void StartTransform() //Maybe include target, perform transform too
-    {
-        Transform?.Invoke();
-    }
-
-    public void StartDestroy()
-    {
-        Destroy?.Invoke();
-        owner.onBoard.Remove(this);
-    }
-
-    public void AddHealth(int increase)
-    {
-        if (increase <= 0)
-            return;
-        maxHealth += increase;
-        curHealth += increase;
-    }
-
-    public void ReduceHealth(int decrease)
-    {
-        if (decrease <= 0)
-            return;
-        maxHealth -= decrease;
-        if (curHealth > maxHealth)
-            curHealth = maxHealth;
-    }
-
-    public void AlterAttack(int alteration)
-    {
-        if (Attack + alteration <= 0)
+        protected Minion(int mana, int attack, int health) : base(mana)
         {
-            Attack = 0;
-            return;
+            _baseAttack = attack;
+            Attack = attack;
+            _baseHealth = health;
+            CurHealth = health;
+            _maxHealth = health;
+            Cost = mana;
+            AttacksLeft = 0;
         }
-        Attack += alteration;
-    }
 
-    public override SubBoardContainer Play(Board curBoard)
-    {
-        if (!CanPlay(curBoard))
-            return null;
-
-        Board b = curBoard.Clone();
-
-        Hero ownerClone = owner.id == b.me.id ? b.me : b.opp;
-        Minion m = (Minion)ownerClone.hand[owner.hand.IndexOf(this)];
-
-        ownerClone.hand.Remove(m);
-        ownerClone.Mana -= cost;
-        ownerClone.StartSummon(m);
-
-        return new SingleSubBoardContainer(new MasterBoardContainer(b), curBoard, "Play " + this);
-    }
-
-    public virtual SubBoardContainer PerformAttack(Board curBoard)
-    {
-        if (AttacksLeft <= 0)
-            return null;
-
-        List<MasterBoardContainer> results = new List<MasterBoardContainer>();
-        Hero opponent = curBoard.me.id == owner.id ? curBoard.opp : curBoard.me;
-        int myIndex = owner.onBoard.IndexOf(this);
-        if (opponent.onBoard.TrueForAll((m) => !m.Taunt)) //All minions don't have taunt => any minion and hero are valid targets)
+        public override Card Clone()
         {
-            foreach (Minion m in opponent.onBoard)
+            var m = (Minion)base.Clone();
+            m._baseAttack = _baseAttack;
+            m._baseHealth = _baseHealth;
+            m.Cost = Cost;
+            m._maxHealth = _maxHealth;
+            m.CurHealth = CurHealth;
+            m.Attack = Attack;
+            m.AttacksLeft = AttacksLeft;
+
+            return m;
+        }
+
+        public void TakeDamage(int dmg)
+        {
+            Health -= dmg;
+        }
+
+        public override bool CanPlay(Board b)
+        {
+            return Owner.OnBoard.Count < 7 && base.CanPlay(b);
+        }
+
+        public void StartTransform() //Maybe include target, perform transform too
+        {
+            Transform?.Invoke();
+        }
+
+        public void StartDestroy()
+        {
+            Destroy?.Invoke();
+            Owner.OnBoard.Remove(this);
+        }
+
+        public void AddHealth(int increase)
+        {
+            if (increase <= 0)
+                return;
+            _maxHealth += increase;
+            CurHealth += increase;
+        }
+
+        public void ReduceHealth(int decrease)
+        {
+            if (decrease <= 0)
+                return;
+            _maxHealth -= decrease;
+            if (CurHealth > _maxHealth)
+                CurHealth = _maxHealth;
+        }
+
+        public void AlterAttack(int alteration)
+        {
+            if (Attack + alteration <= 0)
             {
-                Board b = curBoard.Clone();
-                int theirIndex = opponent.onBoard.IndexOf(m);
-                Minion Attacker = b.me.id == owner.id ? b.me.onBoard[myIndex] : b.opp.onBoard[myIndex];
-                Minion Defender = b.me.id == m.owner.id ? b.me.onBoard[theirIndex] : b.opp.onBoard[theirIndex];
-                b.Attack(Attacker, Defender);
-                results.Add(new MasterBoardContainer(b) { action = "Attacks " + Defender });
+                Attack = 0;
+                return;
+            }
+            Attack += alteration;
+        }
+
+        public override SubBoardContainer Play(Board curBoard)
+        {
+            if (!CanPlay(curBoard))
+                return null;
+
+            var b = curBoard.Clone();
+
+            var ownerClone = Owner.Id == b.Me.Id ? b.Me : b.Opp;
+            var m = (Minion)ownerClone.Hand[Owner.Hand.IndexOf(this)];
+
+            ownerClone.Hand.Remove(m);
+            ownerClone.Mana -= Cost;
+            ownerClone.StartSummon(m);
+
+            return new SingleSubBoardContainer(new MasterBoardContainer(b), curBoard, "Play " + this);
+        }
+
+        public virtual SubBoardContainer PerformAttack(Board curBoard)
+        {
+            if (AttacksLeft <= 0)
+                return null;
+
+            var results = new List<MasterBoardContainer>();
+            var opponent = curBoard.Me.Id == Owner.Id ? curBoard.Opp : curBoard.Me;
+            var myIndex = Owner.OnBoard.IndexOf(this);
+            if (opponent.OnBoard.TrueForAll(m => !m.Taunt)) //All minions don't have taunt => any minion and hero are valid targets)
+            {
+                foreach (var m in opponent.OnBoard)
+                {
+                    var b = curBoard.Clone();
+                    var theirIndex = opponent.OnBoard.IndexOf(m);
+                    var attacker = b.Me.Id == Owner.Id ? b.Me.OnBoard[myIndex] : b.Opp.OnBoard[myIndex];
+                    var defender = b.Me.Id == m.Owner.Id ? b.Me.OnBoard[theirIndex] : b.Opp.OnBoard[theirIndex];
+                    Board.Attack(attacker, defender);
+                    results.Add(new MasterBoardContainer(b) { Action = "Attacks " + defender });
+                }
+
+                if (CantAttackHeroes) return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
+                var clone = curBoard.Clone();
+                var opp = clone.Me.Id == opponent.Id ? clone.Me : clone.Opp;
+                var att = clone.Me.Id == Owner.Id ? clone.Me.OnBoard[myIndex] : clone.Opp.OnBoard[myIndex];
+                Board.Attack(att, opp);
+                results.Add(new MasterBoardContainer(clone) { Action = "Attacks Face" });
+
+                return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
             }
 
-            if (!cantAttackHeroes)
+            foreach (var m in opponent.OnBoard)
             {
-                Board clone = curBoard.Clone();
-                Hero Opp = clone.me.id == opponent.id ? clone.me : clone.opp;
-                Minion Att = clone.me.id == owner.id ? clone.me.onBoard[myIndex] : clone.opp.onBoard[myIndex];
-                clone.Attack(Att, Opp);
-                results.Add(new MasterBoardContainer(clone) { action = "Attacks Face" });
+                if (!m.Taunt)
+                    continue;
+
+                var b = curBoard.Clone();
+                var theirIndex = opponent.OnBoard.IndexOf(m);
+                var attacker = b.Me.Id == Owner.Id ? b.Me.OnBoard[myIndex] : b.Opp.OnBoard[myIndex];
+                var defender = b.Me.Id == m.Owner.Id ? b.Me.OnBoard[theirIndex] : b.Opp.OnBoard[theirIndex];
+                Board.Attack(attacker, defender);
+                results.Add(new MasterBoardContainer(b) { Action = "Attacks " + defender });
             }
 
             return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
         }
-
-        foreach (Minion m in opponent.onBoard)
-        {
-            if (!m.Taunt)
-                continue;
-
-            Board b = curBoard.Clone();
-            int theirIndex = opponent.onBoard.IndexOf(m);
-            Minion Attacker = b.me.id == owner.id ? b.me.onBoard[myIndex] : b.opp.onBoard[myIndex];
-            Minion Defender = b.me.id == m.owner.id ? b.me.onBoard[theirIndex] : b.opp.onBoard[theirIndex];
-            b.Attack(Attacker, Defender);
-            results.Add(new MasterBoardContainer(b) { action = "Attacks " + Defender });
-        }
-
-        return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
     }
 }
