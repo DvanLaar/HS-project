@@ -6,9 +6,9 @@ class Program
 {
     static void Main()
     {
-        Hero me = new BasicHunter(true, true);
+        Hero me = new BasicMage(true, true);
 
-        Hero opp = new BasicHunter();
+        Hero opp = new BasicMage();
         opp.id = false;
 
         Board b = new Board(me, opp);
@@ -52,6 +52,9 @@ class Program
 
         b.me.StartTurn(b);
 
+
+
+        
         MasterBoardContainer first = new MasterBoardContainer(b);
 
         while (true)
@@ -89,8 +92,7 @@ class Program
             Timer tmr = new Timer(20000);
             tmr.Elapsed += (o, e) => { running = false; };
             int ownstatesvisited = 0;
-
-            MinHeap mh = new MinHeap(1000000, false);
+            List<(Func<Board, SubBoardContainer>,double)> mh = new List<(Func<Board, SubBoardContainer>,double)>();
             List<MasterBoardContainer> turnEnded = new List<MasterBoardContainer>();
             first = new MasterBoardContainer(b);
             mh.Insert(first);
@@ -144,7 +146,7 @@ class Program
                         mhopp.Insert(newMbc);
             }
 
-            first.Sort();
+            //first.Sort();
 
             Console.WriteLine(ownstatesvisited);
 
@@ -217,7 +219,7 @@ class Program
                 resIndex = int.Parse(Console.ReadLine());
                 first = sbc.children[resIndex];
                 Console.Clear();
-            }
-        }
+            } 
+        } 
     }
 }

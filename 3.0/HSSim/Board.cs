@@ -10,7 +10,7 @@ class Board
     public double value { get
         {
             //if (curr)
-                return me.value - opp.value;
+                return me.CalcValue() - opp.CalcValue();
             //else
             //    return opp.value - me.value;
         } }

@@ -64,7 +64,7 @@ class MinHeap
 
     public void Insert(MasterBoardContainer item)
     {
-        set(size, item);
+        //set(size, item);
         size++;
         Decrease(size - 1, item);
     }

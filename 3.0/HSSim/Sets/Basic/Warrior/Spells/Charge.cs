@@ -33,4 +33,10 @@ class Charge : Spell
     {
         return base.CanPlay(b) && owner.onBoard.Count > 0;
     }
+
+    public override double DeltaBoardValue(Board b)
+    {
+        Hero h = b.me.id == owner.id ? b.me : b.opp;
+        return h.CalcValue(cards: -1) - h.CalcValue();
+    }
 }

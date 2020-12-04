@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 class Execute : Spell
 {
@@ -29,5 +30,29 @@ class Execute : Spell
     public override bool CanPlay(Board b)
     {
         return base.CanPlay(b) && !(b.me.id == owner.id ? b.opp : b.me).onBoard.TrueForAll((m) => !m.Damaged);
+    }
+
+    public override double DeltaBoardValue(Board b)
+    {
+        Hero me = b.me.id == owner.id ? b.me : b.opp;
+        Hero opp = b.me.id == owner.id ? b.opp : b.me;
+        int max = 0;
+        
+        foreach (Minion m in opp.onBoard)
+        {
+            if (!m.Damaged)
+                continue;
+
+            if (opp.onBoard.Count == 1)
+            {
+                max = m.Health + m.Attack + 2 + opp.maxMana;
+            }
+            else
+            {
+                max = Math.Max(max, m.Health + m.Attack);
+            }
+        }
+
+        return opp.CalcValue() + me.CalcValue(cards: -1) - opp.CalcValue(minions: -1 * max) - me.CalcValue();
     }
 }

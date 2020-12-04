@@ -6,9 +6,9 @@ class MasterBoardContainer
     private static readonly double winValue = 1000, loseValue = -1000;
     public string action;
 
-    public List<SubBoardContainer> children;
+    public List<(Func<Board, SubBoardContainer>, double)> children;
     public bool expanded;
-    public double value { get { if (board.opp.Health <= 0) return winValue; if (board.me.Health <= 0) return loseValue; return expanded ? children[0].value : board.value; } }
+    public double value { get { if (board.opp.Health <= 0) return winValue; if (board.me.Health <= 0) return loseValue; return expanded ? children[0].Item2 : board.value; } }
     public Board board;
 
     
@@ -17,7 +17,7 @@ class MasterBoardContainer
     {
         board = b;
         expanded = false;
-        children = new List<SubBoardContainer>();
+        children = new List<(Func<Board, SubBoardContainer>,double)>();
     }
 
     public void Expand()
@@ -31,14 +31,14 @@ class MasterBoardContainer
             return;
         }
         expanded = true;
-        children = new List<SubBoardContainer>();
+        children = new List<(Func<Board, SubBoardContainer>, double)>();
 
         if (board.toPerform.Count > 0)
         {
             Func<Board, SubBoardContainer> action = board.toPerform.Pop();
             Board cln = board.Clone();
             SubBoardContainer sbc = action(cln);
-            children.Add(sbc);
+            children.Add((action, 0));
             return;
         }
 
@@ -46,19 +46,24 @@ class MasterBoardContainer
 
         foreach (Card c in currentPlayer.hand)
         {
-            SubBoardContainer play = c.Play(board);
-            if (play != null)
-                children.Add(play);
+            if (c.CanPlay(board))
+            {
+                children.Add((c.Play, c.DeltaBoardValue(board)));
+            }
         }
         foreach (Minion m in currentPlayer.onBoard)
         {
+            /*
             SubBoardContainer attack = m.PerformAttack(board);
             if (attack != null)
                 children.Add(attack);
+                */
         }
+        /*
         SubBoardContainer hattack = currentPlayer.PerformAttack(board);
         if (hattack != null)
             children.Add(hattack);
+
 
         SubBoardContainer hp = currentPlayer.UseHeroPower(board);
         if (hp != null)
@@ -70,13 +75,14 @@ class MasterBoardContainer
         clone.curr = !clone.curr;
         (clone.me.id == clone.curr ? clone.me : clone.opp).StartTurn(clone);
         children.Add(new SingleSubBoardContainer(clone, board, "End turn"));
+        */
     }
 
     public void Sort()
     {
         if (!expanded)
             return;
-        foreach (SubBoardContainer sbc in children)
+        foreach ((Func<Board,SubBoardContainer>, int) sbc in children)
         {
             foreach (MasterBoardContainer mbc in sbc.children)
             {

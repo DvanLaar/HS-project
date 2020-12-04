@@ -42,4 +42,26 @@ class Polymorph : Spell
 
         return b.me.onBoard.Count > 0 || b.opp.onBoard.Count > 0;
     }
+
+    public override double DeltaBoardValue(Board b)
+    {
+        if (!CanPlay(b))
+            return -100;
+
+        Hero opp = b.me.id == owner.id ? b.opp : b.me;
+        double max = -100;
+        foreach (Minion m in owner.onBoard)
+        {
+            double val = owner.CalcValue(cards: -1, minions: 2 - m.Health - m.Attack) - owner.CalcValue();
+            if (val > max)
+                max = val;
+        }
+        foreach (Minion m in opp.onBoard)
+        {
+            double val = opp.CalcValue() + owner.CalcValue(cards: -1) - opp.CalcValue(minions: 2 - m.Health - m.Attack) - owner.CalcValue();
+            if (val > max)
+                max = val;
+        }
+        return max;
+    }
 }

@@ -29,10 +29,6 @@ abstract class Hero : IDamagable
     public int AttacksLeft { get; set; }
     public int Mana { get => mana; set { if (value >= 10) mana = 10; else mana = value; } }
     public int SpellDamage { get; set; }
-    public double value { get
-        {
-            return (2 * Math.Sqrt(Health + Armor)) + (hand.Count > 3 ? ((hand.Count - 3) * 2) + 9 : hand.Count * 3) + Math.Sqrt(cardsInDeck) + minionValue;
-        } }
     public int cardsInDeck { get
         {
             int res = 0;
@@ -123,6 +119,15 @@ abstract class Hero : IDamagable
         }
 
         return h;
+    }
+
+    public double CalcValue(int health = 0, int cards = 0, int deck = 0, int minions = 0)
+    {
+        int hp = Health + Armor + health;
+        int cr = hand.Count + cards;
+        int dc = cardsInDeck + deck;
+        int mn = minionValue + minions;
+        return (2 * Math.Sqrt(hp)) + (cr > 3 ? ((cr - 3) * 2) + 9 : cr * 3) + Math.Sqrt(dc) + mn;
     }
 
     public void StartSummon(Minion m)

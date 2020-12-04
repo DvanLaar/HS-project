@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HSSim", "HSSim\HSSim.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourneyPredict", "TourneyPredict\TourneyPredict.csproj", "{74D91AB0-C319-40A7-B60B-E83355A5B179}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoundRobin", "RoundRobin\RoundRobin.csproj", "{505D9884-6488-4F45-B362-C3EE02F0BF36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobs Bestie", "Bobs Bestie\Bobs Bestie.csproj", "{E42F29D9-97DF-4064-854A-C9EC0C2D5915}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{74D91AB0-C319-40A7-B60B-E83355A5B179}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74D91AB0-C319-40A7-B60B-E83355A5B179}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74D91AB0-C319-40A7-B60B-E83355A5B179}.Release|Any CPU.Build.0 = Release|Any CPU
+		{505D9884-6488-4F45-B362-C3EE02F0BF36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{505D9884-6488-4F45-B362-C3EE02F0BF36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{505D9884-6488-4F45-B362-C3EE02F0BF36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{505D9884-6488-4F45-B362-C3EE02F0BF36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E42F29D9-97DF-4064-854A-C9EC0C2D5915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42F29D9-97DF-4064-854A-C9EC0C2D5915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42F29D9-97DF-4064-854A-C9EC0C2D5915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42F29D9-97DF-4064-854A-C9EC0C2D5915}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

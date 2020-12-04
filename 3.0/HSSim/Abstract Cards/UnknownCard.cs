@@ -65,4 +65,9 @@ class UnknownCard : Card
         foreach (Card c in options)
             c.owner = owner;
     }
+
+    public override double DeltaBoardValue(Board b)
+    {
+        throw new System.NotImplementedException();
+    }
 }

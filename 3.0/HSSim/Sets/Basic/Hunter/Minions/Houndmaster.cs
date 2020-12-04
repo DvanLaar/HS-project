@@ -30,4 +30,25 @@ class Houndmaster : BattlecryMinion
             return new ChoiceSubBoardContainer(result, b, "Play " + this);
         });
     }
+
+    private bool hasBeast(Hero h)
+    {
+        foreach (Minion m in h.onBoard)
+        {
+            if (m.Beast)
+                return true;
+        }
+        return false;
+    }
+
+    public override double DeltaBoardValue(Board b)
+    {
+        Hero h = owner.id == b.me.id ? b.me : b.opp;
+        if (hasBeast(h))
+            return h.CalcValue(minions: 11) - h.CalcValue();
+        else if (h.onBoard.Count == 0)
+            return h.CalcValue(minions: 9 + h.maxMana) - h.CalcValue();
+        else
+            return h.CalcValue(minions: 7) - h.CalcValue();
+    }
 }

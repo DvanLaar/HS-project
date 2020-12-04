@@ -7,6 +7,7 @@ abstract class Card
     protected int cost;
     public Hero owner;
     public abstract SubBoardContainer Play(Board curBoard);
+    public abstract double DeltaBoardValue(Board b);
     public virtual Card Clone()
     {
         Card c = (Card)GetType().InvokeMember("", System.Reflection.BindingFlags.CreateInstance, null, null, null);

@@ -2,7 +2,7 @@
 
 abstract class Minion : Card, IDamagable
 {
-    int baseAttack, baseHealth, maxHealth;
+    public int baseAttack, baseHealth, maxHealth;
     protected int curHealth;
     public bool Taunt = false, windfury = false, megaWindfury = false, cantAttackHeroes = false;
     public int maxAttacks { get { if (megaWindfury) return 4; if (windfury) return 2; return 1; } }
@@ -66,6 +66,17 @@ abstract class Minion : Card, IDamagable
     public override bool CanPlay(Board b)
     {
         return owner.onBoard.Count < 7 && base.CanPlay(b);
+    }
+
+    public override double DeltaBoardValue(Board b)
+    {
+        if (!CanPlay(b))
+            return -100;
+
+        int min = Attack + Health;
+        if (owner.onBoard.Count == 0)
+            min += 2 + owner.maxMana;
+        return owner.CalcValue(cards: -1, minions: min) - owner.CalcValue();
     }
 
     public void StartTransform() //Maybe include target, perform transform too
