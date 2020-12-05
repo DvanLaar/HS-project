@@ -67,11 +67,11 @@ namespace HSSim.Sets.Basic.Hunter.Spells
                 return new RandomChoiceSubBoardContainer(result, b, "Play " + this);
             });
         }
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        Hero h = b.me.id == owner.id ? b.me : b.opp;
-        return h.CalcValue(deck: -1) - h.CalcValue();
+        public override double DeltaBoardValue(Board b)
+        {
+            Hero h = b.Me.Id == Owner.Id ? b.Me : b.Opp;
+            return h.CalcValue(deck: -1) - h.CalcValue();
+        }
     }
 }

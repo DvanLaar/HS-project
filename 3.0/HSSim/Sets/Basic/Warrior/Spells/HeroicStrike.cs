@@ -25,11 +25,11 @@ namespace HSSim.Sets.Basic.Warrior.Spells
                 return new SingleSubBoardContainer(clone, b, "Play " + this);
             });
         }
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        Hero me = owner.id == b.me.id ? b.me : b.opp;
-        return me.CalcValue(cards: -1) - me.CalcValue();
+        public override double DeltaBoardValue(Board b)
+        {
+            var me = Owner.Id == b.Me.Id ? b.Me : b.Opp;
+            return me.CalcValue(cards: -1) - me.CalcValue();
+        }
     }
 }

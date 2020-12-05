@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HSSim.Abstract_Cards;
 
 namespace HSSim.Sets.Basic.Mage.Spells
@@ -44,131 +45,120 @@ namespace HSSim.Sets.Basic.Mage.Spells
 
             return result.ToArray();
         }
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        if (!CanPlay(b))
-            return -100;
-
-        int damage = 3 + owner.SpellDamage, damageLeft = damage;
-        Hero opp = owner.id == b.me.id ? b.opp : b.me;
-        int targetN = opp.onBoard.Count + 1;
-        IDamagable[] targets = new IDamagable[targetN];
-        for (int i = 0; i < targetN - 1; i++)
+        public override double DeltaBoardValue(Board b)
         {
-            targets[i] = opp.onBoard[i];
-        }
-        targets[targetN - 1] = opp;
+            if (!CanPlay(b))
+                return -100;
 
-        int[] maxHealth = new int[targetN];
-        for (int i = 0; i < targetN; i++)
-        {
-            maxHealth[i] = targets[i].Health;
-        }
-
-        List<int[]> perms = GenPerms(maxHealth, damage);
-        int totalCombs = 0;
-        double totalScore = 0;
-        foreach (int[] perm in perms)
-        {
-            int comb = combs(perm);
-            totalCombs += comb;
-            int score = 0;
-            bool allDead = true;
-            for (int i = 1; i < perm.Length; i++)
+            int damage = 3 + Owner.SpellDamage, damageLeft = damage;
+            var opp = Owner.Id == b.Me.Id ? b.Opp : b.Me;
+            var targetN = opp.OnBoard.Count + 1;
+            var targets = new IDamagable[targetN];
+            for (var i = 0; i < targetN - 1; i++)
             {
-                if (perm[i] == maxHealth[i])
+                targets[i] = opp.OnBoard[i];
+            }
+            targets[targetN - 1] = opp;
+
+            var maxHealth = new int[targetN];
+            for (var i = 0; i < targetN; i++)
+            {
+                maxHealth[i] = targets[i].Health;
+            }
+
+            var perms = GenPerms(maxHealth, damage);
+            var totalCombs = 0;
+            double totalScore = 0;
+            foreach (var perm in perms)
+            {
+                var comb = Combs(perm);
+                totalCombs += comb;
+                var score = 0;
+                var allDead = true;
+                for (var i = 1; i < perm.Length; i++)
                 {
-                    score += targets[i].Health + targets[i].Attack;
+                    if (perm[i] == maxHealth[i])
+                    {
+                        score += targets[i].Health + targets[i].Attack;
+                    }
+                    else
+                    {
+                        score += perm[i];
+                        allDead = false;
+                    }
                 }
-                else
+                if (allDead)
+                    score += 2 + opp.MaxMana;
+                totalScore += Owner.CalcValue(cards: -1) + opp.CalcValue() - Owner.CalcValue() + opp.CalcValue(health: 0 - perm[0], minions: 0 - score);
+            }
+            return totalScore / totalCombs;
+        }
+
+        private IEnumerable<int[]> GenPerms(int[] maxHealths, int maxDmg)
+        {
+            var sum = maxHealths.Sum();
+            if (sum >= maxDmg)
+                return new List<int[]>() { maxHealths };
+
+            if (maxHealths.Length == 1)
+                return new List<int[]>() { new int[] { maxDmg } };
+
+            var perms = new List<int[]>();
+            for (var j = 0; j <= maxHealths[0] && j <= maxDmg; j++)
+            {
+                var maxHealthsAccent = new int[maxHealths.Length - 1];
+                for (var k = 1; k < maxHealths.Length; k++)
                 {
-                    score += perm[i];
-                    allDead = false;
+                    maxHealthsAccent[k - 1] = maxHealths[k];
                 }
+                var permsAccent = GenPerms(maxHealthsAccent, maxDmg - j);
+                perms.AddRange(permsAccent.Select(perm => Combine(new[] {j}, perm)));
             }
-            if (allDead)
-                score += 2 + opp.maxMana;
-            totalScore += owner.CalcValue(cards: -1) + opp.CalcValue() - owner.CalcValue() + opp.CalcValue(health: 0 - perm[0], minions: 0 - score);
+            return perms;
         }
-        return totalScore / totalCombs;
-    }
 
-    private List<int[]> GenPerms(int[] maxHealths, int maxDmg)
-    {
-        int sum = 0;
-        for (int i = 0; i < maxHealths.Length; i++)
+        private static int[] Combine(IReadOnlyList<int> a, IReadOnlyList<int> b)
         {
-            sum += maxHealths[i];
-        }
-        if (sum >= maxDmg)
-            return new List<int[]>() { maxHealths };
+            var res = new int[a.Count + b.Count];
 
-        if (maxHealths.Length == 1)
-            return new List<int[]>() { new int[] { maxDmg } };
-
-        List<int[]> perms = new List<int[]>();
-        for (int j = 0; j <= maxHealths[0] && j <= maxDmg; j++)
-        {
-            int[] maxHealthsAccent = new int[maxHealths.Length - 1];
-            for (int k = 1; k < maxHealths.Length; k++)
+            for (var i = 0; i < a.Count; i++)
             {
-                maxHealthsAccent[k - 1] = maxHealths[k];
+                res[i] = a[i];
             }
-            List<int[]> permsAccent = GenPerms(maxHealthsAccent, maxDmg - j);
-            foreach (int[] perm in permsAccent)
+            for (var i = 0; i < b.Count; i++)
             {
-                perms.Add(combine(new int[] { j }, perm));
+                res[i + a.Count] = b[i];
             }
+            return res;
         }
-        return perms;
-    }
 
-    private int[] combine(int[] a, int[] b)
-    {
-        int[] res = new int[a.Length + b.Length];
-
-        for (int i = 0; i < a.Length; i++)
+        private int Combs(IReadOnlyList<int> damages)
         {
-            res[i] = a[i];
-        }
-        for (int i = 0; i < b.Length; i++)
-        {
-            res[i + a.Length] = b[i];
-        }
-        return res;
-    }
+            var totalHits = damages.Sum();
 
-    private int combs(int[] damages)
-    {
-        int totalHits = 0;
-        for (int i = 0; i < damages.Length; i++)
-        {
-            totalHits += damages[i];
+            var combs = 1;
+            foreach (var missile in damages)
+            {
+                combs *= NOverK(totalHits, missile);
+                totalHits -= missile;
+            }
+            return combs;
         }
 
-        int combs = 1;
-        for (int i = 0; i < damages.Length; i++)
+        private static int NOverK(int n, int k)
         {
-            combs *= NoverK(totalHits, damages[i]);
-            totalHits -= damages[i];
+            return Fac(n) / (Fac(k) * Fac(n - k));
         }
-        return combs;
-    }
 
-    private int NoverK(int n, int k)
-    {
-        return fac(n) / (fac(k) * fac(n - k));
-    }
-
-    private int fac(int f)
-    {
-        int res = 1;
-        for (int i = f; i > 0; i--)
+        private static int Fac(int f)
         {
-            res *= i;
+            var res = 1;
+            for (var i = f; i > 0; i--)
+            {
+                res *= i;
+            }
+            return res;
         }
-        return res;
     }
 }

@@ -63,10 +63,10 @@ namespace HSSim.Abstract_Cards
             foreach (var c in _options)
                 c.Owner = owner;
         }
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        throw new System.NotImplementedException();
+        public override double DeltaBoardValue(Board b)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

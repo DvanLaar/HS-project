@@ -10,9 +10,16 @@ namespace HSSim.Abstract_Cards.Minions
         private const bool Windfury = false;
         private const bool MegaWindfury = false;
         public bool CantAttackHeroes = false;
+
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        public static int MaxAttacks { get { if (MegaWindfury) return 4; return Windfury ? 2 : 1;
-        } }
+        public static int MaxAttacks
+        {
+            get
+            {
+                if (MegaWindfury) return 4;
+                return Windfury ? 2 : 1;
+            }
+        }
 
         public bool Beast = false;
         protected bool Totem = false;
@@ -21,13 +28,15 @@ namespace HSSim.Abstract_Cards.Minions
         private bool _charge;
 
         public delegate void EmptyHandler();
+
         public event EmptyHandler Transform;
         public event EmptyHandler Destroy;
         public event EmptyHandler OnDamaged;
 
         public virtual int Health
         {
-            get => CurHealth; set
+            get => CurHealth;
+            set
             {
                 if (value < CurHealth)
                     OnDamaged?.Invoke();
@@ -38,9 +47,26 @@ namespace HSSim.Abstract_Cards.Minions
                 }
             }
         }
+
         public int Attack { get; set; }
         public int AttacksLeft { get; set; }
-        public bool Charge { get => _charge; set { if (value) if (_charge) _charge = true; else { _charge = true; AttacksLeft = MaxAttacks; } else _charge = false; } }
+
+        public bool Charge
+        {
+            get => _charge;
+            set
+            {
+                if (value)
+                    if (_charge) _charge = true;
+                    else
+                    {
+                        _charge = true;
+                        AttacksLeft = MaxAttacks;
+                    }
+                else _charge = false;
+            }
+        }
+
         public bool Damaged => Health != _maxHealth;
 
         protected Minion(int mana, int attack, int health) : base(mana)
@@ -56,7 +82,7 @@ namespace HSSim.Abstract_Cards.Minions
 
         public override Card Clone()
         {
-            var m = (Minion)base.Clone();
+            var m = (Minion) base.Clone();
             m._baseAttack = _baseAttack;
             m._baseHealth = _baseHealth;
             m.Cost = Cost;
@@ -113,6 +139,7 @@ namespace HSSim.Abstract_Cards.Minions
                 Attack = 0;
                 return;
             }
+
             Attack += alteration;
         }
 
@@ -124,7 +151,7 @@ namespace HSSim.Abstract_Cards.Minions
             var b = curBoard.Clone();
 
             var ownerClone = Owner.Id == b.Me.Id ? b.Me : b.Opp;
-            var m = (Minion)ownerClone.Hand[Owner.Hand.IndexOf(this)];
+            var m = (Minion) ownerClone.Hand[Owner.Hand.IndexOf(this)];
 
             ownerClone.Hand.Remove(m);
             ownerClone.Mana -= Cost;
@@ -141,7 +168,8 @@ namespace HSSim.Abstract_Cards.Minions
             var results = new List<MasterBoardContainer>();
             var opponent = curBoard.Me.Id == Owner.Id ? curBoard.Opp : curBoard.Me;
             var myIndex = Owner.OnBoard.IndexOf(this);
-            if (opponent.OnBoard.TrueForAll(m => !m.Taunt)) //All minions don't have taunt => any minion and hero are valid targets)
+            if (opponent.OnBoard.TrueForAll(m => !m.Taunt)
+            ) //All minions don't have taunt => any minion and hero are valid targets)
             {
                 foreach (var m in opponent.OnBoard)
                 {
@@ -150,7 +178,7 @@ namespace HSSim.Abstract_Cards.Minions
                     var attacker = b.Me.Id == Owner.Id ? b.Me.OnBoard[myIndex] : b.Opp.OnBoard[myIndex];
                     var defender = b.Me.Id == m.Owner.Id ? b.Me.OnBoard[theirIndex] : b.Opp.OnBoard[theirIndex];
                     Board.Attack(attacker, defender);
-                    results.Add(new MasterBoardContainer(b) { Action = "Attacks " + defender });
+                    results.Add(new MasterBoardContainer(b) {Action = "Attacks " + defender});
                 }
 
                 if (CantAttackHeroes) return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
@@ -158,7 +186,7 @@ namespace HSSim.Abstract_Cards.Minions
                 var opp = clone.Me.Id == opponent.Id ? clone.Me : clone.Opp;
                 var att = clone.Me.Id == Owner.Id ? clone.Me.OnBoard[myIndex] : clone.Opp.OnBoard[myIndex];
                 Board.Attack(att, opp);
-                results.Add(new MasterBoardContainer(clone) { Action = "Attacks Face" });
+                results.Add(new MasterBoardContainer(clone) {Action = "Attacks Face"});
 
                 return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
             }
@@ -173,10 +201,15 @@ namespace HSSim.Abstract_Cards.Minions
                 var attacker = b.Me.Id == Owner.Id ? b.Me.OnBoard[myIndex] : b.Opp.OnBoard[myIndex];
                 var defender = b.Me.Id == m.Owner.Id ? b.Me.OnBoard[theirIndex] : b.Opp.OnBoard[theirIndex];
                 Board.Attack(attacker, defender);
-                results.Add(new MasterBoardContainer(b) { Action = "Attacks " + defender });
+                results.Add(new MasterBoardContainer(b) {Action = "Attacks " + defender});
             }
 
             return new ChoiceSubBoardContainer(results, curBoard, this + " attacks");
+        }
+
+        public override double DeltaBoardValue(Board b)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

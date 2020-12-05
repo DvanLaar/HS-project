@@ -1,4 +1,5 @@
-﻿using HSSim.Abstract_Cards.Minions;
+﻿using System.Linq;
+using HSSim.Abstract_Cards.Minions;
 using HSSim.Abstract_Cards.Minions.AuraMinions;
 
 namespace HSSim.Sets.Basic.Warrior.Minions
@@ -24,22 +25,18 @@ namespace HSSim.Sets.Basic.Warrior.Minions
 
             m.Attack += 1;
         }
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        if (!CanPlay(b))
-            return -100;
-
-        int buffs = 5;
-        Hero h = b.me.id == owner.id ? b.me : b.opp;
-        if (h.onBoard.Count == 0)
-            buffs += 2 + h.maxMana;
-        foreach (Minion m in h.onBoard)
+        public override double DeltaBoardValue(Board b)
         {
-            if (m.Charge)
-                buffs += 1;
+            if (!CanPlay(b))
+                return -100;
+
+            var buffs = 5;
+            var h = b.Me.Id == Owner.Id ? b.Me : b.Opp;
+            if (h.OnBoard.Count == 0)
+                buffs += 2 + h.MaxMana;
+            buffs += h.OnBoard.Count(m => m.Charge);
+            return h.CalcValue(cards: -1, minions: buffs) - h.CalcValue();
         }
-        return h.CalcValue(cards: -1, minions: buffs) - h.CalcValue();
     }
 }

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using HSSim.Abstract_Cards;
+using HSSim.Abstract_Cards.Minions;
 
- namespace HSSim.Sets.Basic.Warrior.Spells
+namespace HSSim.Sets.Basic.Warrior.Spells
 {
     internal class Execute : Spell
     {
@@ -36,18 +39,15 @@ using HSSim.Abstract_Cards;
 
         public override double DeltaBoardValue(Board b)
         {
-            Hero me = b.Me.Id == Owner.Id ? b.me : b.opp;
-            Hero opp = b.me.id == owner.id ? b.opp : b.me;
-            int max = 0;
+            var me = b.Me.Id == Owner.Id ? b.Me : b.Opp;
+            var opp = b.Me.Id == Owner.Id ? b.Opp : b.Me;
+            var max = 0;
             
-            foreach (Minion m in opp.onBoard)
+            foreach (var m in opp.OnBoard.Where(m => m.Damaged))
             {
-                if (!m.Damaged)
-                    continue;
-
-                if (opp.onBoard.Count == 1)
+                if (opp.OnBoard.Count == 1)
                 {
-                    max = m.Health + m.Attack + 2 + opp.maxMana;
+                    max = m.Health + m.Attack + 2 + opp.MaxMana;
                 }
                 else
                 {

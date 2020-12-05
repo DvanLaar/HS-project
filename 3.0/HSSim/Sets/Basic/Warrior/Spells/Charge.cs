@@ -35,11 +35,11 @@ namespace HSSim.Sets.Basic.Warrior.Spells
         {
             return base.CanPlay(b) && Owner.OnBoard.Count > 0;
         }
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        Hero h = b.me.id == owner.id ? b.me : b.opp;
-        return h.CalcValue(cards: -1) - h.CalcValue();
+        public override double DeltaBoardValue(Board b)
+        {
+            var h = b.Me.Id == Owner.Id ? b.Me : b.Opp;
+            return h.CalcValue(cards: -1) - h.CalcValue();
+        }
     }
 }

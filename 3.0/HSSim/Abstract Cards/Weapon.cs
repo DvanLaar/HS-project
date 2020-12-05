@@ -57,13 +57,13 @@
             w.Durability = Durability;
             return w;
         }
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        if (!CanPlay(b))
-            return -100;
+        public override double DeltaBoardValue(Board b)
+        {
+            if (!CanPlay(b))
+                return -100;
 
-        return owner.CalcValue(cards: -1) - owner.CalcValue();
+            return Owner.CalcValue(cards: -1) - Owner.CalcValue();
+        }
     }
 }

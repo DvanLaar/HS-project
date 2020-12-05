@@ -8,16 +8,16 @@ namespace HSSim.Sets.Basic.Neutral.Tokens
         {
             Beast = true;
         }
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        if (!CanPlay(b))
-            return -100;
+        public override double DeltaBoardValue(Board b)
+        {
+            if (!CanPlay(b))
+                return -100;
 
-        int min = 2;
-        if (owner.onBoard.Count == 0)
-            min += 2 + owner.maxMana;
-        return owner.CalcValue(cards: -1, minions: min);
+            var min = 2;
+            if (Owner.OnBoard.Count == 0)
+                min += 2 + Owner.MaxMana;
+            return Owner.CalcValue(cards: -1, minions: min);
+        }
     }
 }

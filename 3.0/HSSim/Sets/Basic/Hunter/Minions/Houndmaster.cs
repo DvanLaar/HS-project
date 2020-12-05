@@ -25,32 +25,26 @@ namespace HSSim.Sets.Basic.Hunter.Minions
                     target.AlterAttack(2);
                     target.AddHealth(2);
                     target.Taunt = true;
-                    result.Add(new MasterBoardContainer(cln) { Action = "Target " + target });
+                    result.Add(new MasterBoardContainer(cln) {Action = "Target " + target});
                 }
 
                 return new ChoiceSubBoardContainer(result, b, "Play " + this);
             });
         }
-    }
 
-    private bool hasBeast(Hero h)
-    {
-        foreach (Minion m in h.onBoard)
+        private static bool HasBeast(Hero h)
         {
-            if (m.Beast)
-                return true;
+            return h.OnBoard.Any(m => m.Beast);
         }
-        return false;
-    }
 
-    public override double DeltaBoardValue(Board b)
-    {
-        Hero h = owner.id == b.me.id ? b.me : b.opp;
-        if (hasBeast(h))
-            return h.CalcValue(minions: 11) - h.CalcValue();
-        else if (h.onBoard.Count == 0)
-            return h.CalcValue(minions: 9 + h.maxMana) - h.CalcValue();
-        else
+        public override double DeltaBoardValue(Board b)
+        {
+            var h = Owner.Id == b.Me.Id ? b.Me : b.Opp;
+            if (HasBeast(h))
+                return h.CalcValue(minions: 11) - h.CalcValue();
+            if (h.OnBoard.Count == 0)
+                return h.CalcValue(minions: 9 + h.MaxMana) - h.CalcValue();
             return h.CalcValue(minions: 7) - h.CalcValue();
+        }
     }
 }

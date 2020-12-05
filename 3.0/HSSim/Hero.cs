@@ -15,7 +15,7 @@ namespace HSSim
         public abstract Dictionary<Card, int> DeckList { get; }
         public readonly List<Minion> OnBoard;
         protected int ManaProtected;
-        protected int MaxMana;
+        public int MaxMana;
         public bool Id, HeroPowerUsed;
         protected Func<Board, SubBoardContainer> HeroPower;
         public Weapon CurrentWeapon;
@@ -49,7 +49,7 @@ namespace HSSim
         private int MinionValue{ get
             {
                 if (OnBoard.Count == 0)
-                    return -2 - _maxMana;
+                    return -2 - MaxMana;
                 return OnBoard.Sum(m => m.Health + m.Attack);
             }
         }
@@ -79,7 +79,7 @@ namespace HSSim
             Armor = 0;
             SpellDamage = 0;
             ManaProtected = 0;
-            _maxMana = 0;
+            MaxMana = 0;
             HeroPowerUsed = false;
 
             //TEMP
@@ -106,7 +106,7 @@ namespace HSSim
             h.Attack = Attack;
             h.AttacksLeft = AttacksLeft;
             h.ManaProtected = ManaProtected;
-            h._maxMana = _maxMana;
+            h.MaxMana = MaxMana;
             h.Summon = Summon; //Correct?
             h.Id = Id;
             h.HeroPowerUsed = HeroPowerUsed;
@@ -317,8 +317,8 @@ namespace HSSim
         // ReSharper disable once UnusedMethodReturnValue.Global
         public SubBoardContainer StartTurn(Board b)
         {
-            _maxMana++;
-            ManaProtected = _maxMana;
+            MaxMana++;
+            ManaProtected = MaxMana;
             AttacksLeft = 1;
             if (CurrentWeapon != null)
                 CurrentWeapon.Active = true;
